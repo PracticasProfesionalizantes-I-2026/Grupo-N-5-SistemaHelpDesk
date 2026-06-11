@@ -18,7 +18,5 @@ Link De Excalidraw. Entrega MOCKUPS:
 
 
 
-**https://excalidraw.com/#room=c9cd60cc7c4f7a5137cf,rpr\_KOj3s8ltfChR8bMZHw**
-
-
+**https://excalidraw.com/#json=qCjTGoJMSNRUiJe7RFOZu,xVWe2aQrX1mCaAVN7sRyJA**
 

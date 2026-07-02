@@ -8,9 +8,7 @@ Documentación:
 
 
 
-https:/docs.google.com/document/d/1k2RcaehhAfb84lSF2YLiLjywj4RT0jz6S-C2N\_WcHGk/edit?usp=sharing
-
-
+**https:/docs.google.com/document/d/1k2RcaehhAfb84lSF2YLiLjywj4RT0jz6S-C2N\_WcHGk/edit?usp=sharing**
 
 
 
@@ -21,4 +19,10 @@ Link De Excalidraw. Entrega MOCKUPS:
 **https://excalidraw.com/#json=bWDcWxKKbyUyVzvUFt1Ox,xbscVFJ7I0CZcbzmHgiJFw**
 
 
+
+**Link de entrega de casos de uso:**
+
+
+
+**https:/docs.google.com/document/d/1Uyw8GygEXdDPZG3zZZZRn8psOikb4c5b6th4ISE7nyw/edit?usp=sharing**
 

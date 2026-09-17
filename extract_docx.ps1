@@ -14,3 +14,4 @@
 \ = \ -replace '</w:t>', ''
 \ = \ -replace '<[^>]+>', ''
 Write-Output \
+ 

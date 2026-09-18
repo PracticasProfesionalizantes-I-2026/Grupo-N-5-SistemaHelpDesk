@@ -70,14 +70,6 @@ public record StatusResponseDTO(
     int Orden
 );
 
-public record CategoryResponseDTO(
-    Guid Id,
-    string Nombre,
-    string Descripcion,
-    bool Activo,
-    int TicketsCount
-);
-
 public record UserSummaryDTO(
     Guid Id,
     string NombreCompleto,

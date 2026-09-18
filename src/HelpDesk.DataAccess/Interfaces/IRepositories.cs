@@ -86,5 +86,27 @@ public interface ICommentRepository : IRepository<Comment>
 public interface IStatusHistoryRepository : IRepository<StatusHistory>
 {
     Task<IEnumerable<StatusHistory>> GetByTicketIdAsync(Guid ticketId, bool asNoTracking = true);
-    Task<StatusHistory> CreateAsync(StatusHistory entity);
+    new Task<StatusHistory> CreateAsync(StatusHistory entity);
+}
+
+public interface ITeamRepository : IRepository<Team>
+{
+    Task<Team?> GetByNameAsync(string nombre, bool asNoTracking = true);
+    Task<IEnumerable<Team>> GetActiveAsync(bool asNoTracking = true);
+    Task<IEnumerable<Team>> GetByCategoryAsync(Guid categoriaId, bool asNoTracking = true);
+    Task<Team?> GetWithTecnicosAsync(Guid id, bool asNoTracking = true);
+    Task AddTecnicoAsync(Guid teamId, Guid tecnicoId);
+    Task RemoveTecnicoAsync(Guid teamId, Guid tecnicoId);
+    Task<bool> HasTecnicoAsync(Guid teamId, Guid tecnicoId);
+    Task<IEnumerable<Team>> GetFilteredAsync(
+        Guid? categoriaId = null,
+        bool? activo = null,
+        string? search = null,
+        int page = 1,
+        int pageSize = 20,
+        bool asNoTracking = true);
+    Task<int> GetFilteredCountAsync(
+        Guid? categoriaId = null,
+        bool? activo = null,
+        string? search = null);
 }

@@ -1,5 +1,7 @@
 namespace HelpDesk.Shared.Constants;
 
+using HelpDesk.Shared.Enums;
+
 public static class BusinessRules
 {
     public const int MaxTitleLength = 200;
@@ -9,6 +11,8 @@ public static class BusinessRules
     public const int MaxCategoryDescriptionLength = 500;
     public const int MaxUserNameLength = 150;
     public const int MaxEmailLength = 256;
+    public const int MaxTeamNameLength = 100;
+    public const int MaxTeamDescriptionLength = 500;
     
     public static readonly Dictionary<TicketPriority, int> SLAHours = new()
     {
@@ -30,6 +34,7 @@ public static class ErrorMessages
     public const string PriorityNotFound = "La prioridad no fue encontrada";
     public const string StatusNotFound = "El estado no fue encontrado";
     public const string CommentNotFound = "El comentario no fue encontrado";
+    public const string TeamNotFound = "El equipo no fue encontrado";
     
     public const string EmailAlreadyExists = "El email ya está registrado en el sistema";
     public const string CategoryHasTickets = "No se puede eliminar la categoría porque tiene tickets asociados";
@@ -44,4 +49,9 @@ public static class ErrorMessages
     public const string TicketAlreadyAssigned = "El ticket ya tiene un técnico asignado";
     public const string UnauthorizedAccess = "No tiene permisos para realizar esta acción";
     public const string InvalidCredentials = "Credenciales inválidas";
+    public const string TeamNameAlreadyExists = "Ya existe un equipo con ese nombre";
+    public const string TeamMustHaveAtLeastOneTechnician = "Debe seleccionar al menos un técnico";
+    public const string TechnicianNotFound = "El técnico no fue encontrado";
+    public const string UserIsNotTechnician = "El usuario seleccionado no es un técnico";
+    public const string TeamHasTickets = "No se puede eliminar el equipo porque tiene tickets asociados";
 }

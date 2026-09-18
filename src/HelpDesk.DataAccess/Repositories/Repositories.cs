@@ -1,3 +1,4 @@
+using HelpDesk.DataAccess.Data;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -77,14 +78,24 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
     public async Task<IEnumerable<Ticket>> GetByEmpleadoIdAsync(Guid empleadoId, bool asNoTracking = true)
     {
-        var query = _dbSet.Where(t => t.EmpleadoId == empleadoId).Include(t => t.Prioridad).Include(t => t.Estado).Include(t => t.Categoria).Include(t => t.Empleado).Include(t => t.Tecnico);
+        var query = _dbSet.Where(t => t.EmpleadoId == empleadoId);
+        query = query.Include(t => t.Prioridad);
+        query = query.Include(t => t.Estado);
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Empleado);
+        query = query.Include(t => t.Tecnico);
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderByDescending(t => t.FechaCreacion).ToListAsync();
     }
 
     public async Task<IEnumerable<Ticket>> GetByTecnicoIdAsync(Guid tecnicoId, bool asNoTracking = true)
     {
-        var query = _dbSet.Where(t => t.TecnicoId == tecnicoId).Include(t => t.Prioridad).Include(t => t.Estado).Include(t => t.Categoria).Include(t => t.Empleado).Include(t => t.Tecnico);
+        var query = _dbSet.Where(t => t.TecnicoId == tecnicoId);
+        query = query.Include(t => t.Prioridad);
+        query = query.Include(t => t.Estado);
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Empleado);
+        query = query.Include(t => t.Tecnico);
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderByDescending(t => t.FechaCreacion).ToListAsync();
     }
@@ -101,13 +112,12 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
         int pageSize = 20,
         bool asNoTracking = true)
     {
-        var query = _dbSet
-            .Include(t => t.Prioridad)
-            .Include(t => t.Estado)
-            .Include(t => t.Categoria)
-            .Include(t => t.Empleado)
-            .Include(t => t.Tecnico)
-            .AsQueryable();
+        var query = _dbSet.AsQueryable();
+        query = query.Include(t => t.Prioridad);
+        query = query.Include(t => t.Estado);
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Empleado);
+        query = query.Include(t => t.Tecnico);
 
         if (estadoId.HasValue) query = query.Where(t => t.EstadoId == estadoId.Value);
         if (prioridadId.HasValue) query = query.Where(t => t.PrioridadId == prioridadId.Value);
@@ -150,13 +160,8 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
     public async Task<IEnumerable<Ticket>> GetOverdueAsync(bool asNoTracking = true)
     {
-        var query = _dbSet
-            .Include(t => t.Prioridad)
-            .Include(t => t.Estado)
-            .Where(t => t.Estado.EsFinal == false);
-
+        var query = _dbSet.Include(t => t.Prioridad).Include(t => t.Estado).Where(t => t.Estado.EsFinal == false);
         if (asNoTracking) query = query.AsNoTracking();
-
         return await query.ToListAsync();
     }
 }
@@ -260,8 +265,8 @@ public class PriorityRepository : Repository<Priority>, IPriorityRepository
 
     public async Task<IEnumerable<Priority>> GetAllOrderedAsync(bool asNoTracking = true)
     {
-        var query = _dbSet.OrderBy(p => p.Nivel);
-        if (asNoTracking) query = query.AsNoTracking();
+        IOrderedQueryable<Priority> query = _dbSet.OrderBy(p => p.Nivel);
+        if (asNoTracking) query = (IOrderedQueryable<Priority>)query.AsNoTracking();
         return await query.ToListAsync();
     }
 }
@@ -279,8 +284,8 @@ public class StatusRepository : Repository<Status>, IStatusRepository
 
     public async Task<IEnumerable<Status>> GetAllOrderedAsync(bool asNoTracking = true)
     {
-        var query = _dbSet.OrderBy(s => s.Orden);
-        if (asNoTracking) query = query.AsNoTracking();
+        IOrderedQueryable<Status> query = _dbSet.OrderBy(s => s.Orden);
+        if (asNoTracking) query = (IOrderedQueryable<Status>)query.AsNoTracking();
         return await query.ToListAsync();
     }
 
@@ -305,14 +310,16 @@ public class CommentRepository : Repository<Comment>, ICommentRepository
 
     public async Task<IEnumerable<Comment>> GetByTicketIdAsync(Guid ticketId, bool asNoTracking = true)
     {
-        var query = _dbSet.Where(c => c.TicketId == ticketId).Include(c => c.Usuario);
+        var query = _dbSet.Where(c => c.TicketId == ticketId);
+        query = query.Include(c => c.Usuario);
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderBy(c => c.FechaCreacion).ToListAsync();
     }
 
     public async Task<IEnumerable<Comment>> GetPublicByTicketIdAsync(Guid ticketId, bool asNoTracking = true)
     {
-        var query = _dbSet.Where(c => c.TicketId == ticketId && !c.EsInterno).Include(c => c.Usuario);
+        var query = _dbSet.Where(c => c.TicketId == ticketId && !c.EsInterno);
+        query = query.Include(c => c.Usuario);
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderBy(c => c.FechaCreacion).ToListAsync();
     }
@@ -324,16 +331,127 @@ public class StatusHistoryRepository : Repository<StatusHistory>, IStatusHistory
 
     public async Task<IEnumerable<StatusHistory>> GetByTicketIdAsync(Guid ticketId, bool asNoTracking = true)
     {
-        var query = _dbSet.Where(h => h.TicketId == ticketId).Include(h => h.EstadoAnterior).Include(h => h.EstadoNuevo).Include(h => h.Usuario);
+        var query = _dbSet.Where(h => h.TicketId == ticketId);
+        query = query.Include(h => h.EstadoAnterior);
+        query = query.Include(h => h.EstadoNuevo);
+        query = query.Include(h => h.Usuario);
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderBy(h => h.FechaCambio).ToListAsync();
     }
 
-    public async Task<StatusHistory> CreateAsync(StatusHistory entity)
+    public new async Task<StatusHistory> CreateAsync(StatusHistory entity)
     {
         entity.Id = Guid.NewGuid();
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
         return entity;
+    }
+}
+
+public class TeamRepository : Repository<Team>, ITeamRepository
+{
+    public TeamRepository(HelpDeskDbContext context) : base(context) { }
+
+    public async Task<Team?> GetByNameAsync(string nombre, bool asNoTracking = true)
+    {
+        var query = _dbSet.Where(t => t.Nombre == nombre);
+        if (asNoTracking) query = query.AsNoTracking();
+        return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task<IEnumerable<Team>> GetActiveAsync(bool asNoTracking = true)
+    {
+        var query = _dbSet.Where(t => t.Activo);
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Tecnicos);
+        if (asNoTracking) query = query.AsNoTracking();
+        return await query.OrderBy(t => t.Nombre).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Team>> GetByCategoryAsync(Guid categoriaId, bool asNoTracking = true)
+    {
+        var query = _dbSet.Where(t => t.CategoriaId == categoriaId);
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Tecnicos);
+        if (asNoTracking) query = query.AsNoTracking();
+        return await query.OrderBy(t => t.Nombre).ToListAsync();
+    }
+
+    public async Task<Team?> GetWithTecnicosAsync(Guid id, bool asNoTracking = true)
+    {
+        var query = _dbSet.Where(t => t.Id == id);
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Tecnicos);
+        if (asNoTracking) query = query.AsNoTracking();
+        return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task AddTecnicoAsync(Guid teamId, Guid tecnicoId)
+    {
+        var team = await _dbSet.Include(t => t.Tecnicos).FirstOrDefaultAsync(t => t.Id == teamId);
+        var tecnico = await _context.Usuarios.FindAsync(tecnicoId);
+        if (team != null && tecnico != null && tecnico.Rol == HelpDesk.Shared.Enums.UserRole.Tecnico)
+        {
+            team.Tecnicos.Add(tecnico);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task RemoveTecnicoAsync(Guid teamId, Guid tecnicoId)
+    {
+        var team = await _dbSet.Include(t => t.Tecnicos).FirstOrDefaultAsync(t => t.Id == teamId);
+        if (team != null)
+        {
+            var tecnico = team.Tecnicos.FirstOrDefault(t => t.Id == tecnicoId);
+            if (tecnico != null)
+            {
+                team.Tecnicos.Remove(tecnico);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+
+    public async Task<bool> HasTecnicoAsync(Guid teamId, Guid tecnicoId)
+    {
+        return await _dbSet.Where(t => t.Id == teamId).SelectMany(t => t.Tecnicos).AnyAsync(u => u.Id == tecnicoId);
+    }
+
+    public async Task<IEnumerable<Team>> GetFilteredAsync(
+        Guid? categoriaId = null,
+        bool? activo = null,
+        string? search = null,
+        int page = 1,
+        int pageSize = 20,
+        bool asNoTracking = true)
+    {
+        var query = _dbSet.AsQueryable();
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Tecnicos);
+
+        if (categoriaId.HasValue) query = query.Where(t => t.CategoriaId == categoriaId.Value);
+        if (activo.HasValue) query = query.Where(t => t.Activo == activo.Value);
+        if (!string.IsNullOrEmpty(search)) query = query.Where(t => t.Nombre.Contains(search) || (t.Descripcion != null && t.Descripcion.Contains(search)));
+
+        if (asNoTracking) query = query.AsNoTracking();
+
+        return await query
+            .OrderBy(t => t.Nombre)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<int> GetFilteredCountAsync(
+        Guid? categoriaId = null,
+        bool? activo = null,
+        string? search = null)
+    {
+        var query = _dbSet.AsQueryable();
+
+        if (categoriaId.HasValue) query = query.Where(t => t.CategoriaId == categoriaId.Value);
+        if (activo.HasValue) query = query.Where(t => t.Activo == activo.Value);
+        if (!string.IsNullOrEmpty(search)) query = query.Where(t => t.Nombre.Contains(search) || (t.Descripcion != null && t.Descripcion.Contains(search)));
+
+        return await query.CountAsync();
     }
 }

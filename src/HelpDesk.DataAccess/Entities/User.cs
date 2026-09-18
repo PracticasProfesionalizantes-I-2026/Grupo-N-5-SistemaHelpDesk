@@ -15,6 +15,7 @@ public abstract class User
     public virtual ICollection<Ticket> TicketsAsignados { get; set; } = new List<Ticket>();
     public virtual ICollection<Comment> Comentarios { get; set; } = new List<Comment>();
     public virtual ICollection<StatusHistory> HistorialEstados { get; set; } = new List<StatusHistory>();
+    public virtual ICollection<Team> Equipos { get; set; } = new List<Team>();
 }
 
 public class Empleado : User

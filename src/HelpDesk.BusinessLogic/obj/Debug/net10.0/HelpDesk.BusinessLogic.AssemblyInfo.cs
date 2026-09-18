@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2294a021b0518b415a92ac1a8b4084aa4e9faef9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb49df516f6c3369a9382f522f719a94c62e1c27")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

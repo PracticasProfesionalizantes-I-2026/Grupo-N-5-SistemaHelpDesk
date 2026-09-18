@@ -1,0 +1,40 @@
+{
+  "name": "HelpDesk API",
+  "version": "1.0.0",
+  "description": "Colección de requests para probar la API de HelpDesk",
+  "requests": [
+    {
+      "name": "Login Empleado",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/login",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "juan.perez@empresa.com"
+      }
+    },
+    {
+      "name": "Login Técnico",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/login",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "carlos.lopez@empresa.com"
+      }
+    },
+    {
+      "name": "Login Supervisor",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/login",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "admin@helpdesk.com"
+      }
+    }
+  ]
+}

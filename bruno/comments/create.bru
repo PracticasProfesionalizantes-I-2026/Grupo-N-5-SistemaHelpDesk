@@ -1,0 +1,12 @@
+{
+  "name": "Agregar Comentario",
+  "method": "POST",
+  "url": "http://localhost:5000/api/tickets/{{ticketId}}/comments",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "contenido": "He revisado la impresora y necesita cambio de tóner",
+    "esInterno": false
+  }
+}

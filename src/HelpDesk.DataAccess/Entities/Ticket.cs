@@ -12,6 +12,7 @@ public class Ticket
     public Guid CategoriaId { get; set; }
     public Guid EmpleadoId { get; set; }
     public Guid? TecnicoId { get; set; }
+    public Guid? TeamId { get; set; }
     public DateTime FechaCreacion { get; set; }
     public DateTime FechaActualizacion { get; set; }
     public DateTime? FechaResolucion { get; set; }
@@ -23,6 +24,7 @@ public class Ticket
     public virtual Category Categoria { get; set; } = null!;
     public virtual User Empleado { get; set; } = null!;
     public virtual User? Tecnico { get; set; }
+    public virtual Team? Team { get; set; }
     public virtual ICollection<Comment> Comentarios { get; set; } = new List<Comment>();
     public virtual ICollection<StatusHistory> HistorialEstados { get; set; } = new List<StatusHistory>();
 }

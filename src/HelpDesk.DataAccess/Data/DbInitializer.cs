@@ -7,8 +7,15 @@ using Microsoft.Extensions.Logging;
 
 namespace HelpDesk.DataAccess.Data;
 
+/// <summary>
+/// Inicializa la base de datos aplicando migraciones y sembrando datos de prueba.
+/// </summary>
 public static class DbInitializer
 {
+    /// <summary>
+    /// Aplica las migraciones pendientes y verifica los datos de prueba al arrancar la aplicación.
+    /// </summary>
+    /// <param name="serviceProvider">Proveedor de servicios de la aplicación.</param>
     public static async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();

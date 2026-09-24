@@ -4,19 +4,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpDesk.DataAccess.Data;
 
+/// <summary>
+/// DbContext de EF Core que configura las entidades y relaciones del sistema HelpDesk.
+/// </summary>
 public class HelpDeskDbContext : DbContext
 {
+    /// <summary>Inicializa una nueva instancia del <see cref="HelpDeskDbContext"/>.</summary>
+    /// <param name="options">Opciones de configuración del contexto.</param>
     public HelpDeskDbContext(DbContextOptions<HelpDeskDbContext> options) : base(options) { }
 
+    /// <summary>Conjunto de usuarios del sistema.</summary>
     public DbSet<User> Usuarios => Set<User>();
+
+    /// <summary>Conjunto de tickets de soporte.</summary>
     public DbSet<Ticket> Tickets => Set<Ticket>();
+
+    /// <summary>Conjunto de categorías de soporte.</summary>
     public DbSet<Category> Categorias => Set<Category>();
+
+    /// <summary>Conjunto de prioridades de atención.</summary>
     public DbSet<Priority> Prioridades => Set<Priority>();
+
+    /// <summary>Conjunto de estados de los tickets.</summary>
     public DbSet<Status> Estados => Set<Status>();
+
+    /// <summary>Conjunto de comentarios de los tickets.</summary>
     public DbSet<Comment> Comentarios => Set<Comment>();
+
+    /// <summary>Conjunto del historial de cambios de estado de los tickets.</summary>
     public DbSet<StatusHistory> HistorialEstados => Set<StatusHistory>();
+
+    /// <summary>Conjunto de equipos de trabajo.</summary>
     public DbSet<Team> Equipos => Set<Team>();
 
+    /// <summary>Configura las entidades, relaciones y datos semilla del modelo.</summary>
+    /// <param name="modelBuilder">Constructor del modelo.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

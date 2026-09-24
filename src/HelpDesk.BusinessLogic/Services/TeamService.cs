@@ -201,7 +201,7 @@ public class TeamService : BaseService, ITeamService
         var categoria = await _categoryRepository.GetByIdAsync(team.CategoriaId);
         var tecnicos = new List<UserSummaryDTO>();
         
-        foreach (var t in team.Tecnicos)
+        foreach (var t in team.Tecnicos ?? Enumerable.Empty<User>())
         {
             tecnicos.Add(new UserSummaryDTO(t.Id, t.NombreCompleto, t.Email, t.Rol.ToString()));
         }
@@ -212,7 +212,9 @@ public class TeamService : BaseService, ITeamService
             team.Id,
             team.Nombre,
             team.Descripcion,
-            new CategoryResponseDTO(categoria!.Id, categoria.Nombre, categoria.Descripcion, categoria.Activo, 0),
+            categoria != null
+                ? new CategoryResponseDTO(categoria.Id, categoria.Nombre, categoria.Descripcion, categoria.Activo, 0)
+                : new CategoryResponseDTO(team.CategoriaId, "", "", true, 0),
             tecnicos,
             team.FechaCreacion,
             team.Activo,

@@ -90,7 +90,7 @@ public abstract class BaseService
 
     protected void ValidateTicketNotClosed(Ticket ticket)
     {
-        if (ticket.Estado.EsFinal)
+        if (ticket.Estado?.EsFinal == true)
             throw new BusinessRuleException(ErrorMessages.CannotModifyClosedTicket);
     }
 

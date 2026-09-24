@@ -85,7 +85,7 @@ public class CategoryServiceTests
         var category = new Category { Id = categoryId, Nombre = "Test" };
         
         _categoryRepoMock.Setup(x => x.GetByIdAsync(categoryId, false)).ReturnsAsync(category);
-        _ticketRepoMock.Setup(x => x.GetFilteredAsync(categoryId, null, null, null, null, null, null, 1, 20, true)).ReturnsAsync(new List<Ticket>());
+        _ticketRepoMock.Setup(x => x.GetFilteredAsync(null, null, categoryId, null, null, null, null, 1, 20, true)).ReturnsAsync(new List<Ticket>());
 
         // Act
         await _service.DeleteAsync(categoryId);
@@ -102,7 +102,7 @@ public class CategoryServiceTests
         var category = new Category { Id = categoryId, Nombre = "Test" };
         
         _categoryRepoMock.Setup(x => x.GetByIdAsync(categoryId, false)).ReturnsAsync(category);
-        _ticketRepoMock.Setup(x => x.GetFilteredAsync(categoryId, null, null, null, null, null, null, 1, 20, true))
+        _ticketRepoMock.Setup(x => x.GetFilteredAsync(null, null, categoryId, null, null, null, null, 1, 20, true))
             .ReturnsAsync(new List<Ticket> { new Ticket() });
 
         // Act & Assert

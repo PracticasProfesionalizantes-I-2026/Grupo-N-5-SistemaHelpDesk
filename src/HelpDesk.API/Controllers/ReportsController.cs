@@ -26,7 +26,7 @@ public class ReportsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Error interno del servidor" });
+            return HandleException(ex);
         }
     }
 
@@ -40,7 +40,7 @@ public class ReportsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Error interno del servidor" });
+            return HandleException(ex);
         }
     }
 
@@ -54,7 +54,7 @@ public class ReportsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Error interno del servidor" });
+            return HandleException(ex);
         }
     }
 
@@ -68,7 +68,7 @@ public class ReportsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Error interno del servidor" });
+            return HandleException(ex);
         }
     }
 
@@ -82,7 +82,7 @@ public class ReportsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Error interno del servidor" });
+            return HandleException(ex);
         }
     }
 
@@ -96,7 +96,21 @@ public class ReportsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Error interno del servidor" });
+            return HandleException(ex);
         }
+    }
+
+    private ActionResult HandleException(Exception ex)
+    {
+        return ex switch
+        {
+            NotFoundException => NotFound(new { error = ex.Message }),
+            ValidationException => BadRequest(new { error = ex.Message }),
+            BusinessRuleException => Conflict(new { error = ex.Message }),
+            DuplicateException => Conflict(new { error = ex.Message }),
+            DependencyException => Conflict(new { error = ex.Message }),
+            UnauthorizedActionException => StatusCode(403, new { error = ex.Message }),
+            _ => StatusCode(500, new { error = "Error interno del servidor" })
+        };
     }
 }

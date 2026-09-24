@@ -39,6 +39,7 @@ public class TicketService : BaseService, ITicketService
             Descripcion = dto.Descripcion,
             PrioridadId = dto.PrioridadId,
             EstadoId = initialStatus.Id,
+            Estado = initialStatus,
             CategoriaId = dto.CategoriaId,
             EmpleadoId = empleadoId,
             FechaCreacion = DateTime.UtcNow,
@@ -161,6 +162,7 @@ public class TicketService : BaseService, ITicketService
 
         ticket.TecnicoId = dto.TecnicoId;
         ticket.EstadoId = inProgressStatus.Id;
+        ticket.Estado = inProgressStatus;
         ticket.FechaActualizacion = DateTime.UtcNow;
 
         await _ticketRepository.UpdateAsync(ticket);
@@ -186,6 +188,7 @@ public class TicketService : BaseService, ITicketService
 
         var oldStatusId = ticket.EstadoId;
         ticket.EstadoId = dto.EstadoId;
+        ticket.Estado = newStatus;
         ticket.FechaActualizacion = DateTime.UtcNow;
 
         if (newStatus.EsFinal)
@@ -217,7 +220,8 @@ public class TicketService : BaseService, ITicketService
         if (ticket == null)
             throw new NotFoundException(ErrorMessages.TicketNotFound);
 
-        if (!ticket.Estado.EsFinal)
+        var currentStatus = ticket.Estado ?? await _statusRepository.GetByIdAsync(ticket.EstadoId);
+        if (currentStatus == null || !currentStatus.EsFinal)
             throw new BusinessRuleException("Solo se pueden reabrir tickets cerrados");
 
         var openStatus = await _statusRepository.GetByNameAsync("Abierto");
@@ -226,6 +230,7 @@ public class TicketService : BaseService, ITicketService
 
         var oldStatusId = ticket.EstadoId;
         ticket.EstadoId = openStatus.Id;
+        ticket.Estado = openStatus;
         ticket.FechaActualizacion = DateTime.UtcNow;
         ticket.FechaCierre = null;
         ticket.FechaResolucion = null;
@@ -254,28 +259,29 @@ public class TicketService : BaseService, ITicketService
 
     private async Task<TicketResponseDTO> MapToResponseDTO(Ticket ticket)
     {
-        var prioridad = await _priorityRepository.GetByIdAsync(ticket.PrioridadId);
-        var estado = await _statusRepository.GetByIdAsync(ticket.EstadoId);
-        var categoria = await _categoryRepository.GetByIdAsync(ticket.CategoriaId);
-        var empleado = await _userRepository.GetByIdAsync(ticket.EmpleadoId);
-        User? tecnico = null;
-        if (ticket.TecnicoId.HasValue)
+        var prioridad = ticket.Prioridad ?? await _priorityRepository.GetByIdAsync(ticket.PrioridadId);
+        var estado = ticket.Estado ?? await _statusRepository.GetByIdAsync(ticket.EstadoId);
+        var categoria = ticket.Categoria ?? await _categoryRepository.GetByIdAsync(ticket.CategoriaId);
+        var empleado = ticket.Empleado ?? await _userRepository.GetByIdAsync(ticket.EmpleadoId);
+        User? tecnico = ticket.Tecnico;
+        if (tecnico == null && ticket.TecnicoId.HasValue)
             tecnico = await _userRepository.GetByIdAsync(ticket.TecnicoId.Value);
 
-        var comentarios = await _commentRepository.GetByTicketIdAsync(ticket.Id);
-        var comentariosPublicos = comentarios.Where(c => !c.EsInterno).Count();
+        var comentarios = await _commentRepository.GetByTicketIdAsync(ticket.Id) ?? Enumerable.Empty<Comment>();
+        var comentariosPublicos = comentarios.Count(c => !c.EsInterno);
 
         var slaHoras = prioridad != null && BusinessRules.SLAHours.TryGetValue((TicketPriority)prioridad.Nivel, out var horas) ? horas : 0;
-        var estaVencido = !ticket.Estado.EsFinal && ticket.FechaCreacion.AddHours(slaHoras) < DateTime.UtcNow;
+        var esFinal = estado?.EsFinal ?? ticket.Estado?.EsFinal ?? false;
+        var estaVencido = !esFinal && ticket.FechaCreacion.AddHours(slaHoras) < DateTime.UtcNow;
 
         return new TicketResponseDTO(
             ticket.Id,
             ticket.Titulo,
             ticket.Descripcion,
-            new PriorityResponseDTO(prioridad!.Id, prioridad.Nombre, prioridad.Nivel, prioridad.Color, prioridad.SLAHoras),
-            new StatusResponseDTO(estado!.Id, estado.Nombre, estado.Descripcion, estado.EsFinal, estado.Orden),
-            new CategoryResponseDTO(categoria!.Id, categoria.Nombre, categoria.Descripcion, categoria.Activo, 0),
-            new UserSummaryDTO(empleado!.Id, empleado.NombreCompleto, empleado.Email, empleado.Rol.ToString()),
+            new PriorityResponseDTO(prioridad?.Id ?? ticket.PrioridadId, prioridad?.Nombre ?? "", prioridad?.Nivel ?? 0, prioridad?.Color ?? "", prioridad?.SLAHoras ?? slaHoras),
+            new StatusResponseDTO(estado?.Id ?? ticket.EstadoId, estado?.Nombre ?? "", estado?.Descripcion ?? "", estado?.EsFinal ?? false, estado?.Orden ?? 0),
+            new CategoryResponseDTO(categoria?.Id ?? ticket.CategoriaId, categoria?.Nombre ?? "", categoria?.Descripcion ?? "", categoria?.Activo ?? true, 0),
+            new UserSummaryDTO(empleado?.Id ?? ticket.EmpleadoId, empleado?.NombreCompleto ?? "", empleado?.Email ?? "", empleado?.Rol.ToString() ?? ""),
             tecnico != null ? new UserSummaryDTO(tecnico.Id, tecnico.NombreCompleto, tecnico.Email, tecnico.Rol.ToString()) : null,
             ticket.FechaCreacion,
             ticket.FechaActualizacion,
@@ -289,17 +295,21 @@ public class TicketService : BaseService, ITicketService
 
     private TicketListDTO MapToListDTO(Ticket ticket)
     {
+        var slaHoras = ticket.Prioridad != null && BusinessRules.SLAHours.TryGetValue((TicketPriority)ticket.Prioridad.Nivel, out var h) ? h : 0;
+        var esFinal = ticket.Estado?.EsFinal ?? false;
+        var estaVencido = !esFinal && ticket.FechaCreacion.AddHours(slaHoras) < DateTime.UtcNow;
+
         return new TicketListDTO(
             ticket.Id,
             ticket.Titulo,
-            new PriorityResponseDTO(ticket.Prioridad.Id, ticket.Prioridad.Nombre, ticket.Prioridad.Nivel, ticket.Prioridad.Color, ticket.Prioridad.SLAHoras),
-            new StatusResponseDTO(ticket.Estado.Id, ticket.Estado.Nombre, ticket.Estado.Descripcion, ticket.Estado.EsFinal, ticket.Estado.Orden),
-            new CategoryResponseDTO(ticket.Categoria.Id, ticket.Categoria.Nombre, ticket.Categoria.Descripcion, ticket.Categoria.Activo, 0),
-            new UserSummaryDTO(ticket.Empleado.Id, ticket.Empleado.NombreCompleto, ticket.Empleado.Email, ticket.Empleado.Rol.ToString()),
+            ticket.Prioridad != null ? new PriorityResponseDTO(ticket.Prioridad.Id, ticket.Prioridad.Nombre, ticket.Prioridad.Nivel, ticket.Prioridad.Color, ticket.Prioridad.SLAHoras) : null!,
+            ticket.Estado != null ? new StatusResponseDTO(ticket.Estado.Id, ticket.Estado.Nombre, ticket.Estado.Descripcion, ticket.Estado.EsFinal, ticket.Estado.Orden) : null!,
+            ticket.Categoria != null ? new CategoryResponseDTO(ticket.Categoria.Id, ticket.Categoria.Nombre, ticket.Categoria.Descripcion, ticket.Categoria.Activo, 0) : null!,
+            ticket.Empleado != null ? new UserSummaryDTO(ticket.Empleado.Id, ticket.Empleado.NombreCompleto, ticket.Empleado.Email, ticket.Empleado.Rol.ToString()) : null!,
             ticket.Tecnico != null ? new UserSummaryDTO(ticket.Tecnico.Id, ticket.Tecnico.NombreCompleto, ticket.Tecnico.Email, ticket.Tecnico.Rol.ToString()) : null,
             ticket.FechaCreacion,
             ticket.FechaActualizacion,
-            !ticket.Estado.EsFinal && ticket.FechaCreacion.AddHours(BusinessRules.SLAHours.TryGetValue((TicketPriority)ticket.Prioridad.Nivel, out var h) ? h : 0) < DateTime.UtcNow
+            estaVencido
         );
     }
 }

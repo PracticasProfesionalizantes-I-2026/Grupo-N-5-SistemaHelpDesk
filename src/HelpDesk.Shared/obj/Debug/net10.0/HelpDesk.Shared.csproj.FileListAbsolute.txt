@@ -12,3 +12,17 @@ C:\Users\loren\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk
 C:\Users\loren\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.xml
 C:\Users\loren\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.pdb
 C:\Users\loren\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\ref\HelpDesk.Shared.dll
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\bin\Debug\net10.0\HelpDesk.Shared.deps.json
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\bin\Debug\net10.0\HelpDesk.Shared.dll
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\bin\Debug\net10.0\HelpDesk.Shared.pdb
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\bin\Debug\net10.0\HelpDesk.Shared.xml
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.AssemblyInfoInputs.cache
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.AssemblyInfo.cs
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.csproj.CoreCompileInputs.cache
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.sourcelink.json
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.dll
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\refint\HelpDesk.Shared.dll
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.xml
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\HelpDesk.Shared.pdb
+C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Shared\obj\Debug\net10.0\ref\HelpDesk.Shared.dll

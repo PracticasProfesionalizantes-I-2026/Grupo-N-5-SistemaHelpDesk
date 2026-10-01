@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-30 |
+| ID | CU-20 |
 | Nombre | Consultar estadísticas |
 | Actor Principal | Supervisor |
 | Alcance / Nivel | Usuario |
@@ -54,12 +54,12 @@ Permite al supervisor consultar reportes y estadísticas globales sobre tiempos 
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-30-01 | TI-CU-30-01 |
-| 2 | TU-CU-30-02 | TI-CU-30-02 |
-| 3 | TU-CU-30-03 | TI-CU-30-03 |
-| 4 | TU-CU-30-04 | TI-CU-30-04 |
-| 5 | TU-CU-30-05 | TI-CU-30-05 |
-| 6 | TU-CU-30-06 | TI-CU-30-06 |
-| 3a-1 | TU-CU-30-A01 | TI-CU-30-A01 |
-| 3a-2 | TU-CU-30-A02 | TI-CU-30-A02 |
-| 3a-3 | TU-CU-30-A03 | TI-CU-30-A03 |
+| 1 | TU-CU-20-01 | TI-CU-20-01 |
+| 2 | TU-CU-20-02 | TI-CU-20-02 |
+| 3 | TU-CU-20-03 | TI-CU-20-03 |
+| 4 | TU-CU-20-04 | TI-CU-20-04 |
+| 5 | TU-CU-20-05 | TI-CU-20-05 |
+| 6 | TU-CU-20-06 | TI-CU-20-06 |
+| 3a-1 | TU-CU-20-A01 | TI-CU-20-A01 |
+| 3a-2 | TU-CU-20-A02 | TI-CU-20-A02 |
+| 3a-3 | TU-CU-20-A03 | TI-CU-20-A03 |

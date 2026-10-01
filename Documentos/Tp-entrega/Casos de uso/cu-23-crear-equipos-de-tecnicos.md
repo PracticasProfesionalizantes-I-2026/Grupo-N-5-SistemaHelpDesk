@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-34 |
+| ID | CU-23 |
 | Nombre | Crear equipos de técnicos |
 | Actor Principal | Supervisor |
 | Alcance / Nivel | Usuario |
@@ -66,17 +66,17 @@ Permite al supervisor crear equipos de técnicos para organizar la asignación d
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-34-01 | TI-CU-34-01 |
-| 2 | TU-CU-34-02 | TI-CU-34-02 |
-| 3 | TU-CU-34-03 | TI-CU-34-03 |
-| 4 | TU-CU-34-04 | TI-CU-34-04 |
-| 5 | TU-CU-34-05 | TI-CU-34-05 |
-| 6 | TU-CU-34-06 | TI-CU-34-06 |
-| 7 | TU-CU-34-07 | TI-CU-34-07 |
-| 8 | TU-CU-34-08 | TI-CU-34-08 |
-| 2a-1 | TU-CU-34-A01 | TI-CU-34-A01 |
-| 2a-2 | TU-CU-34-A02 | TI-CU-34-A02 |
-| 2a-3 | TU-CU-34-A03 | TI-CU-34-A03 |
-| 6a-1 | TU-CU-34-A04 | TI-CU-34-A04 |
-| 6a-2 | TU-CU-34-A05 | TI-CU-34-A05 |
-| 6a-3 | TU-CU-34-A06 | TI-CU-34-A06 |
+| 1 | TU-CU-23-01 | TI-CU-23-01 |
+| 2 | TU-CU-23-02 | TI-CU-23-02 |
+| 3 | TU-CU-23-03 | TI-CU-23-03 |
+| 4 | TU-CU-23-04 | TI-CU-23-04 |
+| 5 | TU-CU-23-05 | TI-CU-23-05 |
+| 6 | TU-CU-23-06 | TI-CU-23-06 |
+| 7 | TU-CU-23-07 | TI-CU-23-07 |
+| 8 | TU-CU-23-08 | TI-CU-23-08 |
+| 2a-1 | TU-CU-23-A01 | TI-CU-23-A01 |
+| 2a-2 | TU-CU-23-A02 | TI-CU-23-A02 |
+| 2a-3 | TU-CU-23-A03 | TI-CU-23-A03 |
+| 6a-1 | TU-CU-23-A04 | TI-CU-23-A04 |
+| 6a-2 | TU-CU-23-A05 | TI-CU-23-A05 |
+| 6a-3 | TU-CU-23-A06 | TI-CU-23-A06 |

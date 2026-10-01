@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-20 |
+| ID | CU-16 |
 | Nombre | Consultar carga de trabajo |
 | Actor Principal | Técnico de Soporte |
 | Alcance / Nivel | Usuario |
@@ -51,11 +51,11 @@ Permite al técnico de soporte consultar la cantidad total de tickets asignados,
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-20-01 | TI-CU-20-01 |
-| 2 | TU-CU-20-02 | TI-CU-20-02 |
-| 3 | TU-CU-20-03 | TI-CU-20-03 |
-| 4 | TU-CU-20-04 | TI-CU-20-04 |
-| 5 | TU-CU-20-05 | TI-CU-20-05 |
-| 2a-1 | TU-CU-20-A01 | TI-CU-20-A01 |
-| 2a-2 | TU-CU-20-A02 | TI-CU-20-A02 |
-| 2a-3 | TU-CU-20-A03 | TI-CU-20-A03 |
+| 1 | TU-CU-16-01 | TI-CU-16-01 |
+| 2 | TU-CU-16-02 | TI-CU-16-02 |
+| 3 | TU-CU-16-03 | TI-CU-16-03 |
+| 4 | TU-CU-16-04 | TI-CU-16-04 |
+| 5 | TU-CU-16-05 | TI-CU-16-05 |
+| 2a-1 | TU-CU-16-A01 | TI-CU-16-A01 |
+| 2a-2 | TU-CU-16-A02 | TI-CU-16-A02 |
+| 2a-3 | TU-CU-16-A03 | TI-CU-16-A03 |

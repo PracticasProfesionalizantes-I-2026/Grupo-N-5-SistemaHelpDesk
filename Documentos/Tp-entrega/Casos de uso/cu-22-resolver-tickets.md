@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-33 |
+| ID | CU-22 |
 | Nombre | Resolver tickets |
 | Actor Principal | Supervisor |
 | Alcance / Nivel | Usuario |
@@ -68,19 +68,19 @@ Permite al supervisor revisar la solución aplicada a un ticket y marcarlo forma
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-33-01 | TI-CU-33-01 |
-| 2 | TU-CU-33-02 | TI-CU-33-02 |
-| 3 | TU-CU-33-03 | TI-CU-33-03 |
-| 4 | TU-CU-33-04 | TI-CU-33-04 |
-| 5 | TU-CU-33-05 | TI-CU-33-05 |
-| 6 | TU-CU-33-06 | TI-CU-33-06 |
-| 7 | TU-CU-33-07 | TI-CU-33-07 |
-| 8 | TU-CU-33-08 | TI-CU-33-08 |
-| 9 | TU-CU-33-09 | TI-CU-33-09 |
-| 10 | TU-CU-33-10 | TI-CU-33-10 |
-| 2a-1 | TU-CU-33-A01 | TI-CU-33-A01 |
-| 2a-2 | TU-CU-33-A02 | TI-CU-33-A02 |
-| 2a-3 | TU-CU-33-A03 | TI-CU-33-A03 |
-| 6a-1 | TU-CU-33-A04 | TI-CU-33-A04 |
-| 6a-2 | TU-CU-33-A05 | TI-CU-33-A05 |
-| 6a-3 | TU-CU-33-A06 | TI-CU-33-A06 |
+| 1 | TU-CU-22-01 | TI-CU-22-01 |
+| 2 | TU-CU-22-02 | TI-CU-22-02 |
+| 3 | TU-CU-22-03 | TI-CU-22-03 |
+| 4 | TU-CU-22-04 | TI-CU-22-04 |
+| 5 | TU-CU-22-05 | TI-CU-22-05 |
+| 6 | TU-CU-22-06 | TI-CU-22-06 |
+| 7 | TU-CU-22-07 | TI-CU-22-07 |
+| 8 | TU-CU-22-08 | TI-CU-22-08 |
+| 9 | TU-CU-22-09 | TI-CU-22-09 |
+| 10 | TU-CU-22-10 | TI-CU-22-10 |
+| 2a-1 | TU-CU-22-A01 | TI-CU-22-A01 |
+| 2a-2 | TU-CU-22-A02 | TI-CU-22-A02 |
+| 2a-3 | TU-CU-22-A03 | TI-CU-22-A03 |
+| 6a-1 | TU-CU-22-A04 | TI-CU-22-A04 |
+| 6a-2 | TU-CU-22-A05 | TI-CU-22-A05 |
+| 6a-3 | TU-CU-22-A06 | TI-CU-22-A06 |

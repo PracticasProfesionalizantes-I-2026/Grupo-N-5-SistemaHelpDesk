@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-41 |
+| ID | CU-24 |
 | Nombre | Asignar tickets automáticamente |
 | Actor Principal | Sistema |
 | Alcance / Nivel | Sistema |
@@ -62,18 +62,18 @@ Permite al sistema asignar automáticamente los tickets recién creados a los t�
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-41-01 | TI-CU-41-01 |
-| 2 | TU-CU-41-02 | TI-CU-41-02 |
-| 3 | TU-CU-41-03 | TI-CU-41-03 |
-| 4 | TU-CU-41-04 | TI-CU-41-04 |
-| 5 | TU-CU-41-05 | TI-CU-41-05 |
-| 6 | TU-CU-41-06 | TI-CU-41-06 |
-| 7 | TU-CU-41-07 | TI-CU-41-07 |
-| 8 | TU-CU-41-08 | TI-CU-41-08 |
-| 9 | TU-CU-41-09 | TI-CU-41-09 |
-| 2a-1 | TU-CU-41-A01 | TI-CU-41-A01 |
-| 2a-2 | TU-CU-41-A02 | TI-CU-41-A02 |
-| 2a-3 | TU-CU-41-A03 | TI-CU-41-A03 |
-| 4a-1 | TU-CU-41-A04 | TI-CU-41-A04 |
-| 4a-2 | TU-CU-41-A05 | TI-CU-41-A05 |
-| 4a-3 | TU-CU-41-A06 | TI-CU-41-A06 |
+| 1 | TU-CU-24-01 | TI-CU-24-01 |
+| 2 | TU-CU-24-02 | TI-CU-24-02 |
+| 3 | TU-CU-24-03 | TI-CU-24-03 |
+| 4 | TU-CU-24-04 | TI-CU-24-04 |
+| 5 | TU-CU-24-05 | TI-CU-24-05 |
+| 6 | TU-CU-24-06 | TI-CU-24-06 |
+| 7 | TU-CU-24-07 | TI-CU-24-07 |
+| 8 | TU-CU-24-08 | TI-CU-24-08 |
+| 9 | TU-CU-24-09 | TI-CU-24-09 |
+| 2a-1 | TU-CU-24-A01 | TI-CU-24-A01 |
+| 2a-2 | TU-CU-24-A02 | TI-CU-24-A02 |
+| 2a-3 | TU-CU-24-A03 | TI-CU-24-A03 |
+| 4a-1 | TU-CU-24-A04 | TI-CU-24-A04 |
+| 4a-2 | TU-CU-24-A05 | TI-CU-24-A05 |
+| 4a-3 | TU-CU-24-A06 | TI-CU-24-A06 |

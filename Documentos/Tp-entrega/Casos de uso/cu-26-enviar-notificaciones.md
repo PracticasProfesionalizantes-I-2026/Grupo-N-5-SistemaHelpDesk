@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-43 |
+| ID | CU-26 |
 | Nombre | Enviar notificaciones |
 | Actor Principal | Sistema |
 | Alcance / Nivel | Sistema |
@@ -59,15 +59,15 @@ Permite al sistema enviar notificaciones automáticas a los usuarios involucrado
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-43-01 | TI-CU-43-01 |
-| 2 | TU-CU-43-02 | TI-CU-43-02 |
-| 3 | TU-CU-43-03 | TI-CU-43-03 |
-| 4 | TU-CU-43-04 | TI-CU-43-04 |
-| 5 | TU-CU-43-05 | TI-CU-43-05 |
-| 6 | TU-CU-43-06 | TI-CU-43-06 |
-| 2a-1 | TU-CU-43-A01 | TI-CU-43-A01 |
-| 2a-2 | TU-CU-43-A02 | TI-CU-43-A02 |
-| 2a-3 | TU-CU-43-A03 | TI-CU-43-A03 |
-| 4a-1 | TU-CU-43-A04 | TI-CU-43-A04 |
-| 4a-2 | TU-CU-43-A05 | TI-CU-43-A05 |
-| 4a-3 | TU-CU-43-A06 | TI-CU-43-A06 |
+| 1 | TU-CU-26-01 | TI-CU-26-01 |
+| 2 | TU-CU-26-02 | TI-CU-26-02 |
+| 3 | TU-CU-26-03 | TI-CU-26-03 |
+| 4 | TU-CU-26-04 | TI-CU-26-04 |
+| 5 | TU-CU-26-05 | TI-CU-26-05 |
+| 6 | TU-CU-26-06 | TI-CU-26-06 |
+| 2a-1 | TU-CU-26-A01 | TI-CU-26-A01 |
+| 2a-2 | TU-CU-26-A02 | TI-CU-26-A02 |
+| 2a-3 | TU-CU-26-A03 | TI-CU-26-A03 |
+| 4a-1 | TU-CU-26-A04 | TI-CU-26-A04 |
+| 4a-2 | TU-CU-26-A05 | TI-CU-26-A05 |
+| 4a-3 | TU-CU-26-A06 | TI-CU-26-A06 |

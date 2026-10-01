@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-23 |
+| ID | CU-17 |
 | Nombre | Ver el equipo de técnicos |
 | Actor Principal | Técnico de Soporte |
 | Alcance / Nivel | Usuario |
@@ -53,11 +53,11 @@ Permite al técnico de soporte consultar los integrantes, roles y datos de conta
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-23-01 | TI-CU-23-01 |
-| 2 | TU-CU-23-02 | TI-CU-23-02 |
-| 3 | TU-CU-23-03 | TI-CU-23-03 |
-| 4 | TU-CU-23-04 | TI-CU-23-04 |
-| 5 | TU-CU-23-05 | TI-CU-23-05 |
-| 2a-1 | TU-CU-23-A01 | TI-CU-23-A01 |
-| 2a-2 | TU-CU-23-A02 | TI-CU-23-A02 |
-| 2a-3 | TU-CU-23-A03 | TI-CU-23-A03 |
+| 1 | TU-CU-17-01 | TI-CU-17-01 |
+| 2 | TU-CU-17-02 | TI-CU-17-02 |
+| 3 | TU-CU-17-03 | TI-CU-17-03 |
+| 4 | TU-CU-17-04 | TI-CU-17-04 |
+| 5 | TU-CU-17-05 | TI-CU-17-05 |
+| 2a-1 | TU-CU-17-A01 | TI-CU-17-A01 |
+| 2a-2 | TU-CU-17-A02 | TI-CU-17-A02 |
+| 2a-3 | TU-CU-17-A03 | TI-CU-17-A03 |

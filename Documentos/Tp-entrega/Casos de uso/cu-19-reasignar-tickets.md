@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-29 |
+| ID | CU-19 |
 | Nombre | Reasignar tickets |
 | Actor Principal | Supervisor |
 | Alcance / Nivel | Usuario |
@@ -69,20 +69,20 @@ Permite al supervisor reasignar manualmente un ticket de un técnico a otro para
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-29-01 | TI-CU-29-01 |
-| 2 | TU-CU-29-02 | TI-CU-29-02 |
-| 3 | TU-CU-29-03 | TI-CU-29-03 |
-| 4 | TU-CU-29-04 | TI-CU-29-04 |
-| 5 | TU-CU-29-05 | TI-CU-29-05 |
-| 6 | TU-CU-29-06 | TI-CU-29-06 |
-| 7 | TU-CU-29-07 | TI-CU-29-07 |
-| 8 | TU-CU-29-08 | TI-CU-29-08 |
-| 9 | TU-CU-29-09 | TI-CU-29-09 |
-| 10 | TU-CU-29-10 | TI-CU-29-10 |
-| 11 | TU-CU-29-11 | TI-CU-29-11 |
-| 5a-1 | TU-CU-29-A01 | TI-CU-29-A01 |
-| 5a-2 | TU-CU-29-A02 | TI-CU-29-A02 |
-| 5a-3 | TU-CU-29-A03 | TI-CU-29-A03 |
-| 8a-1 | TU-CU-29-A04 | TI-CU-29-A04 |
-| 8a-2 | TU-CU-29-A05 | TI-CU-29-A05 |
-| 8a-3 | TU-CU-29-A06 | TI-CU-29-A06 |
+| 1 | TU-CU-19-01 | TI-CU-19-01 |
+| 2 | TU-CU-19-02 | TI-CU-19-02 |
+| 3 | TU-CU-19-03 | TI-CU-19-03 |
+| 4 | TU-CU-19-04 | TI-CU-19-04 |
+| 5 | TU-CU-19-05 | TI-CU-19-05 |
+| 6 | TU-CU-19-06 | TI-CU-19-06 |
+| 7 | TU-CU-19-07 | TI-CU-19-07 |
+| 8 | TU-CU-19-08 | TI-CU-19-08 |
+| 9 | TU-CU-19-09 | TI-CU-19-09 |
+| 10 | TU-CU-19-10 | TI-CU-19-10 |
+| 11 | TU-CU-19-11 | TI-CU-19-11 |
+| 5a-1 | TU-CU-19-A01 | TI-CU-19-A01 |
+| 5a-2 | TU-CU-19-A02 | TI-CU-19-A02 |
+| 5a-3 | TU-CU-19-A03 | TI-CU-19-A03 |
+| 8a-1 | TU-CU-19-A04 | TI-CU-19-A04 |
+| 8a-2 | TU-CU-19-A05 | TI-CU-19-A05 |
+| 8a-3 | TU-CU-19-A06 | TI-CU-19-A06 |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-24 |
+| ID | CU-18 |
 | Nombre | Ver soluciones adjuntadas previamente en cada ticket |
 | Actor Principal | Técnico de Soporte |
 | Alcance / Nivel | Usuario |
@@ -53,11 +53,11 @@ Permite al técnico de soporte consultar el histórico de soluciones que han sid
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-24-01 | TI-CU-24-01 |
-| 2 | TU-CU-24-02 | TI-CU-24-02 |
-| 3 | TU-CU-24-03 | TI-CU-24-03 |
-| 4 | TU-CU-24-04 | TI-CU-24-04 |
-| 5 | TU-CU-24-05 | TI-CU-24-05 |
-| 3a-1 | TU-CU-24-A01 | TI-CU-24-A01 |
-| 3a-2 | TU-CU-24-A02 | TI-CU-24-A02 |
-| 3a-3 | TU-CU-24-A03 | TI-CU-24-A03 |
+| 1 | TU-CU-18-01 | TI-CU-18-01 |
+| 2 | TU-CU-18-02 | TI-CU-18-02 |
+| 3 | TU-CU-18-03 | TI-CU-18-03 |
+| 4 | TU-CU-18-04 | TI-CU-18-04 |
+| 5 | TU-CU-18-05 | TI-CU-18-05 |
+| 3a-1 | TU-CU-18-A01 | TI-CU-18-A01 |
+| 3a-2 | TU-CU-18-A02 | TI-CU-18-A02 |
+| 3a-3 | TU-CU-18-A03 | TI-CU-18-A03 |

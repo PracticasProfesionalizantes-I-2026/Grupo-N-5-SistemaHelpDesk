@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-42 |
+| ID | CU-25 |
 | Nombre | Escalar tickets automáticamente |
 | Actor Principal | Sistema |
 | Alcance / Nivel | Sistema |
@@ -54,13 +54,13 @@ Permite al sistema escalar automáticamente aquellos tickets que superen el tiem
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-42-01 | TI-CU-42-01 |
-| 2 | TU-CU-42-02 | TI-CU-42-02 |
-| 3 | TU-CU-42-03 | TI-CU-42-03 |
-| 4 | TU-CU-42-04 | TI-CU-42-04 |
-| 5 | TU-CU-42-05 | TI-CU-42-05 |
-| 6 | TU-CU-42-06 | TI-CU-42-06 |
-| 7 | TU-CU-42-07 | TI-CU-42-07 |
-| 3a-1 | TU-CU-42-A01 | TI-CU-42-A01 |
-| 3a-2 | TU-CU-42-A02 | TI-CU-42-A02 |
-| 3a-3 | TU-CU-42-A03 | TI-CU-42-A03 |
+| 1 | TU-CU-25-01 | TI-CU-25-01 |
+| 2 | TU-CU-25-02 | TI-CU-25-02 |
+| 3 | TU-CU-25-03 | TI-CU-25-03 |
+| 4 | TU-CU-25-04 | TI-CU-25-04 |
+| 5 | TU-CU-25-05 | TI-CU-25-05 |
+| 6 | TU-CU-25-06 | TI-CU-25-06 |
+| 7 | TU-CU-25-07 | TI-CU-25-07 |
+| 3a-1 | TU-CU-25-A01 | TI-CU-25-A01 |
+| 3a-2 | TU-CU-25-A02 | TI-CU-25-A02 |
+| 3a-3 | TU-CU-25-A03 | TI-CU-25-A03 |

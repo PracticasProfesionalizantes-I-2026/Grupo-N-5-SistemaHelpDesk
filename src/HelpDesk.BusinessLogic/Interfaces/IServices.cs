@@ -29,6 +29,7 @@ public interface IUserService
     Task DeactivateAsync(Guid id);
     Task<UserResponseDTO?> GetByEmailAsync(string email);
     Task<LoginResponseDTO> LoginAsync(LoginDTO dto);
+    Task<UserResponseDTO> RegisterAsync(RegisterDTO dto);
 }
 
 public interface ICategoryService

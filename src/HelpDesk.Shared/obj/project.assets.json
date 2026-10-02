@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
+      "projectUniqueName": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
       "projectName": "HelpDesk.Shared",
-      "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
+      "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
       "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\obj\\",
+      "outputPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\loren\\AppData\\Roaming\\NuGet\\NuGet.Config",

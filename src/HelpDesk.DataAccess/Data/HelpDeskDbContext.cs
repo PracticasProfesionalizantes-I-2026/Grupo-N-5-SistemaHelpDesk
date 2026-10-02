@@ -37,6 +37,7 @@ public class HelpDeskDbContext : DbContext
     /// <summary>Conjunto de equipos de trabajo.</summary>
     public DbSet<Team> Equipos => Set<Team>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+    public DbSet<Rating> Ratings => Set<Rating>();
 
     /// <summary>Configura las entidades, relaciones y datos semilla del modelo.</summary>
     /// <param name="modelBuilder">Constructor del modelo.</param>
@@ -266,7 +267,24 @@ public class HelpDeskDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Restrict);
-        });      
+        });
+        modelBuilder.Entity<Rating>(entity =>
+{
+    entity.HasKey(e => e.Id);
+    entity.Property(e => e.Puntuacion).IsRequired();
+    entity.Property(e => e.Comentario).HasMaxLength(1000);
+    entity.HasIndex(e => e.TicketId).IsUnique(); // una sola calificación por ticket
+
+    entity.HasOne(e => e.Ticket)
+          .WithOne() // o WithOne(t => t.Calificacion) si agregaste la nav
+          .HasForeignKey<Rating>(e => e.TicketId)
+          .OnDelete(DeleteBehavior.Restrict);
+
+    entity.HasOne(e => e.Usuario)
+          .WithMany()
+          .HasForeignKey(e => e.UsuarioId)
+          .OnDelete(DeleteBehavior.Restrict);
+});      
 
         // Seed Data
         SeedData(modelBuilder);

@@ -13,11 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< Updated upstream
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76fe69a568ab3f917789ab11bb083bf8468fa777")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf30f69c285a442c3790269854600e4125a2a72c")]
->>>>>>> Stashed changes
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+273b75c51685cb8a36e825ebe36d61acc95682f5")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

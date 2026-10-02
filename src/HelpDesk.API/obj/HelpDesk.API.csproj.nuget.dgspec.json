@@ -1,7 +1,6 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< Updated upstream
     "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj": {}
   },
   "projects": {
@@ -13,19 +12,6 @@
         "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj",
         "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\obj\\",
-=======
-    "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj": {}
-  },
-  "projects": {
-    "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj",
-        "projectName": "HelpDesk.API",
-        "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj",
-        "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\obj\\",
->>>>>>> Stashed changes
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\loren\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -43,7 +29,6 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-<<<<<<< Updated upstream
               "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj": {
                 "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj"
               },
@@ -52,16 +37,6 @@
               },
               "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
                 "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj"
-=======
-              "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj": {
-                "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj"
-              },
-              "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj": {
-                "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj"
-              },
-              "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
-                "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj"
->>>>>>> Stashed changes
               }
             }
           }
@@ -537,7 +512,6 @@
         }
       }
     },
-<<<<<<< Updated upstream
     "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -546,16 +520,6 @@
         "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
         "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\obj\\",
-=======
-    "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
-        "projectName": "HelpDesk.BusinessLogic",
-        "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
-        "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\obj\\",
->>>>>>> Stashed changes
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\loren\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -573,19 +537,11 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-<<<<<<< Updated upstream
               "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj": {
                 "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj"
               },
               "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
                 "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj"
-=======
-              "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj": {
-                "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj"
-              },
-              "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
-                "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj"
->>>>>>> Stashed changes
               }
             }
           }
@@ -906,7 +862,6 @@
         }
       }
     },
-<<<<<<< Updated upstream
     "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -915,16 +870,6 @@
         "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj",
         "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\obj\\",
-=======
-    "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj",
-        "projectName": "HelpDesk.DataAccess",
-        "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj",
-        "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\obj\\",
->>>>>>> Stashed changes
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\loren\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -942,13 +887,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-<<<<<<< Updated upstream
               "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
                 "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj"
-=======
-              "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
-                "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj"
->>>>>>> Stashed changes
               }
             }
           }
@@ -1275,7 +1215,6 @@
         }
       }
     },
-<<<<<<< Updated upstream
     "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -1284,16 +1223,6 @@
         "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
         "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\obj\\",
-=======
-    "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
-        "projectName": "HelpDesk.Shared",
-        "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
-        "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\obj\\",
->>>>>>> Stashed changes
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\loren\\AppData\\Roaming\\NuGet\\NuGet.Config",

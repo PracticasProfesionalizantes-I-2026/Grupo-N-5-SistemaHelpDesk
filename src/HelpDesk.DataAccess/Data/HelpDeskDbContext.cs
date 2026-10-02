@@ -36,6 +36,7 @@ public class HelpDeskDbContext : DbContext
 
     /// <summary>Conjunto de equipos de trabajo.</summary>
     public DbSet<Team> Equipos => Set<Team>();
+    public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
 
     /// <summary>Configura las entidades, relaciones y datos semilla del modelo.</summary>
     /// <param name="modelBuilder">Constructor del modelo.</param>
@@ -255,6 +256,17 @@ public class HelpDeskDbContext : DbContext
                     j.HasKey("TeamId", "TecnicoId");
                     j.ToTable("TeamTecnicos");
                 });
+                
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Codigo).IsRequired().HasMaxLength(20);
+            entity.HasIndex(e => e.Codigo);
+            entity.HasOne(e => e.Usuario)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });      
 
         // Seed Data
         SeedData(modelBuilder);

@@ -39,6 +39,8 @@ public abstract class User
 
     /// <summary>Equipos en los que participa el usuario como técnico.</summary>
     public virtual ICollection<Team> Equipos { get; set; } = new List<Team>();
+    /// <summary>Hash de la contraseña (nunca texto plano).</summary>
+public string? PasswordHash { get; set; }
 }
 
 /// <summary>

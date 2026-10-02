@@ -29,4 +29,17 @@ public class AuthController : ControllerBase
             return Unauthorized(new { error = ex.Message });
         }
     }
+    [HttpPost("register")]
+    public async Task<ActionResult<UserResponseDTO>> Register([FromBody] RegisterDTO dto)
+    {
+        try
+        {
+            var result = await _userService.RegisterAsync(dto);
+            return StatusCode(StatusCodes.Status201Created, result);
+        }
+        catch (UnauthorizedActionException ex)
+        {
+            return Unauthorized(new { error = ex.Message });
+        }
+    }
 }

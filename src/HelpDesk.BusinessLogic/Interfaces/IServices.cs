@@ -12,6 +12,7 @@ public interface ITicketService
     Task<TicketResponseDTO> ChangeStatusAsync(Guid id, TicketStatusDTO dto, Guid usuarioId, string usuarioRol);
     Task<TicketResponseDTO> ReopenAsync(Guid id, Guid supervisorId);
     Task DeleteAsync(Guid id, Guid supervisorId);
+    Task<IEnumerable<StatusHistoryResponseDTO>> GetHistoryAsync(Guid id, Guid usuarioId, string usuarioRol);
 }
 
 public interface ICommentService

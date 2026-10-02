@@ -139,6 +139,22 @@ public class TicketsController : ControllerBase
         }
     }
 
+    [HttpGet("{id}/history")]
+    public async Task<ActionResult<IEnumerable<StatusHistoryResponseDTO>>> GetHistory(Guid id)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var userRol = GetCurrentUserRole();
+            var result = await _ticketService.GetHistoryAsync(id, userId, userRol);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex);
+        }
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {

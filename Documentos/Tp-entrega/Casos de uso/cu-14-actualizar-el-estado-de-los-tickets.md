@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-17 |
+| ID | CU-14 |
 | Nombre | Actualizar el estado de los tickets |
 | Actor Principal | Técnico de Soporte |
 | Alcance / Nivel | Usuario |
@@ -62,15 +62,15 @@ Permite al técnico modificar el estado de un ticket asignado respetando el fluj
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-17-01 | TI-CU-17-01 |
-| 2 | TU-CU-17-02 | TI-CU-17-02 |
-| 3 | TU-CU-17-03 | TI-CU-17-03 |
-| 4 | TU-CU-17-04 | TI-CU-17-04 |
-| 5 | TU-CU-17-05 | TI-CU-17-05 |
-| 6 | TU-CU-17-06 | TI-CU-17-06 |
-| 7 | TU-CU-17-07 | TI-CU-17-07 |
-| 8 | TU-CU-17-08 | TI-CU-17-08 |
-| 9 | TU-CU-17-09 | TI-CU-17-09 |
-| 5a-1 | TU-CU-17-A01 | TI-CU-17-A01 |
-| 5a-2 | TU-CU-17-A02 | TI-CU-17-A02 |
-| 5a-3 | TU-CU-17-A03 | TI-CU-17-A03 |
+| 1 | TU-CU-14-01 | TI-CU-14-01 |
+| 2 | TU-CU-14-02 | TI-CU-14-02 |
+| 3 | TU-CU-14-03 | TI-CU-14-03 |
+| 4 | TU-CU-14-04 | TI-CU-14-04 |
+| 5 | TU-CU-14-05 | TI-CU-14-05 |
+| 6 | TU-CU-14-06 | TI-CU-14-06 |
+| 7 | TU-CU-14-07 | TI-CU-14-07 |
+| 8 | TU-CU-14-08 | TI-CU-14-08 |
+| 9 | TU-CU-14-09 | TI-CU-14-09 |
+| 5a-1 | TU-CU-14-A01 | TI-CU-14-A01 |
+| 5a-2 | TU-CU-14-A02 | TI-CU-14-A02 |
+| 5a-3 | TU-CU-14-A03 | TI-CU-14-A03 |

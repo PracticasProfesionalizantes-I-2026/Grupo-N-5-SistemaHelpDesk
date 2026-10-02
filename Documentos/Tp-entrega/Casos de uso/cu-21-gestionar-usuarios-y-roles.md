@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-31 |
+| ID | CU-21 |
 | Nombre | Gestionar usuarios y roles |
 | Actor Principal | Supervisor |
 | Alcance / Nivel | Usuario |
@@ -63,17 +63,17 @@ Permite al supervisor administrar los usuarios registrados, modificar sus datos 
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-31-01 | TI-CU-31-01 |
-| 2 | TU-CU-31-02 | TI-CU-31-02 |
-| 3 | TU-CU-31-03 | TI-CU-31-03 |
-| 4 | TU-CU-31-04 | TI-CU-31-04 |
-| 5 | TU-CU-31-05 | TI-CU-31-05 |
-| 6 | TU-CU-31-06 | TI-CU-31-06 |
-| 7 | TU-CU-31-07 | TI-CU-31-07 |
-| 8 | TU-CU-31-08 | TI-CU-31-08 |
-| 2a-1 | TU-CU-31-A01 | TI-CU-31-A01 |
-| 2a-2 | TU-CU-31-A02 | TI-CU-31-A02 |
-| 2a-3 | TU-CU-31-A03 | TI-CU-31-A03 |
-| 6a-1 | TU-CU-31-A04 | TI-CU-31-A04 |
-| 6a-2 | TU-CU-31-A05 | TI-CU-31-A05 |
-| 6a-3 | TU-CU-31-A06 | TI-CU-31-A06 |
+| 1 | TU-CU-21-01 | TI-CU-21-01 |
+| 2 | TU-CU-21-02 | TI-CU-21-02 |
+| 3 | TU-CU-21-03 | TI-CU-21-03 |
+| 4 | TU-CU-21-04 | TI-CU-21-04 |
+| 5 | TU-CU-21-05 | TI-CU-21-05 |
+| 6 | TU-CU-21-06 | TI-CU-21-06 |
+| 7 | TU-CU-21-07 | TI-CU-21-07 |
+| 8 | TU-CU-21-08 | TI-CU-21-08 |
+| 2a-1 | TU-CU-21-A01 | TI-CU-21-A01 |
+| 2a-2 | TU-CU-21-A02 | TI-CU-21-A02 |
+| 2a-3 | TU-CU-21-A03 | TI-CU-21-A03 |
+| 6a-1 | TU-CU-21-A04 | TI-CU-21-A04 |
+| 6a-2 | TU-CU-21-A05 | TI-CU-21-A05 |
+| 6a-3 | TU-CU-21-A06 | TI-CU-21-A06 |

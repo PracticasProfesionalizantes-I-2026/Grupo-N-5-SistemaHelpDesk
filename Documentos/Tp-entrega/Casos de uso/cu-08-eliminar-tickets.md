@@ -4,51 +4,50 @@
 |-------|-------|
 | ID | CU-08 |
 | Nombre | Eliminar tickets |
-| Actor Principal | Usuario Final |
+| Actor Principal | Supervisor |
 | Alcance / Nivel | Usuario |
-| Stakeholders e intereses | Usuario Final (cancelar solicitudes erróneas o innecesarias), Soporte Técnico (evitar atención de tickets descartados) |
-| Disparador (Trigger) | El usuario selecciona la opción 'Eliminar' o 'Cancelar' dentro del detalle de su ticket |
+| Stakeholders e intereses | Supervisor (descartar tickets erróneos o innecesarios), Usuario Final (evitar que su solicitud quede registrada por error), Técnico de Soporte (no atender tickets descartados) |
+| Disparador (Trigger) | El supervisor selecciona la opción 'Eliminar Ticket' desde la administración de tickets |
 | Prioridad / Frecuencia | Baja / Ocasional |
 | Reglas de negocio relacionadas | RF-06, RN-Eliminacion-Tickets |
 
 ### 1. BREVE DESCRIPCIÓN
-Permite al usuario cancelar o eliminar un ticket creado por error, siempre que el ticket se encuentre en estado inicial y no haya sido tomado en gestión.
+Permite al supervisor eliminar de forma definitiva un ticket del sistema, siempre que el ticket se encuentre en estado 'Abierto' y no haya sido tomado en gestión.
 
 ### 2. PRECONDICIONES
-- El usuario debe haber iniciado sesión.
-- El ticket debe pertenecer al usuario.
-- El ticket debe estar en estado inicial ('Abierto' / 'Creado sin Asignación').
+- El supervisor debe haber iniciado sesión con permisos de administración.
+- El ticket debe existir en el sistema.
+- El ticket debe encontrarse en estado 'Abierto'.
 
 ### 3. FLUJO PRINCIPAL (Camino Feliz)
-1. El sistema muestra la lista de tickets del usuario.
-2. El usuario selecciona un ticket en estado inicial.
+1. El sistema muestra la lista de tickets del sistema.
+2. El supervisor selecciona un ticket en estado 'Abierto'.
 3. El sistema muestra la información detallada del ticket.
-4. El usuario selecciona la opción 'Eliminar Ticket'.
+4. El supervisor selecciona la opción 'Eliminar Ticket'.
 5. El sistema solicita confirmación mediante un cuadro de diálogo.
-6. El usuario confirma la eliminación del ticket.
-7. El sistema valida que el ticket cumpla las condiciones para ser cancelado. [RF-06]
-8. El sistema actualiza el estado del ticket a 'Cancelado' o lo elimina del flujo activo. [RF-06]
-9. El sistema registra la cancelación y auditoría de la operación.
-10. El sistema muestra un mensaje confirmando la eliminación del ticket.
+6. El supervisor confirma la eliminación del ticket.
+7. El sistema valida que el actor posea rol de Supervisor y que el ticket se encuentre en estado 'Abierto'. [RF-06, RN-Eliminacion-Tickets]
+8. El sistema elimina el ticket de forma definitiva de la base de datos.
+9. El sistema actualiza el listado de tickets y muestra un mensaje confirmando la eliminación.
 
 ### 4. FLUJOS ALTERNATIVOS (Caminos Tristes / Excepciones)
 
-**6a. El usuario cancela la confirmación**
-1. El usuario presiona 'Cancelar' en el diálogo de confirmación.
+**6a. El supervisor cancela la confirmación**
+1. El supervisor presiona 'Cancelar' en el diálogo de confirmación.
 2. El sistema no realiza ninguna modificación en el ticket.
 3. El flujo finaliza manteniendo el ticket activo.
 
-**7a. El ticket no permite ser cancelado**
-1. El sistema detecta que el ticket ya fue tomado por un técnico (estado 'En Proceso' o posterior).
-2. El sistema muestra el mensaje de error: 'El ticket no puede eliminarse porque ya se encuentra en atención.'
-3. La operación es cancelada y se conserva el estado del ticket.
+**7a. El ticket no se encuentra en estado 'Abierto'**
+1. El sistema detecta que el ticket se encuentra en un estado distinto de 'Abierto', por ejemplo 'En Proceso' o 'Resuelto'.
+2. El sistema muestra el mensaje de error: 'Solo se pueden eliminar tickets en estado Abierto.'
+3. La operación se cancela y se conserva el ticket con su estado actual.
 
 ### 5. SUB-VARIACIONES
 - No se identifican sub-variaciones para este caso de uso.
 
 ### 6. POSTCONDICIONES
-- El ticket queda cancelado o eliminado del listado activo.
-- Se registra la auditoría de la cancelación en el historial del sistema.
+- El ticket queda eliminado de forma definitiva del sistema y del listado activo.
+- La operación solo se ejecuta cuando el ticket se encuentra en estado 'Abierto'.
 
 ---
 
@@ -57,12 +56,13 @@ Permite al usuario cancelar o eliminar un ticket creado por error, siempre que e
 #### Códigos HTTP utilizados
 | Código | Significado | Uso en el CU |
 |--------|-------------|--------------|
-| 200 | OK | Operación de cancelación confirmada |
+| 200 | OK | Listado y detalle del ticket consultados correctamente |
 | 204 | No Content | Ticket eliminado correctamente |
 | 400 | Bad Request | Petición inválida |
-| 403 | Forbidden | El ticket no pertenece al usuario autenticado |
-| 409 | Conflict | El ticket no puede ser eliminado por su estado actual (flujo 7a) |
-| 500 | Internal Server Error | Error interno del servidor al procesar la cancelación |
+| 403 | Forbidden | Acceso denegado: solo un Supervisor puede eliminar tickets |
+| 404 | Not Found | El ticket no fue encontrado |
+| 409 | Conflict | El ticket no puede eliminarse por su estado actual (flujo 7a) |
+| 500 | Internal Server Error | Error interno del servidor al procesar la eliminación |
 
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
@@ -76,7 +76,6 @@ Permite al usuario cancelar o eliminar un ticket creado por error, siempre que e
 | 7 | TU-CU-08-07 | TI-CU-08-07 |
 | 8 | TU-CU-08-08 | TI-CU-08-08 |
 | 9 | TU-CU-08-09 | TI-CU-08-09 |
-| 10 | TU-CU-08-10 | TI-CU-08-10 |
 | 6a-1 | TU-CU-08-A01 | TI-CU-08-A01 |
 | 6a-2 | TU-CU-08-A02 | TI-CU-08-A02 |
 | 6a-3 | TU-CU-08-A03 | TI-CU-08-A03 |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| ID | CU-16 |
+| ID | CU-13 |
 | Nombre | Gestionar tickets asignados |
 | Actor Principal | Técnico de Soporte |
 | Alcance / Nivel | Usuario |
@@ -69,18 +69,18 @@ Permite al técnico gestionar los tickets asignados, consultando la información
 #### Matriz de trazabilidad
 | Paso CU | Test Unitario | Test Integración |
 |---------|---------------|------------------|
-| 1 | TU-CU-16-01 | TI-CU-16-01 |
-| 2 | TU-CU-16-02 | TI-CU-16-02 |
-| 3 | TU-CU-16-03 | TI-CU-16-03 |
-| 4 | TU-CU-16-04 | TI-CU-16-04 |
-| 5 | TU-CU-16-05 | TI-CU-16-05 |
-| 6 | TU-CU-16-06 | TI-CU-16-06 |
-| 7 | TU-CU-16-07 | TI-CU-16-07 |
-| 8 | TU-CU-16-08 | TI-CU-16-08 |
-| 9 | TU-CU-16-09 | TI-CU-16-09 |
-| 2a-1 | TU-CU-16-A01 | TI-CU-16-A01 |
-| 2a-2 | TU-CU-16-A02 | TI-CU-16-A02 |
-| 2a-3 | TU-CU-16-A03 | TI-CU-16-A03 |
-| 7a-1 | TU-CU-16-A04 | TI-CU-16-A04 |
-| 7a-2 | TU-CU-16-A05 | TI-CU-16-A05 |
-| 7a-3 | TU-CU-16-A06 | TI-CU-16-A06 |
+| 1 | TU-CU-13-01 | TI-CU-13-01 |
+| 2 | TU-CU-13-02 | TI-CU-13-02 |
+| 3 | TU-CU-13-03 | TI-CU-13-03 |
+| 4 | TU-CU-13-04 | TI-CU-13-04 |
+| 5 | TU-CU-13-05 | TI-CU-13-05 |
+| 6 | TU-CU-13-06 | TI-CU-13-06 |
+| 7 | TU-CU-13-07 | TI-CU-13-07 |
+| 8 | TU-CU-13-08 | TI-CU-13-08 |
+| 9 | TU-CU-13-09 | TI-CU-13-09 |
+| 2a-1 | TU-CU-13-A01 | TI-CU-13-A01 |
+| 2a-2 | TU-CU-13-A02 | TI-CU-13-A02 |
+| 2a-3 | TU-CU-13-A03 | TI-CU-13-A03 |
+| 7a-1 | TU-CU-13-A04 | TI-CU-13-A04 |
+| 7a-2 | TU-CU-13-A05 | TI-CU-13-A05 |
+| 7a-3 | TU-CU-13-A06 | TI-CU-13-A06 |

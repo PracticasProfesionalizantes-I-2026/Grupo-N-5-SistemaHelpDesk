@@ -41,10 +41,18 @@ public record UserFilterDTO(
 );
 
 public record LoginDTO(
-    string Email
+    string Email,
+    string Password = ""
+);
+
+public record RegisterDTO(
+    string Email,
+    string NombreCompleto,
+    string Password = ""
 );
 
 public record LoginResponseDTO(
     UserResponseDTO Usuario,
     string Token
 );
+

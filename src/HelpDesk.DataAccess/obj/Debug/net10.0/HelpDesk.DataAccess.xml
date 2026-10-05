@@ -355,6 +355,9 @@
         <member name="P:HelpDesk.DataAccess.Entities.User.Equipos">
             <summary>Equipos en los que participa el usuario como técnico.</summary>
         </member>
+        <member name="P:HelpDesk.DataAccess.Entities.User.PasswordHash">
+            <summary>Hash de la contraseña (nunca texto plano).</summary>
+        </member>
         <member name="T:HelpDesk.DataAccess.Entities.Empleado">
             <summary>
             Usuario con rol de Empleado, encargado de crear tickets de soporte.

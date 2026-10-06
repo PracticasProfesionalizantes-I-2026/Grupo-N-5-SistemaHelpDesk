@@ -12,6 +12,8 @@ public interface ITicketService
     Task<TicketResponseDTO> ChangeStatusAsync(Guid id, TicketStatusDTO dto, Guid usuarioId, string usuarioRol);
     Task<TicketResponseDTO> ReopenAsync(Guid id, Guid supervisorId);
     Task DeleteAsync(Guid id, Guid supervisorId);
+    Task<RatingResponseDTO> CreateRatingAsync(Guid ticketId, RatingCreateDTO dto, Guid usuarioId, string usuarioRol);
+    Task<RatingResponseDTO?> GetRatingByTicketIdAsync(Guid ticketId, Guid usuarioId, string usuarioRol);
 }
 
 public interface ICommentService

@@ -18,8 +18,9 @@ public class UserService : BaseService, IUserService
         IStatusRepository statusRepository,
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
-        ITeamRepository teamRepository)
-        : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository)
+        ITeamRepository teamRepository,
+        IRatingRepository ratingRepository)
+        : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository, ratingRepository)
     {
     }
 

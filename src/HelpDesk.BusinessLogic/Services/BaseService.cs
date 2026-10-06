@@ -17,6 +17,7 @@ public abstract class BaseService
     protected readonly ICommentRepository _commentRepository;
     protected readonly IStatusHistoryRepository _statusHistoryRepository;
     protected readonly ITeamRepository _teamRepository;
+    protected readonly IRatingRepository _ratingRepository;
 
     protected BaseService(
         ITicketRepository ticketRepository,
@@ -26,7 +27,8 @@ public abstract class BaseService
         IStatusRepository statusRepository,
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
-        ITeamRepository teamRepository)
+        ITeamRepository teamRepository,
+        IRatingRepository ratingRepository)
     {
         _ticketRepository = ticketRepository;
         _userRepository = userRepository;
@@ -36,6 +38,7 @@ public abstract class BaseService
         _commentRepository = commentRepository;
         _statusHistoryRepository = statusHistoryRepository;
         _teamRepository = teamRepository;
+        _ratingRepository = ratingRepository;
     }
 
     protected async Task ValidateUserExistsAsync(Guid userId)

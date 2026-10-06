@@ -110,3 +110,8 @@ public interface ITeamRepository : IRepository<Team>
         bool? activo = null,
         string? search = null);
 }
+
+public interface IRatingRepository : IRepository<Rating>
+{
+    Task<Rating?> GetByTicketIdAsync(Guid ticketId, bool asNoTracking = true);
+}

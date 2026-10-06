@@ -20,6 +20,7 @@ public class UserServiceTests
     private readonly Mock<ICommentRepository> _commentRepoMock;
     private readonly Mock<IStatusHistoryRepository> _statusHistoryRepoMock;
     private readonly Mock<ITeamRepository> _teamRepoMock;
+    private readonly Mock<IRatingRepository> _ratingRepoMock;
     private readonly UserService _service;
 
     public UserServiceTests()
@@ -32,6 +33,7 @@ public class UserServiceTests
         _commentRepoMock = new Mock<ICommentRepository>();
         _statusHistoryRepoMock = new Mock<IStatusHistoryRepository>();
         _teamRepoMock = new Mock<ITeamRepository>();
+        _ratingRepoMock = new Mock<IRatingRepository>();
 
         _service = new UserService(
             _ticketRepoMock.Object,
@@ -41,7 +43,8 @@ public class UserServiceTests
             _statusRepoMock.Object,
             _commentRepoMock.Object,
             _statusHistoryRepoMock.Object,
-            _teamRepoMock.Object);
+            _teamRepoMock.Object,
+            _ratingRepoMock.Object);
     }
 
     [Fact]

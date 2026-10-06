@@ -20,6 +20,7 @@ public class CategoryServiceTests
     private readonly Mock<ICommentRepository> _commentRepoMock;
     private readonly Mock<IStatusHistoryRepository> _statusHistoryRepoMock;
     private readonly Mock<ITeamRepository> _teamRepoMock;
+    private readonly Mock<IRatingRepository> _ratingRepoMock;
     private readonly CategoryService _service;
 
     public CategoryServiceTests()
@@ -32,6 +33,7 @@ public class CategoryServiceTests
         _commentRepoMock = new Mock<ICommentRepository>();
         _statusHistoryRepoMock = new Mock<IStatusHistoryRepository>();
         _teamRepoMock = new Mock<ITeamRepository>();
+        _ratingRepoMock = new Mock<IRatingRepository>();
 
         _service = new CategoryService(
             _ticketRepoMock.Object,
@@ -41,7 +43,8 @@ public class CategoryServiceTests
             _statusRepoMock.Object,
             _commentRepoMock.Object,
             _statusHistoryRepoMock.Object,
-            _teamRepoMock.Object);
+            _teamRepoMock.Object,
+            _ratingRepoMock.Object);
     }
 
     [Fact]
@@ -120,6 +123,7 @@ public class TeamServiceTests
     private readonly Mock<ICommentRepository> _commentRepoMock;
     private readonly Mock<IStatusHistoryRepository> _statusHistoryRepoMock;
     private readonly Mock<ITeamRepository> _teamRepoMock;
+    private readonly Mock<IRatingRepository> _ratingRepoMock;
     private readonly TeamService _service;
 
     public TeamServiceTests()
@@ -132,6 +136,7 @@ public class TeamServiceTests
         _commentRepoMock = new Mock<ICommentRepository>();
         _statusHistoryRepoMock = new Mock<IStatusHistoryRepository>();
         _teamRepoMock = new Mock<ITeamRepository>();
+        _ratingRepoMock = new Mock<IRatingRepository>();
 
         _service = new TeamService(
             _ticketRepoMock.Object,
@@ -141,7 +146,8 @@ public class TeamServiceTests
             _statusRepoMock.Object,
             _commentRepoMock.Object,
             _statusHistoryRepoMock.Object,
-            _teamRepoMock.Object);
+            _teamRepoMock.Object,
+            _ratingRepoMock.Object);
     }
 
     [Fact]

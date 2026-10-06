@@ -18,8 +18,9 @@ public class TicketService : BaseService, ITicketService
         IStatusRepository statusRepository,
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
-        ITeamRepository teamRepository)
-        : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository)
+        ITeamRepository teamRepository,
+        IRatingRepository ratingRepository)
+        : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository, ratingRepository)
     {
     }
 
@@ -311,5 +312,78 @@ public class TicketService : BaseService, ITicketService
             ticket.FechaActualizacion,
             estaVencido
         );
+    }
+
+    public async Task<RatingResponseDTO> CreateRatingAsync(Guid ticketId, RatingCreateDTO dto, Guid usuarioId, string usuarioRol)
+    {
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        if (ticket == null)
+            throw new NotFoundException(ErrorMessages.TicketNotFound);
+
+        ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
+
+        var currentStatus = ticket.Estado ?? await _statusRepository.GetByIdAsync(ticket.EstadoId);
+        if (currentStatus == null || !currentStatus.EsFinal)
+            throw new BusinessRuleException("Solo se pueden calificar tickets cerrados o resueltos");
+
+        if (ticket.EmpleadoId != usuarioId)
+            throw new UnauthorizedActionException("Solo el creador del ticket puede calificarlo");
+
+        var existingRating = await _ratingRepository.GetByTicketIdAsync(ticketId);
+        if (existingRating != null)
+            throw new BusinessRuleException("El ticket ya tiene una calificación");
+
+        if (dto.Puntuacion < 1 || dto.Puntuacion > 5)
+            throw new ValidationException("La puntuación debe estar entre 1 y 5");
+
+        var user = await _userRepository.GetByIdAsync(usuarioId);
+        if (user == null)
+            throw new NotFoundException(ErrorMessages.UserNotFound);
+
+        var rating = new Rating
+        {
+            TicketId = ticketId,
+            UsuarioId = usuarioId,
+            Puntuacion = dto.Puntuacion,
+            Comentario = dto.Comentario,
+            FechaCreacion = DateTime.UtcNow
+        };
+
+        var created = await _ratingRepository.CreateAsync(rating);
+
+        return new RatingResponseDTO(
+            created.Id,
+            created.TicketId,
+            created.UsuarioId,
+            created.Puntuacion,
+            created.Comentario,
+            created.FechaCreacion,
+            user.NombreCompleto);
+    }
+
+    public async Task<RatingResponseDTO?> GetRatingByTicketIdAsync(Guid ticketId, Guid usuarioId, string usuarioRol)
+    {
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        if (ticket == null)
+            return null;
+
+        ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
+
+        var rating = await _ratingRepository.GetByTicketIdAsync(ticketId);
+        if (rating == null)
+            return null;
+
+        var user = await _userRepository.GetByIdAsync(rating.UsuarioId);
+        if (user == null)
+            return null;
+
+        return new RatingResponseDTO(
+            rating.Id,
+            rating.TicketId,
+            rating.UsuarioId,
+            rating.Puntuacion,
+            rating.Comentario,
+            rating.FechaCreacion,
+            user.NombreCompleto);
     }
 }

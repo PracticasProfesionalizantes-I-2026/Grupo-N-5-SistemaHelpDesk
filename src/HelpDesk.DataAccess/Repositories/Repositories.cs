@@ -76,6 +76,37 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 {
     public TicketRepository(HelpDeskDbContext context) : base(context) { }
 
+    public async Task<IEnumerable<Ticket>> FilterAsync(TicketFilterDTO filter)
+    {
+        var query = _context.Tickets.AsQueryable();
+
+        if (filter.PrioridadId.HasValue)
+            query = query.Where(t => t.PrioridadId == filter.PrioridadId.Value);
+
+        if (filter.EstadoId.HasValue)
+            query = query.Where(t => t.EstadoId == filter.EstadoId.Value);
+
+        if (filter.CategoriaId.HasValue)
+            query = query.Where(t => t.CategoriaId == filter.CategoriaId.Value);
+
+        if (filter.EmpleadoId.HasValue)
+            query = query.Where(t => t.EmpleadoId == filter.EmpleadoId.Value);
+
+        if (filter.TecnicoId.HasValue)
+            query = query.Where(t => t.TecnicoId == filter.TecnicoId.Value);
+
+        if (filter.TeamId.HasValue)
+            query = query.Where(t => t.TeamId == filter.TeamId.Value);
+
+        if (filter.FechaDesde.HasValue)
+            query = query.Where(t => t.FechaCreacion >= filter.FechaDesde.Value);
+
+        if (filter.FechaHasta.HasValue)
+            query = query.Where(t => t.FechaCreacion <= filter.FechaHasta.Value);
+
+        return await query.ToListAsync();
+    }
+
     public async Task<IEnumerable<Ticket>> GetByEmpleadoIdAsync(Guid empleadoId, bool asNoTracking = true)
     {
         var query = _dbSet.Where(t => t.EmpleadoId == empleadoId);
@@ -164,6 +195,20 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
         if (asNoTracking) query = query.AsNoTracking();
         return await query.ToListAsync();
     }
+    public async Task DeleteAsync(int id)
+    {
+        var ticket = await _context.Tickets.FindAsync(id);
+        if (ticket != null)
+        {
+            _context.Tickets.Remove(ticket);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException($"No se encontró el ticket con Id {id}");
+        }
+    }
+
 }
 
 public class UserRepository : Repository<User>, IUserRepository

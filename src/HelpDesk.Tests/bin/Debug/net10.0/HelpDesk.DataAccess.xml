@@ -141,6 +141,47 @@
         <member name="T:HelpDesk.DataAccess.Entities.Rating">
             <summary>Calificación de satisfacción del empleado sobre un ticket resuelto/cerrado.</summary>
         </member>
+        <member name="T:HelpDesk.DataAccess.Entities.Solution">
+            <summary>
+            Solución técnica registrada por un técnico para un ticket.
+            </summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.Id">
+            <summary>Identificador único de la solución.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.TicketId">
+            <summary>Identificador del ticket al que pertenece la solución.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.TecnicoId">
+            <summary>Identificador del técnico que registró la solución.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.Descripcion">
+            <summary>Descripción técnica de la solución aplicada.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.NombreArchivo">
+            <summary>Nombre original del archivo adjunto, si existe.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.RutaArchivo">
+            <summary>Ruta o URL donde se encuentra almacenado el archivo.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.TipoContenido">
+            <summary>Tipo MIME/contenido del archivo adjunto.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.TamanioArchivo">
+            <summary>Tamaño en bytes del archivo adjunto.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.ContenidoArchivo">
+            <summary>Contenido en bytes del archivo adjunto.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.FechaCreacion">
+            <summary>Fecha y hora en que se registró la solución.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.Ticket">
+            <summary>Ticket al que pertenece la solución.</summary>
+        </member>
+        <member name="P:HelpDesk.DataAccess.Entities.Solution.Tecnico">
+            <summary>Técnico que registró la solución.</summary>
+        </member>
         <member name="T:HelpDesk.DataAccess.Entities.Status">
             <summary>
             Estado por el que transita un ticket dentro de su ciclo de vida.

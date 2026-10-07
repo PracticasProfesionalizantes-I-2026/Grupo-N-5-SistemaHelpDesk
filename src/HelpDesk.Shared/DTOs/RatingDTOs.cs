@@ -12,5 +12,5 @@ public record RatingResponseDTO(
     int Puntuacion,
     string? Comentario,
     DateTime FechaCreacion,
-    string UsuarioNombre
+    string UsuarioNombre          // ← agregar esto
 );

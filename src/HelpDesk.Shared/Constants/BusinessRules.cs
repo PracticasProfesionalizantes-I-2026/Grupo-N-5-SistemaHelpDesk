@@ -13,6 +13,18 @@ public static class BusinessRules
     public const int MaxEmailLength = 256;
     public const int MaxTeamNameLength = 100;
     public const int MaxTeamDescriptionLength = 500;
+    public const int MaxSolutionDescriptionLength = 5000;
+    public const int MaxSolutionFileSizeBytes = 10 * 1024 * 1024;
+    public static readonly string[] AllowedSolutionFileExtensions =
+    {
+        ".pdf",
+        ".doc",
+        ".docx",
+        ".txt",
+        ".png",
+        ".jpg",
+        ".jpeg"
+    };
     
     public static readonly Dictionary<TicketPriority, int> SLAHours = new()
     {
@@ -35,6 +47,7 @@ public static class ErrorMessages
     public const string StatusNotFound = "El estado no fue encontrado";
     public const string CommentNotFound = "El comentario no fue encontrado";
     public const string TeamNotFound = "El equipo no fue encontrado";
+    public const string SolutionNotFound = "La solución no fue encontrada";
     
     public const string EmailAlreadyExists = "El email ya está registrado en el sistema";
     public const string CategoryHasTickets = "No se puede eliminar la categoría porque tiene tickets asociados";
@@ -54,4 +67,8 @@ public static class ErrorMessages
     public const string TechnicianNotFound = "El técnico no fue encontrado";
     public const string UserIsNotTechnician = "El usuario seleccionado no es un técnico";
     public const string TeamHasTickets = "No se puede eliminar el equipo porque tiene tickets asociados";
+    public const string OnlyTechnicianCanAttachSolution = "Solo un técnico puede adjuntar soluciones";
+    public const string SolutionDescriptionRequired = "La descripción de la solución es obligatoria";
+    public const string SolutionFileTooLarge = "El archivo adjunto supera el límite permitido de 10 MB";
+    public const string SolutionFileTypeNotAllowed = "El formato del archivo adjunto no está permitido";
 }

@@ -77,3 +77,14 @@ public interface IReportService
     Task<IEnumerable<SLAComplianceDTO>> GetSLAComplianceAsync();
     Task<IEnumerable<TechnicianWorkloadDTO>> GetTechnicianWorkloadAsync();
 }
+
+public interface ISolutionService
+{
+    Task<SolutionFormDTO> GetFormAsync(Guid ticketId, Guid tecnicoId);
+
+    Task<SolutionResponseDTO> CreateAsync(
+        Guid ticketId,
+        SolutionCreateDTO dto,
+        Guid tecnicoId,
+        string usuarioRol);
+}

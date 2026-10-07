@@ -48,9 +48,7 @@ public record LoginResponseDTO(
     UserResponseDTO Usuario,
     string Token
 );
-
 public record RegisterDTO(
     string Email,
-    string NombreCompleto,
-    string Rol
+    string NombreCompleto
 );

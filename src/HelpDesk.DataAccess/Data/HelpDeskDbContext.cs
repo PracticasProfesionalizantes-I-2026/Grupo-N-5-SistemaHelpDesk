@@ -38,6 +38,7 @@ public class HelpDeskDbContext : DbContext
     public DbSet<Team> Equipos => Set<Team>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<Rating> Ratings => Set<Rating>();
+    public DbSet<Notification> Notificaciones => Set<Notification>();
 
     /// <summary>Configura las entidades, relaciones y datos semilla del modelo.</summary>
     /// <param name="modelBuilder">Constructor del modelo.</param>

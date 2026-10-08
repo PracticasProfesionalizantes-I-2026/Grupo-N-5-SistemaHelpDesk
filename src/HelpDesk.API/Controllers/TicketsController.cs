@@ -153,6 +153,19 @@ public class TicketsController : ControllerBase
             return HandleException(ex);
         }
     }
+    [HttpPost("escalate-overdue")]
+public async Task<ActionResult<object>> EscalateOverdue()
+{
+    try
+    {
+        var count = await _ticketService.EscalateOverdueTicketsAsync();
+        return Ok(new { escalados = count, mensaje = $"Se escalaron {count} ticket(s) por SLA" });
+    }
+    catch (Exception ex)
+    {
+        return HandleException(ex);
+    }
+}
 
     private Guid GetCurrentUserId()
     {

@@ -4,6 +4,7 @@ namespace HelpDesk.BusinessLogic.Interfaces;
 
 public interface ITicketService
 {
+    Task UpdateStatusAsync(Guid ticketId, Guid estadoId);
     Task<TicketResponseDTO> CreateAsync(TicketCreateDTO dto, Guid empleadoId);
     Task<TicketResponseDTO?> GetByIdAsync(Guid id, Guid usuarioId, string usuarioRol);
     Task<PagedResultDTO<TicketListDTO>> GetFilteredAsync(TicketFilterDTO filter, Guid usuarioId, string usuarioRol);

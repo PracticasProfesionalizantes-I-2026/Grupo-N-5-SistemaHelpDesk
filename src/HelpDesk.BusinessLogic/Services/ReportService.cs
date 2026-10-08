@@ -1,9 +1,9 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
+using HelpDesk.Shared.Constants;
 using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Enums;
-using HelpDesk.Shared.Constants;
 
 namespace HelpDesk.BusinessLogic.Services;
 
@@ -14,6 +14,7 @@ public class ReportService : IReportService
     private readonly IStatusRepository _statusRepository;
     private readonly IPriorityRepository _priorityRepository;
     private readonly ICategoryRepository _categoryRepository;
+
 
     public ReportService(
         ITicketRepository ticketRepository,
@@ -36,7 +37,7 @@ public class ReportService : IReportService
 
         var total = ticketsList.Count;
         var abiertos = ticketsList.Count(t => t.Estado.Nombre == "Abierto");
-        var enProgreso = ticketsList.Count(t => t.Estado.Nombre == "En Progreso");
+        var enProgreso = ticketsList.Count(t => t.Estado.Nombre =="En Progreso");
         var resueltos = ticketsList.Count(t => t.Estado.Nombre == "Resuelto");
         var cerrados = ticketsList.Count(t => t.Estado.Nombre == "Cerrado");
 

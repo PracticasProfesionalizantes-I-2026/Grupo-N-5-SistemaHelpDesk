@@ -1,5 +1,15 @@
 namespace HelpDesk.Shared.DTOs;
 
+public record WorkloadDto
+(
+    Guid TecnicoId,
+    string TecnicoNombre,
+    int TicketsAbiertos,
+    int TicketsEnProgreso,
+    int TicketsResueltos,
+    int TicketsCerrados
+);
+
 public record TicketsByStatusDTO(
     StatusResponseDTO Estado,
     int Count,

@@ -258,6 +258,39 @@ public class TicketService : BaseService, ITicketService
         await _ticketRepository.DeleteAsync(id);
     }
 
+    public async Task<IEnumerable<StatusHistoryResponseDTO>> GetHistoryAsync(Guid id, Guid usuarioId, string usuarioRol)
+    {
+        var ticket = await _ticketRepository.GetByIdAsync(id);
+        if (ticket == null)
+            throw new NotFoundException(ErrorMessages.TicketNotFound);
+
+        ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
+
+        var history = await _statusHistoryRepository.GetByTicketIdAsync(id);
+        var result = new List<StatusHistoryResponseDTO>();
+
+        foreach (var item in history.OrderByDescending(h => h.FechaCambio))
+        {
+            var user = item.Usuario ?? await _userRepository.GetByIdAsync(item.UsuarioId);
+            var estadoAnterior = item.EstadoAnteriorId.HasValue 
+                ? (item.EstadoAnterior ?? await _statusRepository.GetByIdAsync(item.EstadoAnteriorId.Value)) 
+                : null;
+            var estadoNuevo = item.EstadoNuevo ?? await _statusRepository.GetByIdAsync(item.EstadoNuevoId);
+
+            result.Add(new StatusHistoryResponseDTO(
+                item.Id,
+                item.TicketId,
+                estadoAnterior != null ? new StatusResponseDTO(estadoAnterior.Id, estadoAnterior.Nombre, estadoAnterior.Descripcion, estadoAnterior.EsFinal, estadoAnterior.Orden) : null,
+                new StatusResponseDTO(estadoNuevo!.Id, estadoNuevo.Nombre, estadoNuevo.Descripcion, estadoNuevo.EsFinal, estadoNuevo.Orden),
+                new UserSummaryDTO(user!.Id, user.NombreCompleto, user.Email, user.Rol.ToString()),
+                item.FechaCambio,
+                item.Observacion
+            ));
+        }
+
+        return result;
+    }
+
     private async Task<TicketResponseDTO> MapToResponseDTO(Ticket ticket)
     {
         var prioridad = ticket.Prioridad ?? await _priorityRepository.GetByIdAsync(ticket.PrioridadId);

@@ -29,6 +29,7 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IStatusHistoryRepository, StatusHistoryRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<ISolutionRepository, SolutionRepository>();
 
 // Services
 builder.Services.AddScoped<ITicketService, TicketService>();
@@ -39,6 +40,7 @@ builder.Services.AddScoped<IPriorityService, PriorityService>();
 builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<ISolutionService, SolutionService>();
 
 // CORS
 builder.Services.AddCors(options =>

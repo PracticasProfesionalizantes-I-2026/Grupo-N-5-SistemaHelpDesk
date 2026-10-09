@@ -84,3 +84,15 @@ public interface INotificationService
         Guid usuarioId
     );
 }
+
+public interface ISolutionService
+{
+    Task<SolutionFormDTO> GetFormAsync(Guid ticketId, Guid tecnicoId);
+
+    Task<SolutionResponseDTO> CreateAsync(
+        Guid ticketId,
+        SolutionCreateDTO dto,
+        Guid tecnicoId,
+        string usuarioRol);
+}
+}

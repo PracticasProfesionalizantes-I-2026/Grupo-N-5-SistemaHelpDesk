@@ -123,3 +123,10 @@ public interface IRatingRepository : IRepository<Rating>
 {
     Task<Rating?> GetByTicketIdAsync(Guid ticketId, bool asNoTracking = true);
 }
+
+public interface ISolutionRepository : IRepository<Solution>
+{
+    Task<IEnumerable<Solution>> GetByTicketIdAsync(
+        Guid ticketId,
+        bool asNoTracking = true);
+}

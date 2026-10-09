@@ -10,6 +10,8 @@ namespace HelpDesk.BusinessLogic.Services;
 
 public class TicketService : BaseService, ITicketService
 {
+    private readonly IRatingRepository _ratingRepository;
+
     public TicketService(
         ITicketRepository ticketRepository,
         IUserRepository userRepository,
@@ -18,9 +20,24 @@ public class TicketService : BaseService, ITicketService
         IStatusRepository statusRepository,
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
-        ITeamRepository teamRepository)
-        : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository)
+        ITeamRepository teamRepository,
+        IRatingRepository ratingRepository
+    ) : base(
+        ticketRepository,
+        userRepository,
+        categoryRepository,
+        priorityRepository,
+        statusRepository,
+        commentRepository,
+        statusHistoryRepository,
+        teamRepository,
+        ratingRepository
+    )
     {
+        _ratingRepository = ratingRepository;
+    }
+    {
+        _ratingRepository = ratingRepository;
     }
 
     public async Task<Tic
@@ -139,37 +156,53 @@ public class TicketService : BaseService, ITicketService
     }
 
     public async Task<TicketResponseDTO> AssignTechnicianAsync(Guid id, TicketAssignDTO dto, Guid supervisorId)
-    {
-        var supervisor = await _userRepository.GetByIdAsync(supervisorId);
-        if (supervisor == null || supervisor.Rol != UserRole.Supervisor)
-            throw new UnauthorizedActionException(ErrorMessages.OnlySupervisorCanAssign);
+{
+    var supervisor = await _userRepository.GetByIdAsync(supervisorId);
+    if (supervisor == null || supervisor.Rol != UserRole.Supervisor)
+        throw new UnauthorizedActionException(ErrorMessages.OnlySupervisorCanAssign);
 
-        await ValidateTechnicianAsync(dto.TecnicoId);
+    await ValidateTechnicianAsync(dto.TecnicoId);
 
-        var ticket = await _ticketRepository.GetByIdAsync(id, asNoTracking: false);
-        if (ticket == null)
-            throw new NotFoundException(ErrorMessages.TicketNotFound);
+    var ticket = await _ticketRepository.GetByIdAsync(id, asNoTracking: false);
+    if (ticket == null)
+        throw new NotFoundException(ErrorMessages.TicketNotFound);
 
-        ValidateTicketNotClosed(ticket);
+    ValidateTicketNotClosed(ticket);
 
-        if (ticket.TecnicoId.HasValue)
-            throw new BusinessRuleException(ErrorMessages.TicketAlreadyAssigned);
+    // No asignar al mismo técnico otra vez
+    if (ticket.TecnicoId == dto.TecnicoId)
+        throw new BusinessRuleException("El ticket ya está asignado a ese técnico");
 
-        var oldStatusId = ticket.EstadoId;
-        var inProgressStatus = await _statusRepository.GetByNameAsync("En Progreso");
-        if (inProgressStatus == null)
-            throw new BusinessRuleException("Estado 'En Progreso' no configurado");
+    var tecnicoAnteriorId = ticket.TecnicoId;
+    var oldStatusId = ticket.EstadoId;
 
-        ticket.TecnicoId = dto.TecnicoId;
-        ticket.EstadoId = inProgressStatus.Id;
-        ticket.Estado = inProgressStatus;
-        ticket.FechaActualizacion = DateTime.UtcNow;
+    var inProgressStatus = await _statusRepository.GetByNameAsync("En Progreso");
+    if (inProgressStatus == null)
+        throw new BusinessRuleException("Estado 'En Progreso' no configurado");
 
-        await _ticketRepository.UpdateAsync(ticket);
-        await CreateStatusHistoryAsync(ticket.Id, oldStatusId, inProgressStatus.Id, supervisorId, $"Asignado a técnico");
+    ticket.TecnicoId = dto.TecnicoId;
+    ticket.EstadoId = inProgressStatus.Id;
+    ticket.Estado = inProgressStatus;
+    ticket.FechaActualizacion = DateTime.UtcNow;
 
-        return await MapToResponseDTO(ticket);
-    }
+    await _ticketRepository.UpdateAsync(ticket);
+
+    // Mensaje de historial: primera asignación vs reasignación (CU-19)
+    string observacion;
+    if (tecnicoAnteriorId.HasValue)
+        observacion = $"Reasignado de técnico {tecnicoAnteriorId} a {dto.TecnicoId}";
+    else
+        observacion = "Asignado a técnico";
+
+    await CreateStatusHistoryAsync(
+        ticket.Id,
+        oldStatusId,
+        inProgressStatus.Id,
+        supervisorId,
+        observacion);
+
+    return await MapToResponseDTO(ticket);
+}
 
     public async Task<TicketResponseDTO> ChangeStatusAsync(Guid id, TicketStatusDTO dto, Guid usuarioId, string usuarioRol)
     {
@@ -333,6 +366,7 @@ public class TicketService : BaseService, ITicketService
             FechaCierre = t.FechaCierre
         });
     }
+
     public async Task ActualizarEstadoAsync(TicketUpdateStatusDto dto)
     {
         await _ticketRepository.UpdateStatusAsync(dto.TicketId, dto.EstadoId);
@@ -341,5 +375,79 @@ public class TicketService : BaseService, ITicketService
     public async Task EliminarTicketAsync(Guid id)
     {
         await _ticketRepository.DeleteAsync(id);
+    }
+
+    public async Task<RatingResponseDTO> CreateRatingAsync(
+        Guid ticketId,
+        RatingCreateDTO dto,
+        Guid usuarioId,
+        string usuarioRol)
+    {
+        if (dto.Puntuacion < 1 || dto.Puntuacion > 5)
+            throw new ValidationException("Puntuacion", "La calificación debe ser entre 1 y 5");
+
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        if (ticket == null)
+            throw new NotFoundException(ErrorMessages.TicketNotFound);
+
+        if (ticket.EmpleadoId != usuarioId)
+            throw new UnauthorizedActionException(ErrorMessages.UnauthorizedAccess);
+
+        var estado = await _statusRepository.GetByIdAsync(ticket.EstadoId);
+        var nombreEstado = estado?.Nombre ?? string.Empty;
+        if (nombreEstado != "Resuelto" && nombreEstado != "Cerrado")
+            throw new BusinessRuleException("Este ticket no está disponible para ser calificado");
+
+        var existente = await _ratingRepository.GetByTicketIdAsync(ticketId);
+        if (existente != null)
+            throw new BusinessRuleException("Este ticket ya fue calificado");
+
+        var rating = new Rating
+        {
+            TicketId = ticketId,
+            UsuarioId = usuarioId,
+            Puntuacion = dto.Puntuacion,
+            Comentario = dto.Comentario,
+            FechaCreacion = DateTime.UtcNow
+        };
+
+        var created = await _ratingRepository.CreateAsync(rating);
+
+        return new RatingResponseDTO(
+            created.Id,
+            created.TicketId,
+            created.UsuarioId,
+            created.Puntuacion,
+            created.Comentario,
+            created.FechaCreacion,
+            ""
+        );
+    }
+
+    public async Task<RatingResponseDTO?> GetRatingByTicketIdAsync(
+        Guid ticketId,
+        Guid usuarioId,
+        string usuarioRol)
+    {
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        if (ticket == null)
+            throw new NotFoundException(ErrorMessages.TicketNotFound);
+
+        ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
+
+        var rating = await _ratingRepository.GetByTicketIdAsync(ticketId);
+        if (rating == null)
+            return null;
+
+        return new RatingResponseDTO(
+            rating.Id,
+            rating.TicketId,
+            rating.UsuarioId,
+            rating.Puntuacion,
+            rating.Comentario,
+            rating.FechaCreacion,
+            ""
+        );
+    }
     }
 }

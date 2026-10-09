@@ -1,10 +1,18 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "FsjSa5Pc5Hc=",
   "success": true,
   "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
+=======
+  "dgSpecHash": "/i2iEI1NeyA=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.API\\HelpDesk.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+>>>>>>> Cu-12-Filtrado-de-tickets-
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.data.sqlite.core\\9.0.0\\microsoft.data.sqlite.core.9.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.0\\microsoft.entityframeworkcore.9.0.0.nupkg.sha512",

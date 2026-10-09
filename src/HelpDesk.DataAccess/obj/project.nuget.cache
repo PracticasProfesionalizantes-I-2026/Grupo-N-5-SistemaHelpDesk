@@ -1,10 +1,17 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "7HY9W/48/qo=",
   "success": true,
   "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
+=======
+  "dgSpecHash": "UvbtGYBUKsw=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.DataAccess\\HelpDesk.DataAccess.csproj",
+  "expectedPackageFiles": [
+>>>>>>> Cu-12-Filtrado-de-tickets-
     "C:\\Users\\GianLuca\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.build.framework\\17.8.3\\microsoft.build.framework.17.8.3.nupkg.sha512",

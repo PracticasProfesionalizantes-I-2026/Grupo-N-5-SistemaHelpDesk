@@ -1,12 +1,20 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "LRmKHYo5Blo=",
+=======
+  "dgSpecHash": "y46E3uR3CvY=",
+>>>>>>> Cu-12-Filtrado-de-tickets-
   "success": true,
   "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GianLuca\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentassertions\\6.12.2\\fluentassertions.6.12.2.nupkg.sha512",
+<<<<<<< HEAD
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
+=======
+    "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+>>>>>>> Cu-12-Filtrado-de-tickets-
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.aspnetcore.mvc.testing\\9.0.0\\microsoft.aspnetcore.mvc.testing.9.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.aspnetcore.testhost\\9.0.0\\microsoft.aspnetcore.testhost.9.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.codecoverage\\17.12.0\\microsoft.codecoverage.17.12.0.nupkg.sha512",

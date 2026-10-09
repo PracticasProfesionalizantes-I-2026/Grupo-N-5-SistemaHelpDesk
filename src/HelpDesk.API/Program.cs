@@ -6,6 +6,7 @@ using HelpDesk.DataAccess.Interfaces;
 using HelpDesk.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using HelpDesk.API.Background;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,14 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IStatusHistoryRepository, StatusHistoryRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<IStatusHistoryRepository, StatusHistoryRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<ISolutionRepository, SolutionRepository>();
+
+// Services
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 // Services
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
@@ -39,7 +47,10 @@ builder.Services.AddScoped<IPriorityService, PriorityService>();
 builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<ISolutionService, SolutionService>();
+builder.Services.AddScoped<ISolutionService, SolutionService>();
 
+builder.Services.AddHostedService<HelpDesk.API.Background.TicketEscalationService>();
 // CORS
 builder.Services.AddCors(options =>
 {

@@ -169,7 +169,7 @@ public class TicketsController : ControllerBase
             return HandleException(ex);
         }
     }
-        [HttpPost("{id}/rating")]
+    [HttpPost("{id}/rating")]
     public async Task<ActionResult<RatingResponseDTO>> CreateRating(Guid id, [FromBody] RatingCreateDTO dto)
     {
         try
@@ -198,6 +198,20 @@ public class TicketsController : ControllerBase
                 return NotFound(new { error = "Este ticket aún no fue calificado" });
 
             return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex);
+        }
+    }
+
+    [HttpPost("escalate-overdue")]
+    public async Task<ActionResult<object>> EscalateOverdue()
+    {
+        try
+        {
+            var count = await _ticketService.EscalateOverdueTicketsAsync();
+            return Ok(new { escalados = count, mensaje = $"Se escalaron {count} ticket(s) por SLA" });
         }
         catch (Exception ex)
         {

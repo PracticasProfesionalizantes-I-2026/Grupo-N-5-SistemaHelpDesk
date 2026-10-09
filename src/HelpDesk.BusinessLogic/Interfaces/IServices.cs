@@ -15,6 +15,7 @@ public interface ITicketService
     Task<IEnumerable<StatusHistoryResponseDTO>> GetHistoryAsync(Guid id, Guid usuarioId, string usuarioRol);
     Task<RatingResponseDTO> CreateRatingAsync(Guid ticketId, RatingCreateDTO dto, Guid usuarioId, string usuarioRol);
     Task<RatingResponseDTO?> GetRatingByTicketIdAsync(Guid ticketId, Guid usuarioId, string usuarioRol);
+    Task<int> EscalateOverdueTicketsAsync();
 }
 
 public interface ICommentService
@@ -67,6 +68,7 @@ public interface ITeamService
     Task DeleteAsync(Guid id);
     Task<TeamResponseDTO> AddTecnicoAsync(Guid id, TeamAddTecnicoDTO dto);
     Task<TeamResponseDTO> RemoveTecnicoAsync(Guid id, TeamRemoveTecnicoDTO dto);
+    Task<IEnumerable<TeamResponseDTO>> GetByTecnicoIdAsync(Guid tecnicoId);
 }
 
 public interface IReportService
@@ -91,6 +93,10 @@ public interface ISolutionService
 
     Task<SolutionResponseDTO> CreateAsync(
         Guid ticketId,
+        SolutionCreateDTO dto,
+        Guid tecnicoId,
+        string usuarioRol);
+    Task<SolutionResponseDTO> CreateAsync(
         SolutionCreateDTO dto,
         Guid tecnicoId,
         string usuarioRol);

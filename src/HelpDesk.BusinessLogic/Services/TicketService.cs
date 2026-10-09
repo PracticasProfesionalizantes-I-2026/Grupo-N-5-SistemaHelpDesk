@@ -242,6 +242,69 @@ public class TicketService : BaseService, ITicketService
 
         return await MapToResponseDTO(ticket);
     }
+    public async Task<int> EscalateOverdueTicketsAsync()
+{
+    var escaladoStatus = await _statusRepository.GetByNameAsync("Escalado");
+    if (escaladoStatus == null)
+        throw new BusinessRuleException("Estado 'Escalado' no configurado. Revisar seed.");
+
+    // Tickets que no están en estado final (usa el método que ya tengan)
+    var tickets = await _ticketRepository.GetOverdueAsync();
+    // Si GetOverdueAsync no existe o no trae bien, alternativa:
+    // var tickets = await _ticketRepository.GetFilteredAsync(pageSize: 500);
+
+    var ahora = DateTime.UtcNow;
+    var escalados = 0;
+
+    // Usuario "sistema" para el historial (supervisor del seed)
+    var sistemaId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+
+    foreach (var ticket in tickets)
+    {
+        // Ya escalado → no tocar
+        if (ticket.EstadoId == escaladoStatus.Id)
+            continue;
+
+        // Si viene marcado como final, saltear
+        if (ticket.Estado?.EsFinal == true)
+            continue;
+
+        var prioridad = ticket.Prioridad
+            ?? await _priorityRepository.GetByIdAsync(ticket.PrioridadId);
+
+        if (prioridad == null)
+            continue;
+
+        var vencimiento = ticket.FechaCreacion.AddHours(prioridad.SLAHoras);
+        if (ahora <= vencimiento)
+            continue; // todavía dentro del SLA
+
+        // Releer para update (tracking)
+        var ticketDb = await _ticketRepository.GetByIdAsync(ticket.Id, asNoTracking: false);
+        if (ticketDb == null)
+            continue;
+
+        if (ticketDb.EstadoId == escaladoStatus.Id)
+            continue;
+
+        var oldStatusId = ticketDb.EstadoId;
+        ticketDb.EstadoId = escaladoStatus.Id;
+        ticketDb.Estado = escaladoStatus;
+        ticketDb.FechaActualizacion = ahora;
+
+        await _ticketRepository.UpdateAsync(ticketDb);
+        await CreateStatusHistoryAsync(
+            ticketDb.Id,
+            oldStatusId,
+            escaladoStatus.Id,
+            sistemaId,
+            "Escalado automático por incumplimiento de SLA");
+
+        escalados++;
+    }
+
+    return escalados;
+}
 
     public async Task<TicketResponseDTO> ReopenAsync(Guid id, Guid supervisorId)
     {

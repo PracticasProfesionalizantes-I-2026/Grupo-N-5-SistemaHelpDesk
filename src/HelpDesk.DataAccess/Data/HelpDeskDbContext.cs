@@ -39,7 +39,7 @@ public class HelpDeskDbContext : DbContext
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<Rating> Ratings => Set<Rating>();
     public DbSet<Notification> Notificaciones => Set<Notification>();
-
+    public DbSet<Solution> Soluciones => Set<Solution>();
     /// <summary>Configura las entidades, relaciones y datos semilla del modelo.</summary>
     /// <param name="modelBuilder">Constructor del modelo.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -220,6 +220,31 @@ public class HelpDeskDbContext : DbContext
             .WithMany(u => u.HistorialEstados)
             .HasForeignKey(h => h.UsuarioId)
             .OnDelete(DeleteBehavior.Restrict);
+        // Solution
+modelBuilder.Entity<Solution>(entity =>
+{
+    entity.HasKey(s => s.Id);
+
+    entity.Property(s => s.Descripcion)
+        .HasMaxLength(5000)
+        .IsRequired();
+
+    entity.Property(s => s.NombreArchivo)
+        .HasMaxLength(255);
+
+    entity.Property(s => s.TipoContenido)
+        .HasMaxLength(100);
+
+    entity.HasOne(s => s.Ticket)
+        .WithMany(t => t.Soluciones)
+        .HasForeignKey(s => s.TicketId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+    entity.HasOne(s => s.Tecnico)
+        .WithMany(u => u.SolucionesRegistradas)
+        .HasForeignKey(s => s.TecnicoId)
+        .OnDelete(DeleteBehavior.Restrict);
+});
 
         // Team
         modelBuilder.Entity<Team>()
@@ -310,7 +335,8 @@ public class HelpDeskDbContext : DbContext
             new Status { Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), Nombre = "En Progreso", Descripcion = "Ticket siendo trabajado", EsFinal = false, Orden = 2 },
             new Status { Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"), Nombre = "Resuelto", Descripcion = "Ticket resuelto, pendiente de cierre", EsFinal = false, Orden = 3 },
             new Status { Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"), Nombre = "Cerrado", Descripcion = "Ticket cerrado definitivamente", EsFinal = true, Orden = 4 },
-            new Status { Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), Nombre = "Reabierto", Descripcion = "Ticket reabierto después de cerrado", EsFinal = false, Orden = 5 }
+            new Status { Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), Nombre = "Reabierto", Descripcion = "Ticket reabierto después de cerrado", EsFinal = false, Orden = 5 },
+            new Status { Id = Guid.Parse("ffffffff-aaaa-bbbb-cccc-dddddddddddd"), Nombre = "Escalado", Descripcion = "Ticket escalado por incumplimiento de SLA", EsFinal = false, Orden = 6 }
         };
         modelBuilder.Entity<Status>().HasData(estados);
 

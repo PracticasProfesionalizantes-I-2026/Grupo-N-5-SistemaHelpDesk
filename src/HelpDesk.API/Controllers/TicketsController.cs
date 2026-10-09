@@ -65,10 +65,10 @@ public class TicketsController : ControllerBase
             var userId = GetCurrentUserId();
             var userRol = GetCurrentUserRole();
             var result = await _ticketService.GetByIdAsync(id, userId, userRol);
-            
+
             if (result == null)
                 return NotFound(new { error = "Ticket no encontrado" });
-                
+
             return Ok(result);
         }
         catch (Exception ex)
@@ -154,6 +154,29 @@ public class TicketsController : ControllerBase
             return HandleException(ex);
         }
     }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTicket(Guid id)
+    {
+        try
+        {
+            string userRole = GetCurrentUserRole();
+            await _ticketService.DeleteTicketAsync(id, userRole);
+            return NoContent(); // 204: Eliminado correctamente
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message }); // 409: Estado inválido
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message }); // 404: No existe
+        }
+    }
+
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)

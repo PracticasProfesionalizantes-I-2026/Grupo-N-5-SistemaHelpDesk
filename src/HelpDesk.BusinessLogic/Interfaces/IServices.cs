@@ -80,6 +80,7 @@ public interface IReportService
     Task<IEnumerable<TicketsByTechnicianDTO>> GetTicketsByTechnicianAsync();
     Task<IEnumerable<SLAComplianceDTO>> GetSLAComplianceAsync();
     Task<IEnumerable<TechnicianWorkloadDTO>> GetTechnicianWorkloadAsync();
+    Task<TicketStatisticsDto> GetTicketStatisticsAsync(DateTime? startDate, DateTime? endDate, string? userRole);
 }
 public interface INotificationService
 {

@@ -31,8 +31,7 @@ public class TicketService : BaseService, ITicketService
         teamRepository,
         ratingRepository
     )
-    {
-    }
+    
 
     public async Task<TicketResponseDTO> CreateAsync(TicketCreateDTO dto, Guid empleadoId)
     {
@@ -327,6 +326,14 @@ public class TicketService : BaseService, ITicketService
 
         return await MapToResponseDTO(ticket);
     }
+    public async Task DeleteTicketAsync(Guid id, string userRole)
+    {
+        if (userRole != "Supervisor")
+            throw new UnauthorizedAccessException("Solo un Supervisor puede eliminar tickets.");
+
+        await _ticketRepository.DeleteAsync(id);
+    }
+
 
     public async Task DeleteAsync(Guid id, Guid supervisorId)
     {

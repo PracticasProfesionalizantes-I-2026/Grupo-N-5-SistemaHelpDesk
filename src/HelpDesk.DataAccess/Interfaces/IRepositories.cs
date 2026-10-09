@@ -1,4 +1,5 @@
 using HelpDesk.DataAccess.Entities;
+using HelpDesk.Shared.DTOs;
 
 namespace HelpDesk.DataAccess.Interfaces;
 
@@ -38,6 +39,7 @@ public interface ITicketRepository : IRepository<Ticket>
         DateTime? fechaHasta = null);
     Task<IEnumerable<Ticket>> GetOverdueAsync(bool asNoTracking = true);
     Task UpdateStatusAsync(Guid ticketId, Guid estadoId);
+    Task<TicketStatisticsDto> GetStatisticsAsync(DateTime? startDate, DateTime? endDate);
 }
 
 public interface IUserRepository : IRepository<User>

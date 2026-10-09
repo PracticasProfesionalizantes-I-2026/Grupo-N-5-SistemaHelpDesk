@@ -16,6 +16,31 @@ public class ReportsController : ControllerBase
         _reportService = reportService;
     }
 
+    [HttpGet("statistics")]
+    public async Task<IActionResult> GetStatistics([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+    {
+        try
+        {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var result = await _reportService.GetTicketStatisticsAsync(startDate, endDate, userRole!);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message }); // 400 Bad Request
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error interno al procesar estadísticas", detail = ex.Message });
+        }
+    }
+
+
+
     [HttpGet("dashboard")]
     public async Task<ActionResult<DashboardStatsDTO>> GetDashboardStats()
     {

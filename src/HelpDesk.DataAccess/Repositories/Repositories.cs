@@ -218,6 +218,51 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<TicketStatisticsDto> GetStatisticsAsync(DateTime? startDate, DateTime? endDate)
+    {
+        var query = _context.Tickets.AsQueryable();
+
+        if (startDate.HasValue)
+            query = query.Where(t => t.FechaCreacion >= startDate.Value);
+
+        if (endDate.HasValue)
+            query = query.Where(t => t.FechaCreacion <= endDate.Value);
+
+        var tickets = await query
+            .Include(t => t.Estado)
+            .Include(t => t.Tecnico)
+            .ToListAsync();
+
+        if (!tickets.Any())
+            throw new InvalidOperationException("No hay datos suficientes para el periodo seleccionado.");
+
+        int total = tickets.Count;
+        int abiertos = tickets.Count(t => t.Estado.Nombre == "Abierto");
+        int enProceso = tickets.Count(t => t.Estado.Nombre == "En Proceso");
+        int resueltos = tickets.Count(t => t.Estado.Nombre == "Resuelto");
+        int cerrados = tickets.Count(t => t.Estado.Nombre == "Cerrado");
+
+        double promedioHoras = tickets
+            .Where(t => t.FechaResolucion.HasValue)
+            .Select(t => (t.FechaResolucion.Value - t.FechaCreacion).TotalHours)
+            .DefaultIfEmpty(0)
+            .Average();
+
+        var ticketsPorTecnico = tickets
+            .Where(t => t.Tecnico != null)
+            .GroupBy(t => t.Tecnico!.NombreCompleto)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        double promedioSatisfaccion = await _context.Ratings
+            .Where(r => tickets.Select(t => t.Id).Contains(r.TicketId))
+            .Select(r => r.Puntuacion)
+            .DefaultIfEmpty(0)
+            .AverageAsync();
+
+        return new TicketStatisticsDto(total, abiertos, enProceso, resueltos, cerrados, promedioHoras, ticketsPorTecnico, promedioSatisfaccion);
+    }
+
+
 }
 
 public class UserRepository : Repository<User>, IUserRepository

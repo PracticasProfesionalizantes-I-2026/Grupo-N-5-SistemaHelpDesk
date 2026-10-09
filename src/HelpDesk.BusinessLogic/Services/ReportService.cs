@@ -15,6 +15,14 @@ public class ReportService : IReportService
     private readonly IPriorityRepository _priorityRepository;
     private readonly ICategoryRepository _categoryRepository;
 
+    public async Task<TicketStatisticsDto> GetTicketStatisticsAsync(DateTime? startDate, DateTime? endDate, string userRole)
+    {
+        if (userRole != "Supervisor")
+            throw new UnauthorizedAccessException("Acceso restringido únicamente a Supervisores.");
+
+        return await _ticketRepository.GetStatisticsAsync(startDate, endDate);
+    }
+
 
     public ReportService(
         ITicketRepository ticketRepository,
@@ -37,16 +45,16 @@ public class ReportService : IReportService
 
         var total = ticketsList.Count;
         var abiertos = ticketsList.Count(t => t.Estado.Nombre == "Abierto");
-        var enProgreso = ticketsList.Count(t => t.Estado.Nombre =="En Progreso");
+        var enProgreso = ticketsList.Count(t => t.Estado.Nombre == "En Progreso");
         var resueltos = ticketsList.Count(t => t.Estado.Nombre == "Resuelto");
         var cerrados = ticketsList.Count(t => t.Estado.Nombre == "Cerrado");
 
         var now = DateTime.UtcNow;
-        var vencidos = ticketsList.Count(t => !t.Estado.EsFinal && 
+        var vencidos = ticketsList.Count(t => !t.Estado.EsFinal &&
             t.FechaCreacion.AddHours(BusinessRules.SLAHours.TryGetValue((TicketPriority)t.Prioridad.Nivel, out var h) ? h : 0) < now);
 
         var resueltosConFecha = ticketsList.Where(t => t.FechaResolucion.HasValue).ToList();
-        var avgResolutionHours = resueltosConFecha.Any() 
+        var avgResolutionHours = resueltosConFecha.Any()
             ? resueltosConFecha.Average(t => (t.FechaResolucion!.Value - t.FechaCreacion).TotalHours)
             : 0;
 
@@ -121,7 +129,7 @@ public class ReportService : IReportService
         {
             var priorityTickets = allTickets.Where(t => t.PrioridadId == p.Id).ToList();
             var total = priorityTickets.Count;
-            var withinSLA = priorityTickets.Count(t => 
+            var withinSLA = priorityTickets.Count(t =>
                 (t.FechaResolucion!.Value - t.FechaCreacion).TotalHours <= p.SLAHoras);
             var overdue = total - withinSLA;
             var avgHours = total > 0 ? priorityTickets.Average(t => (t.FechaResolucion!.Value - t.FechaCreacion).TotalHours) : 0;
@@ -145,22 +153,22 @@ public class ReportService : IReportService
         return technicians.Select(t =>
         {
             var activeTickets = allTickets.Where(tk => tk.TecnicoId == t.Id && !tk.Estado.EsFinal).ToList();
-            var overdueTickets = activeTickets.Count(tk => 
+            var overdueTickets = activeTickets.Count(tk =>
                 tk.FechaCreacion.AddHours(BusinessRules.SLAHours.TryGetValue((TicketPriority)tk.Prioridad.Nivel, out var h) ? h : 0) < DateTime.UtcNow);
-            
-            var resolvedThisMonth = allTickets.Count(tk => 
-                tk.TecnicoId == t.Id && 
-                tk.Estado.EsFinal && 
-                tk.FechaResolucion.HasValue && 
+
+            var resolvedThisMonth = allTickets.Count(tk =>
+                tk.TecnicoId == t.Id &&
+                tk.Estado.EsFinal &&
+                tk.FechaResolucion.HasValue &&
                 tk.FechaResolucion.Value.Month == DateTime.UtcNow.Month &&
                 tk.FechaResolucion.Value.Year == DateTime.UtcNow.Year);
 
-            var resolvedTickets = allTickets.Where(tk => 
-                tk.TecnicoId == t.Id && 
-                tk.Estado.EsFinal && 
+            var resolvedTickets = allTickets.Where(tk =>
+                tk.TecnicoId == t.Id &&
+                tk.Estado.EsFinal &&
                 tk.FechaResolucion.HasValue).ToList();
-            
-            var avgHours = resolvedTickets.Any() 
+
+            var avgHours = resolvedTickets.Any()
                 ? resolvedTickets.Average(r => (r.FechaResolucion!.Value - r.FechaCreacion).TotalHours)
                 : 0;
 

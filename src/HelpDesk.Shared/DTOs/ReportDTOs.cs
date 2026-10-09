@@ -69,3 +69,14 @@ public record DashboardStatsDTO(
     int TicketsCreatedToday,
     int TicketsResolvedToday
 );
+public record TicketStatisticsDto
+(
+    int TotalTickets,
+    int TicketsAbiertos,
+    int TicketsEnProceso,
+    int TicketsResueltos,
+    int TicketsCerrados,
+    double PromedioTiempoResolucionHoras,
+    Dictionary<string, int> TicketsPorTecnico,
+    double PromedioSatisfaccion
+);

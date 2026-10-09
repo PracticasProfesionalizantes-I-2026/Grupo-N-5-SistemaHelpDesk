@@ -89,6 +89,14 @@ public interface IStatusHistoryRepository : IRepository<StatusHistory>
     new Task<StatusHistory> CreateAsync(StatusHistory entity);
 }
 
+public interface INotificationRepository : IRepository<Notification>
+{
+    Task<IEnumerable<Notification>> GetByUsuarioIdAsync(
+        Guid usuarioId,
+        bool asNoTracking = true
+    );
+}
+
 public interface ITeamRepository : IRepository<Team>
 {
     Task<Team?> GetByNameAsync(string nombre, bool asNoTracking = true);

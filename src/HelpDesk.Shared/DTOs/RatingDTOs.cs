@@ -11,6 +11,5 @@ public record RatingResponseDTO(
     Guid UsuarioId,
     int Puntuacion,
     string? Comentario,
-    DateTime FechaCreacion,
-    string UsuarioNombre
+    DateTime FechaCreacion
 );

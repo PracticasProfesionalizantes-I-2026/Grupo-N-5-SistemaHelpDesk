@@ -169,6 +169,41 @@ public class TicketsController : ControllerBase
             return HandleException(ex);
         }
     }
+        [HttpPost("{id}/rating")]
+    public async Task<ActionResult<RatingResponseDTO>> CreateRating(Guid id, [FromBody] RatingCreateDTO dto)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var userRol = GetCurrentUserRole();
+            var result = await _ticketService.CreateRatingAsync(id, dto, userId, userRol);
+            return StatusCode(StatusCodes.Status201Created, result);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex);
+        }
+    }
+
+    [HttpGet("{id}/rating")]
+    public async Task<ActionResult<RatingResponseDTO>> GetRating(Guid id)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var userRol = GetCurrentUserRole();
+            var result = await _ticketService.GetRatingByTicketIdAsync(id, userId, userRol);
+
+            if (result == null)
+                return NotFound(new { error = "Este ticket aún no fue calificado" });
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex);
+        }
+    }
 
     private Guid GetCurrentUserId()
     {

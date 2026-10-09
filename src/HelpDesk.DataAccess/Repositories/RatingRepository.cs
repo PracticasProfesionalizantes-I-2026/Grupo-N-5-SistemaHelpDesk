@@ -11,9 +11,10 @@ public class RatingRepository : Repository<Rating>, IRatingRepository
 
     public async Task<Rating?> GetByTicketIdAsync(Guid ticketId, bool asNoTracking = true)
     {
-        var query = _dbSet.Where(r => r.TicketId == ticketId);
-        query = query.Include(r => r.Usuario);
-        if (asNoTracking) query = query.AsNoTracking();
-        return await query.FirstOrDefaultAsync();
+        var query = _dbSet.AsQueryable();
+        if (asNoTracking)
+            query = query.AsNoTracking();
+
+        return await query.FirstOrDefaultAsync(r => r.TicketId == ticketId);
     }
 }

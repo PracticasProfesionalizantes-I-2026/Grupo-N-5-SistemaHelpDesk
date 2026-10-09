@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 >>>>>>> ConsultarHistorial
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f938dc4faad7dfbe6d952627c65d94d206091d31")]
+>>>>>>> CU-11-notificaciones
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

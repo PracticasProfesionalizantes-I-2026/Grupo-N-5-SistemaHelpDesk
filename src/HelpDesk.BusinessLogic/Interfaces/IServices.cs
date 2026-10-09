@@ -78,3 +78,9 @@ public interface IReportService
     Task<IEnumerable<SLAComplianceDTO>> GetSLAComplianceAsync();
     Task<IEnumerable<TechnicianWorkloadDTO>> GetTechnicianWorkloadAsync();
 }
+public interface INotificationService
+{
+    Task<IEnumerable<NotificationResponseDTO>> GetMyNotificationsAsync(
+        Guid usuarioId
+    );
+}

@@ -77,6 +77,7 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 {
     public TicketRepository(HelpDeskDbContext context) : base(context) { }
 
+<<<<<<< HEAD
     public async Task UpdateStatusAsync(Guid ticketId, Guid estadoId)
     {
         var ticket = await _context.Tickets.FindAsync(ticketId);
@@ -110,6 +111,8 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
 
 
+=======
+>>>>>>> Cu-12-Filtrado-de-tickets-
     public async Task<IEnumerable<Ticket>> FilterAsync(TicketFilterDTO filter)
     {
         var query = _context.Tickets.AsQueryable();
@@ -129,6 +132,12 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
         if (filter.TecnicoId.HasValue)
             query = query.Where(t => t.TecnicoId == filter.TecnicoId.Value);
 
+<<<<<<< HEAD
+=======
+        if (filter.TeamId.HasValue)
+            query = query.Where(t => t.TeamId == filter.TeamId.Value);
+
+>>>>>>> Cu-12-Filtrado-de-tickets-
         if (filter.FechaDesde.HasValue)
             query = query.Where(t => t.FechaCreacion >= filter.FechaDesde.Value);
 

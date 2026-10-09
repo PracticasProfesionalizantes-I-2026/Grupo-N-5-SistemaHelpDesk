@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b60b8af74f6053447a0d72c99884a4d93b0e7dbe")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
+>>>>>>> Cu-12-Filtrado-de-tickets-
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

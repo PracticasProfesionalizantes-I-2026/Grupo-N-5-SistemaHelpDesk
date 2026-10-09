@@ -22,6 +22,12 @@ public record TicketStatusDTO(
     Guid EstadoId,
     string? Observacion = null
 );
+public record TicketUpdateStatusDto
+{
+    public Guid TicketId { get; set; }
+    public Guid EstadoId { get; set;}
+}
+
 
 public record TicketResponseDTO(
     Guid Id,
@@ -76,6 +82,14 @@ public record UserSummaryDTO(
     string Email,
     string Rol
 );
+public record TicketSolutionDTO(
+    Guid Id,
+    Guid TicketId,
+    string Descripcion,
+    DateTime FechaCreacion,
+    Guid AutorId,
+    string AutorNombre
+);
 
 public record TicketFilterDTO(
     Guid? EstadoId = null,
@@ -96,13 +110,3 @@ public record PagedResultDTO<T>(
     int PageSize,
     int TotalPages
 );
-
-public record StatusHistoryResponseDTO(
-    Guid Id,
-    Guid TicketId,
-    StatusResponseDTO? EstadoAnterior,
-    StatusResponseDTO EstadoNuevo,
-    UserSummaryDTO Usuario,
-    DateTime FechaCambio,
-    string? Observacion
-);

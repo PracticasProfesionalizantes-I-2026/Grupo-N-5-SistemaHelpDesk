@@ -2,6 +2,7 @@ using HelpDesk.DataAccess.Data;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using HelpDesk.Shared.DTOs;
 
 namespace HelpDesk.DataAccess.Repositories;
 
@@ -75,6 +76,67 @@ public class Repository<T> : IRepository<T> where T : class
 public class TicketRepository : Repository<Ticket>, ITicketRepository
 {
     public TicketRepository(HelpDeskDbContext context) : base(context) { }
+
+    public async Task UpdateStatusAsync(Guid ticketId, Guid estadoId)
+    {
+        var ticket = await _context.Tickets.FindAsync(ticketId);
+        if (ticket == null)
+            throw new KeyNotFoundException($"No se encontró el ticket con Id {ticketId}");
+
+        ticket.EstadoId = estadoId;
+        ticket.FechaActualizacion = DateTime.Now;
+
+        _context.Tickets.Update(ticket);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<WorkloadDto>> GetWorkloadAsync()
+    {
+        var query = await _context.Tickets
+            .Where(t => t.TecnicoId != null)
+            .GroupBy(t => new { t.TecnicoId, t.Tecnico.Nombre })
+            .Select(g => new WorkloadDto(
+            g.Key.TecnicoId!.Value,
+            g.Key.Nombre,
+            g.Count(t => t.Estado.Nombre == "Abierto"),
+            g.Count(t => t.Estado.Nombre == "En Progreso"),
+            g.Count(t => t.Estado.Nombre == "Resuelto"),
+            g.Count(t => t.Estado.Nombre == "Cerrado")
+        ))
+        .ToListAsync();
+    
+        return query;
+    }
+
+
+
+    public async Task<IEnumerable<Ticket>> FilterAsync(TicketFilterDTO filter)
+    {
+        var query = _context.Tickets.AsQueryable();
+
+        if (filter.PrioridadId.HasValue)
+            query = query.Where(t => t.PrioridadId == filter.PrioridadId.Value);
+
+        if (filter.EstadoId.HasValue)
+            query = query.Where(t => t.EstadoId == filter.EstadoId.Value);
+
+        if (filter.CategoriaId.HasValue)
+            query = query.Where(t => t.CategoriaId == filter.CategoriaId.Value);
+
+        if (filter.EmpleadoId.HasValue)
+            query = query.Where(t => t.EmpleadoId == filter.EmpleadoId.Value);
+
+        if (filter.TecnicoId.HasValue)
+            query = query.Where(t => t.TecnicoId == filter.TecnicoId.Value);
+
+        if (filter.FechaDesde.HasValue)
+            query = query.Where(t => t.FechaCreacion >= filter.FechaDesde.Value);
+
+        if (filter.FechaHasta.HasValue)
+            query = query.Where(t => t.FechaCreacion <= filter.FechaHasta.Value);
+
+        return await query.ToListAsync();
+    }
 
     public async Task<IEnumerable<Ticket>> GetByEmpleadoIdAsync(Guid empleadoId, bool asNoTracking = true)
     {
@@ -164,6 +226,20 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
         if (asNoTracking) query = query.AsNoTracking();
         return await query.ToListAsync();
     }
+    public async Task DeleteAsync(int id)
+    {
+        var ticket = await _context.Tickets.FindAsync(id);
+        if (ticket != null)
+        {
+            _context.Tickets.Remove(ticket);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException($"No se encontró el ticket con Id {id}");
+        }
+    }
+
 }
 
 public class UserRepository : Repository<User>, IUserRepository

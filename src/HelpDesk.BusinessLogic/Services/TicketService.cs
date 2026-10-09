@@ -1,17 +1,15 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
-using HelpDesk.Shared.DTOs;
-using HelpDesk.Shared.Exceptions;
-using HelpDesk.Shared.Enums;
 using HelpDesk.Shared.Constants;
+using HelpDesk.Shared.DTOs;
+using HelpDesk.Shared.Enums;
+using HelpDesk.Shared.Exceptions;
 
 namespace HelpDesk.BusinessLogic.Services;
 
 public class TicketService : BaseService, ITicketService
 {
-    private readonly IRatingRepository _ratingRepository;
-
     public TicketService(
         ITicketRepository ticketRepository,
         IUserRepository userRepository,
@@ -20,49 +18,37 @@ public class TicketService : BaseService, ITicketService
         IStatusRepository statusRepository,
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
-        ITeamRepository teamRepository,
-        IRatingRepository ratingRepository
-    ) : base(
-        ticketRepository, 
-        userRepository, 
-        categoryRepository, 
-        priorityRepository, 
-        statusRepository, 
-        commentRepository, 
-        statusHistoryRepository, 
-        teamRepository, 
-        ratingRepository
-    )
+        ITeamRepository teamRepository)
+        : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository)
     {
-        _ratingRepository = ratingRepository;
     }
 
-    public async Task<TicketResponseDTO> CreateAsync(TicketCreateDTO dto, Guid empleadoId)
-    {
-        await ValidateUserExistsAsync(empleadoId);
-        await ValidateCategoryExistsAsync(dto.CategoriaId);
-        await ValidatePriorityExistsAsync(dto.PrioridadId);
-
-        var initialStatus = await _statusRepository.GetInitialStatusAsync();
-        if (initialStatus == null)
+    public async Task<Tic
+        userRepository,
+        categoryRepository,
+        priorityRepository,
+        statusRepository,
+        commentRepository,
+        statusHistoryRepository,
+        teamRepository, s == null)
             throw new BusinessRuleException("No hay estado inicial configurado");
 
-        var ticket = new Ticket
-        {
-            Titulo = dto.Titulo,
-            Descripcion = dto.Descripcion,
-            PrioridadId = dto.PrioridadId,
-            EstadoId = initialStatus.Id,
-            Estado = initialStatus,
-            CategoriaId = dto.CategoriaId,
-            EmpleadoId = empleadoId,
-            FechaCreacion = DateTime.UtcNow,
-            FechaActualizacion = DateTime.UtcNow
-        };
+    var ticket = new Ticket
+    {
+        Titulo = dto.Titulo,
+        Descripcion = dto.Descripcion,
+        PrioridadId = dto.PrioridadId,
+        EstadoId = initialStatus.Id,
+        Estado = initialStatus,
+        CategoriaId = dto.CategoriaId,
+        EmpleadoId = empleadoId,
+        FechaCreacion = DateTime.UtcNow,
+        FechaActualizacion = DateTime.UtcNow
+    };
 
-        var created = await _ticketRepository.CreateAsync(ticket);
+    var created = await _ticketRepository.CreateAsync(ticket);
 
-        await CreateStatusHistoryAsync(created.Id, null, initialStatus.Id, empleadoId, "Ticket creado");
+    await CreateStatusHistoryAsync(created.Id, null, initialStatus.Id, empleadoId, "Ticket creado");
 
         return await MapToResponseDTO(created);
     }
@@ -271,39 +257,6 @@ public class TicketService : BaseService, ITicketService
         await _ticketRepository.DeleteAsync(id);
     }
 
-    public async Task<IEnumerable<StatusHistoryResponseDTO>> GetHistoryAsync(Guid id, Guid usuarioId, string usuarioRol)
-    {
-        var ticket = await _ticketRepository.GetByIdAsync(id);
-        if (ticket == null)
-            throw new NotFoundException(ErrorMessages.TicketNotFound);
-
-        ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
-
-        var history = await _statusHistoryRepository.GetByTicketIdAsync(id);
-        var result = new List<StatusHistoryResponseDTO>();
-
-        foreach (var item in history.OrderByDescending(h => h.FechaCambio))
-        {
-            var user = item.Usuario ?? await _userRepository.GetByIdAsync(item.UsuarioId);
-            var estadoAnterior = item.EstadoAnteriorId.HasValue 
-                ? (item.EstadoAnterior ?? await _statusRepository.GetByIdAsync(item.EstadoAnteriorId.Value)) 
-                : null;
-            var estadoNuevo = item.EstadoNuevo ?? await _statusRepository.GetByIdAsync(item.EstadoNuevoId);
-
-            result.Add(new StatusHistoryResponseDTO(
-                item.Id,
-                item.TicketId,
-                estadoAnterior != null ? new StatusResponseDTO(estadoAnterior.Id, estadoAnterior.Nombre, estadoAnterior.Descripcion, estadoAnterior.EsFinal, estadoAnterior.Orden) : null,
-                new StatusResponseDTO(estadoNuevo!.Id, estadoNuevo.Nombre, estadoNuevo.Descripcion, estadoNuevo.EsFinal, estadoNuevo.Orden),
-                new UserSummaryDTO(user!.Id, user.NombreCompleto, user.Email, user.Rol.ToString()),
-                item.FechaCambio,
-                item.Observacion
-            ));
-        }
-
-        return result;
-    }
-
     private async Task<TicketResponseDTO> MapToResponseDTO(Ticket ticket)
     {
         var prioridad = ticket.Prioridad ?? await _priorityRepository.GetByIdAsync(ticket.PrioridadId);
@@ -359,75 +312,34 @@ public class TicketService : BaseService, ITicketService
             estaVencido
         );
     }
-        public async Task<RatingResponseDTO> CreateRatingAsync(
-        Guid ticketId,
-        RatingCreateDTO dto,
-        Guid usuarioId,
-        string usuarioRol)
+    public async Task<IEnumerable<TicketResponseDTO>> FiltrarTicketsAsync(TicketFilterDTO filter)
     {
-        if (dto.Puntuacion < 1 || dto.Puntuacion > 5)
-            throw new ValidationException("Puntuacion", "La calificación debe ser entre 1 y 5");
+        var tickets = await _ticketRepository.FilterAsync(filter);
 
-        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
-        if (ticket == null)
-            throw new NotFoundException(ErrorMessages.TicketNotFound);
-
-        if (ticket.EmpleadoId != usuarioId)
-            throw new UnauthorizedActionException(ErrorMessages.UnauthorizedAccess);
-
-        var estado = await _statusRepository.GetByIdAsync(ticket.EstadoId);
-        var nombreEstado = estado?.Nombre ?? string.Empty;
-        if (nombreEstado != "Resuelto" && nombreEstado != "Cerrado")
-            throw new BusinessRuleException("Este ticket no está disponible para ser calificado");
-
-        var existente = await _ratingRepository.GetByTicketIdAsync(ticketId);
-        if (existente != null)
-            throw new BusinessRuleException("Este ticket ya fue calificado");
-
-        var rating = new Rating
+        return tickets.Select(t => new TicketResponseDTO
         {
-            TicketId = ticketId,
-            UsuarioId = usuarioId,
-            Puntuacion = dto.Puntuacion,
-            Comentario = dto.Comentario,
-            FechaCreacion = DateTime.UtcNow
-        };
-
-        var created = await _ratingRepository.CreateAsync(rating);
-
-        return new RatingResponseDTO(
-            created.Id,
-            created.TicketId,
-            created.UsuarioId,
-            created.Puntuacion,
-            created.Comentario,
-            created.FechaCreacion
-            
-        );
+            Id = t.Id,
+            Titulo = t.Titulo,
+            Descripcion = t.Descripcion,
+            EstadoId = t.EstadoId,
+            PrioridadId = t.PrioridadId,
+            CategoriaId = t.CategoriaId,
+            EmpleadoId = t.EmpleadoId,
+            TecnicoId = t.TecnicoId,
+            TeamId = t.TeamId,
+            FechaCreacion = t.FechaCreacion,
+            FechaActualizacion = t.FechaActualizacion,
+            FechaResolucion = t.FechaResolucion,
+            FechaCierre = t.FechaCierre
+        });
+    }
+    public async Task ActualizarEstadoAsync(TicketUpdateStatusDto dto)
+    {
+        await _ticketRepository.UpdateStatusAsync(dto.TicketId, dto.EstadoId);
     }
 
-    public async Task<RatingResponseDTO?> GetRatingByTicketIdAsync(
-        Guid ticketId,
-        Guid usuarioId,
-        string usuarioRol)
+    public async Task EliminarTicketAsync(Guid id)
     {
-        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
-        if (ticket == null)
-            throw new NotFoundException(ErrorMessages.TicketNotFound);
-
-        ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
-
-        var rating = await _ratingRepository.GetByTicketIdAsync(ticketId);
-        if (rating == null)
-            return null;
-
-        return new RatingResponseDTO(
-            rating.Id,
-            rating.TicketId,
-            rating.UsuarioId,
-            rating.Puntuacion,
-            rating.Comentario,
-            rating.FechaCreacion
-        );
+        await _ticketRepository.DeleteAsync(id);
     }
 }

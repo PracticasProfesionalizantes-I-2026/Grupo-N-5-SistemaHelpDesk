@@ -2,6 +2,7 @@
   "version": 2,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "dgSpecHash": "Zx2X7LGpDns=",
   "success": true,
   "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
@@ -17,6 +18,11 @@
   "success": true,
   "projectFilePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
 >>>>>>> CU-14-ActualizarEstado
+=======
+  "dgSpecHash": "3/Houp4DNqQ=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
+>>>>>>> CU16-ConsultarCargaDeTrabajo
   "expectedPackageFiles": [],
 >>>>>>> Cu-12-Filtrado-de-tickets-
   "logs": []

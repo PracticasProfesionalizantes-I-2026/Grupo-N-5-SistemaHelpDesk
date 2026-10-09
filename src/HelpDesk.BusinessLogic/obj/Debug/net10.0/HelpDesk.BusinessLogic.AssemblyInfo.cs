@@ -15,6 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b60b8af74f6053447a0d72c99884a4d93b0e7dbe")]
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
@@ -22,6 +23,9 @@ using System.Reflection;
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
 >>>>>>> CU-14-ActualizarEstado
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
+>>>>>>> CU16-ConsultarCargaDeTrabajo
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.BusinessLogic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

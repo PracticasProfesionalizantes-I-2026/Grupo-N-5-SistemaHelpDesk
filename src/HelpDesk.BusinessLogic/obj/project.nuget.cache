@@ -2,6 +2,7 @@
   "version": 2,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "dgSpecHash": "+DioyUwjozo=",
   "success": false,
 =======
@@ -14,6 +15,11 @@
   "success": true,
   "projectFilePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
 >>>>>>> CU-14-ActualizarEstado
+=======
+  "dgSpecHash": "KpLW4gY543Y=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
+>>>>>>> CU16-ConsultarCargaDeTrabajo
   "expectedPackageFiles": [
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.data.sqlite.core\\9.0.0\\microsoft.data.sqlite.core.9.0.0.nupkg.sha512",
@@ -44,6 +50,7 @@
       "level": "Warning",
       "message": "Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.10 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
 <<<<<<< HEAD
+<<<<<<< HEAD
       "projectPath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
       "warningLevel": 1,
       "filePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
@@ -52,6 +59,11 @@
       "warningLevel": 1,
       "filePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
 >>>>>>> CU-14-ActualizarEstado
+=======
+      "projectPath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
+      "warningLevel": 1,
+      "filePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.BusinessLogic\\HelpDesk.BusinessLogic.csproj",
+>>>>>>> CU16-ConsultarCargaDeTrabajo
       "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
       "targetGraphs": [
         "net10.0"

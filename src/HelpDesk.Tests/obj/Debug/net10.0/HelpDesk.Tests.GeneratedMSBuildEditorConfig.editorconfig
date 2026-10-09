@@ -11,7 +11,11 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property.EntryPointFilePath = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = HelpDesk.Tests
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Tests\
+=======
+build_property.ProjectDir = c:\Users\GianLuca\OneDrive\Documentos\GitHub\Grupo-N-5-SistemaHelpDesk\src\HelpDesk.Tests\
+>>>>>>> CU16-ConsultarCargaDeTrabajo
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 10.0

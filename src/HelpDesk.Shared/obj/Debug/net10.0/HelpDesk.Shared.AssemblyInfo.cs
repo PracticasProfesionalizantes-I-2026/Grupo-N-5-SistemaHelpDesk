@@ -15,11 +15,14 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
 >>>>>>> origin/CU-25
 =======
 >>>>>>> CU-14-ActualizarEstado
+=======
+>>>>>>> CU16-ConsultarCargaDeTrabajo
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

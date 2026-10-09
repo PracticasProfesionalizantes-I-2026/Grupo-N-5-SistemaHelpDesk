@@ -1,6 +1,7 @@
 {
   "version": 2,
 <<<<<<< HEAD
+<<<<<<< HEAD
   "dgSpecHash": "LRmKHYo5Blo=",
 =======
   "dgSpecHash": "y46E3uR3CvY=",
@@ -15,6 +16,15 @@
 =======
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
 >>>>>>> Cu-12-Filtrado-de-tickets-
+=======
+  "dgSpecHash": "K4A2ww+DOQ8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\GianLuca\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
+    "C:\\Users\\GianLuca\\.nuget\\packages\\fluentassertions\\6.12.2\\fluentassertions.6.12.2.nupkg.sha512",
+    "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+>>>>>>> CU-14-ActualizarEstado
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.aspnetcore.mvc.testing\\9.0.0\\microsoft.aspnetcore.mvc.testing.9.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.aspnetcore.testhost\\9.0.0\\microsoft.aspnetcore.testhost.9.0.0.nupkg.sha512",
     "C:\\Users\\GianLuca\\.nuget\\packages\\microsoft.codecoverage\\17.12.0\\microsoft.codecoverage.17.12.0.nupkg.sha512",
@@ -82,9 +92,15 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.10 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
+<<<<<<< HEAD
       "projectPath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
       "warningLevel": 1,
       "filePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+=======
+      "projectPath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+>>>>>>> CU-14-ActualizarEstado
       "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
       "targetGraphs": [
         "net10.0"

@@ -69,7 +69,7 @@ public class Ticket
 
     /// <summary>Comentarios asociados al ticket.</summary>
     public virtual ICollection<Comment> Comentarios { get; set; } = new List<Comment>();
-
+    // gian 
     /// <summary>Historial de cambios de estado del ticket.</summary>
     public virtual ICollection<StatusHistory> HistorialEstados { get; set; } = new List<StatusHistory>();
 }

@@ -14,9 +14,12 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
+<<<<<<< HEAD
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
 >>>>>>> origin/CU-25
+=======
+>>>>>>> CU-14-ActualizarEstado
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

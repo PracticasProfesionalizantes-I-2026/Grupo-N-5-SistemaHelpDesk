@@ -13,11 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
->>>>>>> ConsultarHistorial
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f938dc4faad7dfbe6d952627c65d94d206091d31")]
->>>>>>> CU-11-notificaciones
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+943a5f0b1feef12b9e85454ed4c6c28e2ecd27bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

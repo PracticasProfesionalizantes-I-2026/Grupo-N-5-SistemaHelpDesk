@@ -37,6 +37,7 @@ public interface ITicketRepository : IRepository<Ticket>
         DateTime? fechaDesde = null,
         DateTime? fechaHasta = null);
     Task<IEnumerable<Ticket>> GetOverdueAsync(bool asNoTracking = true);
+    Task UpdateStatusAsync(Guid ticketId, Guid estadoId);
 }
 
 public interface IUserRepository : IRepository<User>

@@ -13,19 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b60b8af74f6053447a0d72c99884a4d93b0e7dbe")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
->>>>>>> Cu-12-Filtrado-de-tickets-
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
->>>>>>> CU-14-ActualizarEstado
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49de2ad2ba7c7a7f9fe56206f8c2ad8c412fadb3")]
->>>>>>> CU16-ConsultarCargaDeTrabajo
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d905b2871eefb5cb18c67bcec4b9816844195464")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -15,13 +15,6 @@ public class ReportsController : ControllerBase
     {
         _reportService = reportService;
     }
-    [HttpGet("workload")]
-    public async Task<ActionResult<IEnumerable<WorkloadDto>>> GetWorkloadAsync()
-    {
-        var result = await _reportService.GetWorkloadAsync();
-        return Ok(result);
-    }
-
 
     [HttpGet("dashboard")]
     public async Task<ActionResult<DashboardStatsDTO>> GetDashboardStats()

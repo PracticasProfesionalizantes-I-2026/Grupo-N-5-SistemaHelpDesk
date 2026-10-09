@@ -97,9 +97,4 @@ public interface ISolutionService
         SolutionCreateDTO dto,
         Guid tecnicoId,
         string usuarioRol);
-    Task<SolutionResponseDTO> CreateAsync(
-        SolutionCreateDTO dto,
-        Guid tecnicoId,
-        string usuarioRol);
-}
 }

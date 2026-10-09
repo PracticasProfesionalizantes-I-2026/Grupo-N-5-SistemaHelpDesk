@@ -1,10 +1,10 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
-using HelpDesk.Shared.DTOs;
-using HelpDesk.Shared.Exceptions;
-using HelpDesk.Shared.Enums;
 using HelpDesk.Shared.Constants;
+using HelpDesk.Shared.DTOs;
+using HelpDesk.Shared.Enums;
+using HelpDesk.Shared.Exceptions;
 
 namespace HelpDesk.BusinessLogic.Services;
 
@@ -197,11 +197,23 @@ public class TeamService : BaseService, ITeamService
         return await MapToResponseDTO(updated!);
     }
 
+    public async Task<IEnumerable<TeamResponseDTO>> GetByTecnicoIdAsync(Guid tecnicoId)
+    {
+        var allTeams = await _teamRepository.GetActiveAsync();
+        var teamsWithTecnico = allTeams.Where(t => t.Tecnicos != null && t.Tecnicos.Any(u => u.Id == tecnicoId));
+        var response = new List<TeamResponseDTO>();
+        foreach (var team in teamsWithTecnico)
+        {
+            response.Add(await MapToResponseDTO(team));
+        }
+        return response;
+    }
+
     private async Task<TeamResponseDTO> MapToResponseDTO(Team team)
     {
         var categoria = await _categoryRepository.GetByIdAsync(team.CategoriaId);
         var tecnicos = new List<UserSummaryDTO>();
-        
+
         foreach (var t in team.Tecnicos ?? Enumerable.Empty<User>())
         {
             tecnicos.Add(new UserSummaryDTO(t.Id, t.NombreCompleto, t.Email, t.Rol.ToString()));

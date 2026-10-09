@@ -1,29 +1,10 @@
 {
   "version": 2,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "dgSpecHash": "Zx2X7LGpDns=",
+  "dgSpecHash": "R+K02TqfE9E=",
   "success": true,
-  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
+  "projectFilePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512"
   ],
-=======
-  "dgSpecHash": "3/Houp4DNqQ=",
-  "success": true,
-  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
-=======
-  "dgSpecHash": "P74F7Gf29Lk=",
-  "success": true,
-  "projectFilePath": "C:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
->>>>>>> CU-14-ActualizarEstado
-=======
-  "dgSpecHash": "3/Houp4DNqQ=",
-  "success": true,
-  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
->>>>>>> CU16-ConsultarCargaDeTrabajo
-  "expectedPackageFiles": [],
->>>>>>> Cu-12-Filtrado-de-tickets-
   "logs": []
 }

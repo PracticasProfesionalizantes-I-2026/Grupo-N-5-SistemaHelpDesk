@@ -1,9 +1,8 @@
 using HelpDesk.DataAccess.Data;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using HelpDesk.Shared.DTOs;
-
+using Microsoft.EntityFrameworkCore;
 namespace HelpDesk.DataAccess.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
@@ -16,6 +15,8 @@ public class Repository<T> : IRepository<T> where T : class
         _context = context;
         _dbSet = context.Set<T>();
     }
+
+
 
     public virtual async Task<T?> GetByIdAsync(Guid id, bool asNoTracking = true)
     {
@@ -77,42 +78,6 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 {
     public TicketRepository(HelpDeskDbContext context) : base(context) { }
 
-<<<<<<< HEAD
-    public async Task UpdateStatusAsync(Guid ticketId, Guid estadoId)
-    {
-        var ticket = await _context.Tickets.FindAsync(ticketId);
-        if (ticket == null)
-            throw new KeyNotFoundException($"No se encontró el ticket con Id {ticketId}");
-
-        ticket.EstadoId = estadoId;
-        ticket.FechaActualizacion = DateTime.Now;
-
-        _context.Tickets.Update(ticket);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task<IEnumerable<WorkloadDto>> GetWorkloadAsync()
-    {
-        var query = await _context.Tickets
-            .Where(t => t.TecnicoId != null)
-            .GroupBy(t => new { t.TecnicoId, t.Tecnico.Nombre })
-            .Select(g => new WorkloadDto(
-            g.Key.TecnicoId!.Value,
-            g.Key.Nombre,
-            g.Count(t => t.Estado.Nombre == "Abierto"),
-            g.Count(t => t.Estado.Nombre == "En Progreso"),
-            g.Count(t => t.Estado.Nombre == "Resuelto"),
-            g.Count(t => t.Estado.Nombre == "Cerrado")
-        ))
-        .ToListAsync();
-    
-        return query;
-    }
-
-
-
-=======
->>>>>>> Cu-12-Filtrado-de-tickets-
     public async Task<IEnumerable<Ticket>> FilterAsync(TicketFilterDTO filter)
     {
         var query = _context.Tickets.AsQueryable();
@@ -132,12 +97,6 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
         if (filter.TecnicoId.HasValue)
             query = query.Where(t => t.TecnicoId == filter.TecnicoId.Value);
 
-<<<<<<< HEAD
-=======
-        if (filter.TeamId.HasValue)
-            query = query.Where(t => t.TeamId == filter.TeamId.Value);
-
->>>>>>> Cu-12-Filtrado-de-tickets-
         if (filter.FechaDesde.HasValue)
             query = query.Where(t => t.FechaCreacion >= filter.FechaDesde.Value);
 
@@ -249,6 +208,16 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
         }
     }
 
+    public async Task UpdateStatusAsync(Guid ticketId, Guid estadoId)
+    {
+        var ticket = await _dbSet.FindAsync(ticketId);
+        if (ticket != null)
+        {
+            ticket.EstadoId = estadoId;
+            ticket.FechaActualizacion = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+        }
+    }
 }
 
 public class UserRepository : Repository<User>, IUserRepository

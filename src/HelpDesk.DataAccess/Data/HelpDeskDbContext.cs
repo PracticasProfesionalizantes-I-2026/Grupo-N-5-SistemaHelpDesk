@@ -236,12 +236,12 @@ modelBuilder.Entity<Solution>(entity =>
         .HasMaxLength(100);
 
     entity.HasOne(s => s.Ticket)
-        .WithMany(t => t.Soluciones)
+        .WithMany()
         .HasForeignKey(s => s.TicketId)
         .OnDelete(DeleteBehavior.Cascade);
 
     entity.HasOne(s => s.Tecnico)
-        .WithMany(u => u.SolucionesRegistradas)
+        .WithMany()
         .HasForeignKey(s => s.TecnicoId)
         .OnDelete(DeleteBehavior.Restrict);
 });

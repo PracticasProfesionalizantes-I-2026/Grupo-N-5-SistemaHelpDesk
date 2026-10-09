@@ -110,3 +110,14 @@ public record PagedResultDTO<T>(
     int PageSize,
     int TotalPages
 );
+
+public record StatusHistoryResponseDTO(
+    Guid Id,
+    Guid TicketId,
+    Guid? EstadoAnteriorId,
+    StatusResponseDTO? EstadoAnterior,
+    StatusResponseDTO EstadoNuevo,
+    UserSummaryDTO Usuario,
+    DateTime FechaCambio,
+    string? Observacion
+);

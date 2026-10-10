@@ -18,7 +18,9 @@ public interface ITicketService
     Task<RatingResponseDTO?> GetRatingByTicketIdAsync(Guid ticketId, Guid usuarioId, string usuarioRol);
     Task<int> EscalateOverdueTicketsAsync();
     Task ResolveAsync(Guid ticketId, string userRole, Guid usuarioId, bool cerrar = false);
+    Task AutoAssignTicketAsync();
 }
+
 
 public interface ICommentService
 {

@@ -2,7 +2,9 @@ using HelpDesk.DataAccess.Data;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
 using HelpDesk.Shared.DTOs;
+using HelpDesk.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
+
 namespace HelpDesk.DataAccess.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
@@ -302,9 +304,38 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
         await _context.SaveChangesAsync();
     }
+    public async Task<Ticket?> GetUnassignedTicketAsync()
+    {
+        return await _context.Tickets
+            .Include(t => t.Categoria)
+            .FirstOrDefaultAsync(t => t.TecnicoId == null);
+    }
 
+    public async Task AssignTicketAsync(Guid ticketId, Guid tecnicoId)
+    {
+        var ticket = await _context.Tickets.FindAsync(ticketId);
+        if (ticket == null)
+            throw new KeyNotFoundException("El ticket no existe.");
 
+        ticket.TecnicoId = tecnicoId;
+        ticket.EstadoId = (await _context.Estados.FirstAsync(s => s.Nombre == "Asignado")).Id;
+        ticket.FechaAsignacion = DateTime.UtcNow;
 
+        _context.Tickets.Update(ticket);
+
+        _context.HistorialEstados.Add(new StatusHistory
+        {
+            Id = Guid.NewGuid(),
+            TicketId = ticket.Id,
+            EstadoAnteriorId = null,
+            EstadoNuevoId = ticket.EstadoId,
+            UsuarioId = tecnicoId, // técnico asignado
+            FechaCambio = DateTime.UtcNow,
+            Observacion = "Asignación automática"
+        });
+
+        await _context.SaveChangesAsync();
+    }
 }
 
 public class UserRepository : Repository<User>, IUserRepository
@@ -594,5 +625,12 @@ public class TeamRepository : Repository<Team>, ITeamRepository
         if (!string.IsNullOrEmpty(search)) query = query.Where(t => t.Nombre.Contains(search) || (t.Descripcion != null && t.Descripcion.Contains(search)));
 
         return await query.CountAsync();
+    }
+    public async Task<IEnumerable<User>> GetTechniciansByCategoryAsync(Guid categoriaId)
+    {
+        return await _context.Usuarios
+            .Include(u => u.TicketsAsignados)
+            .Where(u => u.Rol == UserRole.Tecnico && u.TicketsAsignados.Any(t => t.CategoriaId == categoriaId))
+            .ToListAsync();
     }
 }

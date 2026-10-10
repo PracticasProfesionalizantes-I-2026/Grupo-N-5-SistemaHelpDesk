@@ -204,6 +204,21 @@ public class TicketsController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error interno al resolver el ticket", detail = ex.Message });
         }
     }
+    [HttpPost("auto-assign")]
+    public async Task<IActionResult> AutoAssign()
+    {
+        try
+        {
+            await _ticketService.AutoAssignTicketAsync();
+            return Ok(new { message = "Asignación automática completada." });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+        }
+    }
+
+
 
 
 

@@ -504,11 +504,36 @@ public class TicketService : BaseService, ITicketService
             estaVencido
         );
     }
-    public async Task ResolveTicketAsync(Guid id, string userRole, bool cerrar = false)
+    public async Task ResolveAsync(Guid id, string userRole, Guid usuarioId, bool cerrar = false)
     {
         if (userRole != "Supervisor")
             throw new UnauthorizedAccessException("Acceso restringido a Supervisores.");
 
-        await _ticketRepository.ResolveAsync(id, cerrar);
+        await _ticketRepository.ResolveAsync(id, usuarioId, cerrar);
+    }
+    public async Task AutoAssignTicketAsync()
+    {
+        var ticket = await _ticketRepository.GetUnassignedTicketAsync();
+        if (ticket == null)
+            return; // No hay tickets pendientes
+
+        // Buscar técnicos disponibles en la categoría del ticket
+        var tecnicos = await _teamRepository.GetTechniciansByCategoryAsync(ticket.CategoriaId);
+        if (!tecnicos.Any())
+            throw new InvalidOperationException("No existen técnicos disponibles para la categoría.");
+
+        // Calcular carga de trabajo
+        var tecnicoConMenorCarga = tecnicos
+            .OrderBy(t => t.Tickets.Count) // RF-02: menor carga
+            .FirstOrDefault();
+
+        if (tecnicoConMenorCarga == null)
+            throw new InvalidOperationException("No se pudo determinar técnico para asignación.");
+
+        await _ticketRepository.AssignTicketAsync(ticket.Id, tecnicoConMenorCarga.Id);
+
+        // Notificación al técnico y al usuario
+        // _notificationService.NotifyUser(ticket.UsuarioId, "Su ticket fue asignado automáticamente.");
+        // _notificationService.NotifyTechnician(tecnicoConMenorCarga.Id, "Se le asignó un nuevo ticket.");
     }
 }

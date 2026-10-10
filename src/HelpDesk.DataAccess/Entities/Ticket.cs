@@ -66,7 +66,8 @@ public class Ticket
 
     /// <summary>Equipo asignado al ticket.</summary>
     public virtual Team? Team { get; set; }
-
+    /// <summary> Fecha de asignacion del ticket </summary>
+    public DateTime? FechaAsignacion { get; set; }
     /// <summary>Comentarios asociados al ticket.</summary>
     public virtual ICollection<Comment> Comentarios { get; set; } = new List<Comment>();
     // gian 

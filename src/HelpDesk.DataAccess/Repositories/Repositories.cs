@@ -107,6 +107,23 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
         return await query.ToListAsync();
     }
+    public async Task<Ticket?> GetUnassignedTicketAsync()
+    {
+        return await _dbSet
+            .Where(t => t.TecnicoId == null)
+            .OrderBy(t => t.FechaCreacion)
+            .FirstOrDefaultAsync();
+    }
+    public async Task AssignTicketAsync(Guid ticketId, Guid technicianId)
+    {
+        var ticket = await _dbSet.FindAsync(ticketId);
+        if (ticket is null)
+            throw new KeyNotFoundException("Ticket no encontrado.");
+        ticket.TecnicoId = technicianId;
+        await _context.SaveChangesAsync();
+    }
+
+
 
     public async Task<IEnumerable<Ticket>> GetByEmpleadoIdAsync(Guid empleadoId, bool asNoTracking = true)
     {
@@ -539,6 +556,13 @@ public class TeamRepository : Repository<Team>, ITeamRepository
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderBy(t => t.Nombre).ToListAsync();
     }
+    public async Task<IEnumerable<User>> GetTechniciansByCategoryAsync(Guid categoryId)
+    {
+        return await _context.Usuarios
+            .Where(t => t.CategoriaId == categoryId)
+            .ToListAsync();
+    }
+
 
     public async Task<IEnumerable<Team>> GetByCategoryAsync(Guid categoriaId, bool asNoTracking = true)
     {

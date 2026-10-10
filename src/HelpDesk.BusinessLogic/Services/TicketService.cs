@@ -504,36 +504,24 @@ public class TicketService : BaseService, ITicketService
             estaVencido
         );
     }
-    public async Task ResolveAsync(Guid id, string userRole, Guid usuarioId, bool cerrar = false)
+    public async Task ResolveAsync(Guid ticketId, string userRole, Guid usuarioId, bool cerrar)
     {
         if (userRole != "Supervisor")
-            throw new UnauthorizedAccessException("Acceso restringido a Supervisores.");
+            throw new UnauthorizedAccessException("Only Supervisors can resolve tickets.");
 
-        await _ticketRepository.ResolveAsync(id, usuarioId, cerrar);
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        if (ticket is null)
+            throw new KeyNotFoundException("Ticket not found.");
+
+        ticket.FechaResolucion = DateTime.UtcNow;
+
+        if (cerrar)
+        {
+            var closedStatus = await _statusRepository.GetClosedStatusAsync(true);
+            ticket.EstadoId = closedStatus.Id;
+        }
+
+        await _ticketRepository.UpdateAsync(ticket);
     }
-    public async Task AutoAssignTicketAsync()
-    {
-        var ticket = await _ticketRepository.GetUnassignedTicketAsync();
-        if (ticket == null)
-            return; // No hay tickets pendientes
 
-        // Buscar técnicos disponibles en la categoría del ticket
-        var tecnicos = await _teamRepository.GetTechniciansByCategoryAsync(ticket.CategoriaId);
-        if (!tecnicos.Any())
-            throw new InvalidOperationException("No existen técnicos disponibles para la categoría.");
-
-        // Calcular carga de trabajo
-        var tecnicoConMenorCarga = tecnicos
-            .OrderBy(t => t.Tickets.Count) // RF-02: menor carga
-            .FirstOrDefault();
-
-        if (tecnicoConMenorCarga == null)
-            throw new InvalidOperationException("No se pudo determinar técnico para asignación.");
-
-        await _ticketRepository.AssignTicketAsync(ticket.Id, tecnicoConMenorCarga.Id);
-
-        // Notificación al técnico y al usuario
-        // _notificationService.NotifyUser(ticket.UsuarioId, "Su ticket fue asignado automáticamente.");
-        // _notificationService.NotifyTechnician(tecnicoConMenorCarga.Id, "Se le asignó un nuevo ticket.");
-    }
 }

@@ -13,6 +13,10 @@ public abstract class User
     /// <summary>Correo electrónico del usuario (único en el sistema).</summary>
     public string Email { get; set; } = string.Empty;
 
+    /// <summary>Categoría asociada al usuario (aplicable a técnicos).</summary>
+    public Guid? CategoriaId { get; set; }
+    public virtual Category? Categoria { get; set; }
+
     /// <summary>Nombre completo del usuario.</summary>
     public string NombreCompleto { get; set; } = string.Empty;
 
@@ -40,7 +44,7 @@ public abstract class User
     /// <summary>Equipos en los que participa el usuario como técnico.</summary>
     public virtual ICollection<Team> Equipos { get; set; } = new List<Team>();
     /// <summary>Hash de la contraseña (nunca texto plano).</summary>
-public string? PasswordHash { get; set; }
+    public string? PasswordHash { get; set; }
 }
 
 /// <summary>

@@ -352,14 +352,54 @@ public class HelpDeskDbContext : DbContext
         modelBuilder.Entity<Category>().HasData(categorias);
 
         // Usuarios
-        var usuarios = new List<User>
-        {
-            new Supervisor { Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"), Email = "admin@helpdesk.com", NombreCompleto = "Admin Sistema", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Empleado { Id = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"), Email = "juan.perez@empresa.com", NombreCompleto = "Juan Pérez", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Empleado { Id = Guid.Parse("bbbbbbbb-cccc-dddd-eeee-ffffffffffff"), Email = "maria.garcia@empresa.com", NombreCompleto = "María García", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Tecnico { Id = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa"), Email = "carlos.lopez@empresa.com", NombreCompleto = "Carlos López", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Tecnico { Id = Guid.Parse("dddddddd-eeee-ffff-aaaa-bbbbbbbbbbbb"), Email = "ana.martinez@empresa.com", NombreCompleto = "Ana Martínez", FechaCreacion = DateTime.UtcNow, Activo = true }
-        };
-        modelBuilder.Entity<User>().HasData(usuarios);
+                // Usuarios (TPH: cada tipo derivado por separado)
+        modelBuilder.Entity<Supervisor>().HasData(
+            new Supervisor
+            {
+                Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+                Email = "admin@helpdesk.com",
+                NombreCompleto = "Admin Sistema",
+                FechaCreacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Activo = true
+            }
+        );
+
+        modelBuilder.Entity<Empleado>().HasData(
+            new Empleado
+            {
+                Id = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+                Email = "juan.perez@empresa.com",
+                NombreCompleto = "Juan Pérez",
+                FechaCreacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Activo = true
+            },
+            new Empleado
+            {
+                Id = Guid.Parse("bbbbbbbb-cccc-dddd-eeee-ffffffffffff"),
+                Email = "maria.garcia@empresa.com",
+                NombreCompleto = "María García",
+                FechaCreacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Activo = true
+            }
+        );
+
+        modelBuilder.Entity<Tecnico>().HasData(
+            new Tecnico
+            {
+                Id = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa"),
+                Email = "carlos.lopez@empresa.com",
+                NombreCompleto = "Carlos López",
+                FechaCreacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Activo = true
+            },
+            new Tecnico
+            {
+                Id = Guid.Parse("dddddddd-eeee-ffff-aaaa-bbbbbbbbbbbb"),
+                Email = "ana.martinez@empresa.com",
+                NombreCompleto = "Ana Martínez",
+                FechaCreacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Activo = true
+            }
+        );
     }
 }

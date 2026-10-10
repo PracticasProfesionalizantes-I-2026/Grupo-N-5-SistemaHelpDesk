@@ -25,7 +25,7 @@ public static class DbInitializer
         try
         {
             logger.LogInformation("Iniciando migración de base de datos...");
-            await context.Database.MigrateAsync();
+            await context.Database.EnsureCreatedAsync();
             logger.LogInformation("Migración completada.");
 
             logger.LogInformation("Verificando datos de prueba...");

@@ -50,7 +50,7 @@ public class TicketService : BaseService, ITicketService
             Descripcion = dto.Descripcion,
             PrioridadId = dto.PrioridadId,
             EstadoId = initialStatus.Id,
-            Estado = initialStatus,
+            
             CategoriaId = dto.CategoriaId,
             EmpleadoId = empleadoId,
             FechaCreacion = DateTime.UtcNow,

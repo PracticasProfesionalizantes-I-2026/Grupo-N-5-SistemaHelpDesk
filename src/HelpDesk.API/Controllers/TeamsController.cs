@@ -49,6 +49,24 @@ public class TeamsController : ControllerBase
             return HandleException(ex);
         }
     }
+    [HttpGet("mios")]
+public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetMisEquipos()
+{
+    try
+    {
+        var tecnicoId = GetCurrentUserId();
+        var result = await _teamService.GetByTecnicoIdAsync(tecnicoId);
+
+        if (result == null || !result.Any())
+            return NotFound(new { error = "No pertenece a ningún equipo." });
+
+        return Ok(result);
+    }
+    catch (Exception ex)
+    {
+        return HandleException(ex);
+    }
+}
 
     [HttpGet("{id}")]
     public async Task<ActionResult<TeamResponseDTO>> GetById(Guid id)
@@ -135,4 +153,14 @@ public class TeamsController : ControllerBase
             _ => StatusCode(500, new { error = "Error interno del servidor" })
         };
     }
+    private Guid GetCurrentUserId()
+{
+    // Para pruebas: id de un técnico del seed (Carlos López)
+    return Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
+}
+
+private string GetCurrentUserRole()
+{
+    return "Tecnico";
+}
 }

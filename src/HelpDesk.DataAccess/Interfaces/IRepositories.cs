@@ -40,6 +40,7 @@ public interface ITicketRepository : IRepository<Ticket>
     Task<IEnumerable<Ticket>> GetOverdueAsync(bool asNoTracking = true);
     Task UpdateStatusAsync(Guid ticketId, Guid estadoId);
     Task<TicketStatisticsDto> GetStatisticsAsync(DateTime? startDate, DateTime? endDate);
+    Task ResolveAsync(Guid ticketId, Guid usuarioId, bool cerrar = false);
 }
 
 public interface IUserRepository : IRepository<User>

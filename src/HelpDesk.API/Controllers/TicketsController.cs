@@ -176,6 +176,35 @@ public class TicketsController : ControllerBase
             return NotFound(new { message = ex.Message }); // 404: No existe
         }
     }
+    [HttpPut("{id}/resolve")]
+    public async Task<IActionResult> ResolveTicket(Guid id, [FromQuery] bool cerrar = false)
+    {
+        try
+        {
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            var usuarioId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value!);
+
+            await _ticketService.ResolveAsync(id, userRole!, usuarioId, cerrar);
+            return NoContent(); // 204
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error interno al resolver el ticket", detail = ex.Message });
+        }
+    }
+
 
 
     [HttpDelete("{id}")]
@@ -184,7 +213,7 @@ public class TicketsController : ControllerBase
         try
         {
             var supervisorId = GetCurrentUserId();
-            await _ticketService.DeleteAsync(id, supervisorId);
+            await _ticketService.DeleteTicketAsync(id, supervisorId);
             return NoContent();
         }
         catch (Exception ex)

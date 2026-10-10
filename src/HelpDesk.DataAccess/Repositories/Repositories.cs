@@ -261,6 +261,48 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
         return new TicketStatisticsDto(total, abiertos, enProceso, resueltos, cerrados, promedioHoras, ticketsPorTecnico, promedioSatisfaccion);
     }
+    public async Task ResolveAsync(Guid ticketId, Guid usuarioId, bool cerrar = false)
+    {
+        var ticket = await _context.Tickets
+            .Include(t => t.Estado)
+            .FirstOrDefaultAsync(t => t.Id == ticketId);
+
+        if (ticket == null)
+            throw new KeyNotFoundException("El ticket no existe.");
+
+        if (ticket.Estado.Nombre != "En Proceso" && ticket.Estado.Nombre != "Abierto")
+            throw new InvalidOperationException("El ticket no cumple las condiciones para ser resuelto.");
+
+        // Buscar estado Resuelto o Cerrado
+        var nuevoEstadoNombre = cerrar ? "Cerrado" : "Resuelto";
+        var nuevoEstado = await _context.Estados.FirstOrDefaultAsync(s => s.Nombre == nuevoEstadoNombre);
+
+        if (nuevoEstado == null)
+            throw new InvalidOperationException($"No se encontró el estado '{nuevoEstadoNombre}' en la base de datos.");
+
+        var estadoAnteriorId = ticket.Estado.Id;
+
+        ticket.Estado = nuevoEstado;
+        ticket.EstadoId = nuevoEstado.Id;
+        ticket.FechaResolucion = DateTime.UtcNow;
+
+        _context.Tickets.Update(ticket);
+
+        // Auditoría con IDs
+        _context.HistorialEstados.Add(new StatusHistory
+        {
+            Id = Guid.NewGuid(),
+            TicketId = ticket.Id,
+            EstadoAnteriorId = estadoAnteriorId,
+            EstadoNuevoId = nuevoEstado.Id,
+            UsuarioId = usuarioId,
+            FechaCambio = DateTime.UtcNow,
+            Observacion = cerrar ? "Ticket cerrado por supervisor" : "Ticket resuelto por supervisor"
+        });
+
+        await _context.SaveChangesAsync();
+    }
+
 
 
 }

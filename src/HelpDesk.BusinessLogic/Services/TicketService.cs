@@ -31,7 +31,8 @@ public class TicketService : BaseService, ITicketService
         teamRepository,
         ratingRepository
     )
-    
+    {
+    }
 
     public async Task<TicketResponseDTO> CreateAsync(TicketCreateDTO dto, Guid empleadoId)
     {
@@ -502,5 +503,12 @@ public class TicketService : BaseService, ITicketService
             ticket.FechaActualizacion,
             estaVencido
         );
+    }
+    public async Task ResolveTicketAsync(Guid id, string userRole, bool cerrar = false)
+    {
+        if (userRole != "Supervisor")
+            throw new UnauthorizedAccessException("Acceso restringido a Supervisores.");
+
+        await _ticketRepository.ResolveAsync(id, cerrar);
     }
 }

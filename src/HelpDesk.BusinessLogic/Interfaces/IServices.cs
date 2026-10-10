@@ -12,11 +12,12 @@ public interface ITicketService
     Task<TicketResponseDTO> AssignTechnicianAsync(Guid id, TicketAssignDTO dto, Guid supervisorId);
     Task<TicketResponseDTO> ChangeStatusAsync(Guid id, TicketStatusDTO dto, Guid usuarioId, string usuarioRol);
     Task<TicketResponseDTO> ReopenAsync(Guid id, Guid supervisorId);
-    Task DeleteAsync(Guid id, Guid supervisorId);
+    Task DeleteTicketAsync(Guid id, string userRole);
     Task<IEnumerable<StatusHistoryResponseDTO>> GetHistoryAsync(Guid id, Guid usuarioId, string usuarioRol);
     Task<RatingResponseDTO> CreateRatingAsync(Guid ticketId, RatingCreateDTO dto, Guid usuarioId, string usuarioRol);
     Task<RatingResponseDTO?> GetRatingByTicketIdAsync(Guid ticketId, Guid usuarioId, string usuarioRol);
     Task<int> EscalateOverdueTicketsAsync();
+    Task ResolveAsync(Guid ticketId, string userRole, Guid usuarioId, bool cerrar = false);
 }
 
 public interface ICommentService

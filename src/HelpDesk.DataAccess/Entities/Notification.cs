@@ -6,6 +6,8 @@ public class Notification
 
     public Guid UsuarioId { get; set; }
 
+    public Guid TicketId { get; set; }
+
     public string Titulo { get; set; } = string.Empty;
 
     public string Mensaje { get; set; } = string.Empty;
@@ -14,5 +16,10 @@ public class Notification
 
     public DateTime FechaCreacion { get; set; }
 
+    public bool Entregada { get; set; }
+
+    public string Canal { get; set; } = "Panel";
+
     public virtual User Usuario { get; set; } = null!;
+    public virtual Ticket Ticket { get; set; } = null!;
 }

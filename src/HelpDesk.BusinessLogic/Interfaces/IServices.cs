@@ -1,4 +1,5 @@
 using HelpDesk.Shared.DTOs;
+using HelpDesk.Shared.Enums;
 
 namespace HelpDesk.BusinessLogic.Interfaces;
 
@@ -85,10 +86,12 @@ public interface IReportService
 }
 public interface INotificationService
 {
-    Task<IEnumerable<NotificationResponseDTO>> GetMyNotificationsAsync(
-        Guid usuarioId
-    );
+    Task<IEnumerable<NotificationResponseDTO>> GetMyNotificationsAsync(Guid usuarioId);
+    Task EnviarNotificacionAsync(Guid ticketId, Guid usuarioId, string titulo, string mensaje, string canal = "Panel");
+    Task MarcarComoLeidaAsync(Guid notificationId);
+    Task ActualizarEstadoAsync(Guid notificationId, bool entregada);
 }
+
 
 public interface ISolutionService
 {

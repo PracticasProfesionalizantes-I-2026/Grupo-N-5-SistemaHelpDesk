@@ -504,11 +504,24 @@ public class TicketService : BaseService, ITicketService
             estaVencido
         );
     }
-    public async Task ResolveTicketAsync(Guid id, string userRole, bool cerrar = false)
+    public async Task ResolveAsync(Guid ticketId, string userRole, Guid usuarioId, bool cerrar)
     {
         if (userRole != "Supervisor")
-            throw new UnauthorizedAccessException("Acceso restringido a Supervisores.");
+            throw new UnauthorizedAccessException("Only Supervisors can resolve tickets.");
 
-        await _ticketRepository.ResolveAsync(id, cerrar);
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        if (ticket is null)
+            throw new KeyNotFoundException("Ticket not found.");
+
+        ticket.FechaResolucion = DateTime.UtcNow;
+
+        if (cerrar)
+        {
+            var closedStatus = await _statusRepository.GetClosedStatusAsync(true);
+            ticket.EstadoId = closedStatus.Id;
+        }
+
+        await _ticketRepository.UpdateAsync(ticket);
     }
+
 }

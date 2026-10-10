@@ -213,7 +213,7 @@ public class TicketsController : ControllerBase
         try
         {
             var supervisorId = GetCurrentUserId();
-            await _ticketService.DeleteTicketAsync(id, supervisorId);
+            await _ticketService.ResolveAsync(id, supervisorId, true);
             return NoContent();
         }
         catch (Exception ex)

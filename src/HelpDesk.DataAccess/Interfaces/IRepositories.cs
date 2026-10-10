@@ -41,6 +41,9 @@ public interface ITicketRepository : IRepository<Ticket>
     Task UpdateStatusAsync(Guid ticketId, Guid estadoId);
     Task<TicketStatisticsDto> GetStatisticsAsync(DateTime? startDate, DateTime? endDate);
     Task ResolveAsync(Guid ticketId, Guid usuarioId, bool cerrar = false);
+    Task<Ticket?> GetUnassignedTicketAsync();
+    Task AssignTicketAsync(Guid ticketId, Guid tecnicoId);
+
 }
 
 public interface IUserRepository : IRepository<User>
@@ -95,10 +98,10 @@ public interface IStatusHistoryRepository : IRepository<StatusHistory>
 
 public interface INotificationRepository : IRepository<Notification>
 {
-    Task<IEnumerable<Notification>> GetByUsuarioIdAsync(
-        Guid usuarioId,
-        bool asNoTracking = true
-    );
+    Task<IEnumerable<Notification>> GetByUsuarioIdAsync(Guid usuarioId, bool asNoTracking = true);
+    Task RegistrarAsync(Notification notification);
+    Task MarcarComoLeidaAsync(Guid notificationId);
+    Task ActualizarEstadoAsync(Guid notificationId, bool entregada);
 }
 
 public interface ITeamRepository : IRepository<Team>
@@ -121,6 +124,7 @@ public interface ITeamRepository : IRepository<Team>
         Guid? categoriaId = null,
         bool? activo = null,
         string? search = null);
+    Task<IEnumerable<User>> GetTechniciansByCategoryAsync(Guid categoriaId);
 }
 
 public interface IRatingRepository : IRepository<Rating>

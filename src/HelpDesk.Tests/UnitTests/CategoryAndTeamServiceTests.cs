@@ -53,7 +53,7 @@ public class CategoryServiceTests
         // Arrange
         var dto = new CategoryCreateDTO("Hardware", "Hardware issues");
         _categoryRepoMock.Setup(x => x.GetByNameAsync(dto.Nombre)).ReturnsAsync((Category?)null);
-        
+
         Category? capturedCategory = null;
         _categoryRepoMock.Setup(x => x.CreateAsync(It.IsAny<Category>()))
             .Callback<Category>(c => capturedCategory = c)
@@ -86,7 +86,7 @@ public class CategoryServiceTests
         // Arrange
         var categoryId = Guid.NewGuid();
         var category = new Category { Id = categoryId, Nombre = "Test" };
-        
+
         _categoryRepoMock.Setup(x => x.GetByIdAsync(categoryId, false)).ReturnsAsync(category);
         _ticketRepoMock.Setup(x => x.GetFilteredAsync(null, null, categoryId, null, null, null, null, 1, 20, true)).ReturnsAsync(new List<Ticket>());
 
@@ -103,7 +103,7 @@ public class CategoryServiceTests
         // Arrange
         var categoryId = Guid.NewGuid();
         var category = new Category { Id = categoryId, Nombre = "Test" };
-        
+
         _categoryRepoMock.Setup(x => x.GetByIdAsync(categoryId, false)).ReturnsAsync(category);
         _ticketRepoMock.Setup(x => x.GetFilteredAsync(null, null, categoryId, null, null, null, null, 1, 20, true))
             .ReturnsAsync(new List<Ticket> { new Ticket() });
@@ -157,11 +157,11 @@ public class TeamServiceTests
         var categoriaId = Guid.NewGuid();
         var tecnicoId = Guid.NewGuid();
         var dto = new TeamCreateDTO("Team A", "Description", categoriaId, new[] { tecnicoId });
-        
+
         _teamRepoMock.Setup(x => x.GetByNameAsync(dto.Nombre)).ReturnsAsync((Team?)null);
         _categoryRepoMock.Setup(x => x.GetByIdAsync(categoriaId)).ReturnsAsync(new Category { Id = categoriaId, Activo = true });
         _userRepoMock.Setup(x => x.GetByIdAsync(tecnicoId)).ReturnsAsync(new Tecnico { Id = tecnicoId, Activo = true, Rol = UserRole.Tecnico });
-        
+
         Team? capturedTeam = null;
         _teamRepoMock.Setup(x => x.CreateAsync(It.IsAny<Team>()))
             .Callback<Team>(t => capturedTeam = t)

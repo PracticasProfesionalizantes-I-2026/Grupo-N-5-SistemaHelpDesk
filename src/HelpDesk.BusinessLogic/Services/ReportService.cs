@@ -15,7 +15,7 @@ public class ReportService : IReportService
     private readonly IPriorityRepository _priorityRepository;
     private readonly ICategoryRepository _categoryRepository;
 
-    public async Task<TicketStatisticsDto> GetTicketStatisticsAsync(DateTime? startDate, DateTime? endDate, string userRole)
+    public async Task<TicketStatisticsDto> GetTicketStatisticsAsync(DateTime? startDate, DateTime? endDate, string? userRole)
     {
         if (userRole != "Supervisor")
             throw new UnauthorizedAccessException("Acceso restringido únicamente a Supervisores.");

@@ -107,21 +107,7 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
         return await query.ToListAsync();
     }
-    public async Task<Ticket?> GetUnassignedTicketAsync()
-    {
-        return await _dbSet
-            .Where(t => t.TecnicoId == null)
-            .OrderBy(t => t.FechaCreacion)
-            .FirstOrDefaultAsync();
-    }
-    public async Task AssignTicketAsync(Guid ticketId, Guid technicianId)
-    {
-        var ticket = await _dbSet.FindAsync(ticketId);
-        if (ticket is null)
-            throw new KeyNotFoundException("Ticket no encontrado.");
-        ticket.TecnicoId = technicianId;
-        await _context.SaveChangesAsync();
-    }
+
 
 
 
@@ -263,7 +249,7 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
 
         double promedioHoras = tickets
             .Where(t => t.FechaResolucion.HasValue)
-            .Select(t => (t.FechaResolucion.Value - t.FechaCreacion).TotalHours)
+            .Select(t => (t.FechaResolucion!.Value - t.FechaCreacion).TotalHours)
             .DefaultIfEmpty(0)
             .Average();
 
@@ -556,12 +542,16 @@ public class TeamRepository : Repository<Team>, ITeamRepository
         if (asNoTracking) query = query.AsNoTracking();
         return await query.OrderBy(t => t.Nombre).ToListAsync();
     }
-    public async Task<IEnumerable<User>> GetTechniciansByCategoryAsync(Guid categoryId)
+
+    public async Task<IEnumerable<Team>> GetByTecnicoIdAsync(Guid tecnicoId, bool asNoTracking = true)
     {
-        return await _context.Usuarios
-            .Where(t => t.CategoriaId == categoryId)
-            .ToListAsync();
+        var query = _dbSet.Where(t => t.Tecnicos.Any(u => u.Id == tecnicoId));
+        query = query.Include(t => t.Categoria);
+        query = query.Include(t => t.Tecnicos);
+        if (asNoTracking) query = query.AsNoTracking();
+        return await query.OrderBy(t => t.Nombre).ToListAsync();
     }
+
 
 
     public async Task<IEnumerable<Team>> GetByCategoryAsync(Guid categoriaId, bool asNoTracking = true)

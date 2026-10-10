@@ -55,12 +55,12 @@ public class TicketServiceTests
         var categoriaId = Guid.NewGuid();
         var prioridadId = Guid.NewGuid();
         var dto = new TicketCreateDTO("Test Ticket", "Description", prioridadId, categoriaId);
-        
+
         _userRepoMock.Setup(x => x.GetByIdAsync(empleadoId)).ReturnsAsync(new Empleado { Id = empleadoId, Activo = true });
         _categoryRepoMock.Setup(x => x.GetByIdAsync(categoriaId)).ReturnsAsync(new Category { Id = categoriaId, Activo = true });
         _priorityRepoMock.Setup(x => x.GetByIdAsync(prioridadId)).ReturnsAsync(new Priority { Id = prioridadId, Nivel = 2, SLAHoras = 24 });
         _statusRepoMock.Setup(x => x.GetInitialStatusAsync()).ReturnsAsync(new Status { Id = Guid.NewGuid(), Nombre = "Abierto", EsFinal = false });
-        
+
         Ticket? capturedTicket = null;
         _ticketRepoMock.Setup(x => x.CreateAsync(It.IsAny<Ticket>()))
             .Callback<Ticket>(t => capturedTicket = t)

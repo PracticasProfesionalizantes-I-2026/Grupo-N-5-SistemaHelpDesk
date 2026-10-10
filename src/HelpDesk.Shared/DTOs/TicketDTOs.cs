@@ -25,7 +25,7 @@ public record TicketStatusDTO(
 public record TicketUpdateStatusDto
 {
     public Guid TicketId { get; set; }
-    public Guid EstadoId { get; set;}
+    public Guid EstadoId { get; set; }
 }
 
 

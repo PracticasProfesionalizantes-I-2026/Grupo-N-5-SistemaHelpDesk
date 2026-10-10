@@ -13,10 +13,6 @@ public abstract class User
     /// <summary>Correo electrónico del usuario (único en el sistema).</summary>
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>Categoría asociada al usuario (aplicable a técnicos).</summary>
-    public Guid? CategoriaId { get; set; }
-    public virtual Category? Categoria { get; set; }
-
     /// <summary>Nombre completo del usuario.</summary>
     public string NombreCompleto { get; set; } = string.Empty;
 
@@ -40,6 +36,9 @@ public abstract class User
 
     /// <summary>Historiales de cambio de estado realizados por el usuario.</summary>
     public virtual ICollection<StatusHistory> HistorialEstados { get; set; } = new List<StatusHistory>();
+
+    /// <summary>Soluciones registradas por el usuario cuando actúa como técnico.</summary>
+    public virtual ICollection<Solution> SolucionesRegistradas { get; set; } = new List<Solution>();
 
     /// <summary>Equipos en los que participa el usuario como técnico.</summary>
     public virtual ICollection<Team> Equipos { get; set; } = new List<Team>();

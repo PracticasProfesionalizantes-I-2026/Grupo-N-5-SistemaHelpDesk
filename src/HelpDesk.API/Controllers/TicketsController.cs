@@ -222,20 +222,7 @@ public class TicketsController : ControllerBase
 
 
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(Guid id)
-    {
-        try
-        {
-            var supervisorId = GetCurrentUserId();
-            await _ticketService.ResolveAsync(id, supervisorId, true);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return HandleException(ex);
-        }
-    }
+
     [HttpPost("{id}/rating")]
     public async Task<ActionResult<RatingResponseDTO>> CreateRating(Guid id, [FromBody] RatingCreateDTO dto)
     {

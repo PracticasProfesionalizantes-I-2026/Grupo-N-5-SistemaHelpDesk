@@ -53,7 +53,7 @@ public class UserServiceTests
         // Arrange
         var dto = new UserCreateDTO("test@test.com", "Test User", "Empleado");
         _userRepoMock.Setup(x => x.GetByEmailAsync(dto.Email)).ReturnsAsync((User?)null);
-        
+
         User? capturedUser = null;
         _userRepoMock.Setup(x => x.CreateAsync(It.IsAny<User>()))
             .Callback<User>(u => capturedUser = u)
@@ -115,7 +115,7 @@ public class UserServiceTests
         // Arrange
         var userId = Guid.NewGuid();
         var user = new Tecnico { Id = userId, Activo = true };
-        
+
         _userRepoMock.Setup(x => x.GetByIdAsync(userId, false)).ReturnsAsync(user);
         _ticketRepoMock.Setup(x => x.GetByTecnicoIdAsync(userId))
             .ReturnsAsync(new List<Ticket> { new Ticket { Estado = new Status { EsFinal = false } } });
@@ -130,7 +130,7 @@ public class UserServiceTests
         // Arrange
         var email = "test@test.com";
         var user = new Empleado { Id = Guid.NewGuid(), Email = email, NombreCompleto = "Test", Activo = true };
-        
+
         _userRepoMock.Setup(x => x.GetByEmailAsync(email)).ReturnsAsync(user);
 
         // Act

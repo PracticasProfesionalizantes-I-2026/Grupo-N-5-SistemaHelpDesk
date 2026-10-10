@@ -27,7 +27,7 @@ public class CommentService : BaseService, ICommentService
     public async Task<CommentResponseDTO> CreateAsync(Guid ticketId, CommentCreateDTO dto, Guid usuarioId, string usuarioRol)
     {
         await ValidateUserExistsAsync(usuarioId);
-        
+
         var ticket = await _ticketRepository.GetByIdAsync(ticketId, asNoTracking: false);
         if (ticket == null)
             throw new NotFoundException(ErrorMessages.TicketNotFound);

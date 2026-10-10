@@ -199,10 +199,9 @@ public class TeamService : BaseService, ITeamService
 
     public async Task<IEnumerable<TeamResponseDTO>> GetByTecnicoIdAsync(Guid tecnicoId)
     {
-        var allTeams = await _teamRepository.GetActiveAsync();
-        var teamsWithTecnico = allTeams.Where(t => t.Tecnicos != null && t.Tecnicos.Any(u => u.Id == tecnicoId));
+        var teams = await _teamRepository.GetByTecnicoIdAsync(tecnicoId);
         var response = new List<TeamResponseDTO>();
-        foreach (var team in teamsWithTecnico)
+        foreach (var team in teams)
         {
             response.Add(await MapToResponseDTO(team));
         }

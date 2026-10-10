@@ -51,30 +51,30 @@ public class UserService : BaseService, IUserService
         return MapToResponseDTO(created);
     }
     public async Task<UserResponseDTO> RegisterAsync(RegisterDTO dto)
-{
-    if (string.IsNullOrWhiteSpace(dto.Email))
-        throw new ValidationException("Email", "El email es obligatorio");
-
-    if (string.IsNullOrWhiteSpace(dto.NombreCompleto))
-        throw new ValidationException("NombreCompleto", "El nombre completo es obligatorio");
-
-    var existing = await _userRepository.GetByEmailAsync(dto.Email);
-    if (existing != null)
-        throw new DuplicateException(ErrorMessages.EmailAlreadyExists);
-
-    var user = new Empleado
     {
-        Email = dto.Email.Trim(),
-        NombreCompleto = dto.NombreCompleto.Trim(),
-        FechaCreacion = DateTime.UtcNow,
-        Activo = true
-    };
-    user.Rol = UserRole.Empleado;
+        if (string.IsNullOrWhiteSpace(dto.Email))
+            throw new ValidationException("Email", "El email es obligatorio");
 
-    var created = await _userRepository.CreateAsync(user);
+        if (string.IsNullOrWhiteSpace(dto.NombreCompleto))
+            throw new ValidationException("NombreCompleto", "El nombre completo es obligatorio");
 
-    return MapToResponseDTO(created);
-}
+        var existing = await _userRepository.GetByEmailAsync(dto.Email);
+        if (existing != null)
+            throw new DuplicateException(ErrorMessages.EmailAlreadyExists);
+
+        var user = new Empleado
+        {
+            Email = dto.Email.Trim(),
+            NombreCompleto = dto.NombreCompleto.Trim(),
+            FechaCreacion = DateTime.UtcNow,
+            Activo = true
+        };
+        user.Rol = UserRole.Empleado;
+
+        var created = await _userRepository.CreateAsync(user);
+
+        return MapToResponseDTO(created);
+    }
 
     public async Task<UserResponseDTO?> GetByIdAsync(Guid id)
     {
@@ -104,7 +104,7 @@ public class UserService : BaseService, IUserService
         {
             var ticketsAsignados = await _ticketRepository.GetByTecnicoIdAsync(user.Id);
             var ticketsCreados = await _ticketRepository.GetByEmpleadoIdAsync(user.Id);
-            
+
             itemDTOs.Add(new UserListDTO(
                 user.Id,
                 user.Email,
@@ -195,7 +195,7 @@ public class UserService : BaseService, IUserService
             throw new UnauthorizedActionException("Usuario inactivo");
 
         var token = $"mock-token-{user.Id}-{DateTime.UtcNow.Ticks}"; // Simulación simple
-        
+
         return new LoginResponseDTO(MapToResponseDTO(user), token);
     }
 

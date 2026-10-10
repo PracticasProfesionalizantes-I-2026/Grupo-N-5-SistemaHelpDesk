@@ -518,10 +518,28 @@ public class TicketService : BaseService, ITicketService
         if (cerrar)
         {
             var closedStatus = await _statusRepository.GetClosedStatusAsync(true);
-            ticket.EstadoId = closedStatus.Id;
+            if (closedStatus != null)
+            {
+                ticket.EstadoId = closedStatus.Id;
+            }
         }
 
         await _ticketRepository.UpdateAsync(ticket);
     }
 
+
+
+    public async Task AutoAssignTicketAsync()
+    {
+        var ticket = await _ticketRepository.GetUnassignedTicketAsync();
+        if (ticket == null)
+            return;
+
+        var activeTechnicians = await _userRepository.GetActiveTechniciansAsync();
+        var technician = activeTechnicians.FirstOrDefault();
+        if (technician == null)
+            throw new InvalidOperationException("No hay técnicos activos disponibles para asignación.");
+
+        await _ticketRepository.AssignTicketAsync(ticket.Id, technician.Id);
+    }
 }

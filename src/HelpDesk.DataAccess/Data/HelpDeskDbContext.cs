@@ -221,30 +221,30 @@ public class HelpDeskDbContext : DbContext
             .HasForeignKey(h => h.UsuarioId)
             .OnDelete(DeleteBehavior.Restrict);
         // Solution
-modelBuilder.Entity<Solution>(entity =>
-{
-    entity.HasKey(s => s.Id);
+        modelBuilder.Entity<Solution>(entity =>
+        {
+            entity.HasKey(s => s.Id);
 
-    entity.Property(s => s.Descripcion)
-        .HasMaxLength(5000)
-        .IsRequired();
+            entity.Property(s => s.Descripcion)
+                .HasMaxLength(5000)
+                .IsRequired();
 
-    entity.Property(s => s.NombreArchivo)
-        .HasMaxLength(255);
+            entity.Property(s => s.NombreArchivo)
+                .HasMaxLength(255);
 
-    entity.Property(s => s.TipoContenido)
-        .HasMaxLength(100);
+            entity.Property(s => s.TipoContenido)
+                .HasMaxLength(100);
 
-    entity.HasOne(s => s.Ticket)
-        .WithMany()
-        .HasForeignKey(s => s.TicketId)
-        .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(s => s.Ticket)
+                .WithMany()
+                .HasForeignKey(s => s.TicketId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-    entity.HasOne(s => s.Tecnico)
-        .WithMany()
-        .HasForeignKey(s => s.TecnicoId)
-        .OnDelete(DeleteBehavior.Restrict);
-});
+            entity.HasOne(s => s.Tecnico)
+                .WithMany()
+                .HasForeignKey(s => s.TecnicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         // Team
         modelBuilder.Entity<Team>()
@@ -283,7 +283,7 @@ modelBuilder.Entity<Solution>(entity =>
                     j.HasKey("TeamId", "TecnicoId");
                     j.ToTable("TeamTecnicos");
                 });
-                
+
         modelBuilder.Entity<PasswordResetToken>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -310,7 +310,7 @@ modelBuilder.Entity<Solution>(entity =>
           .WithMany()
           .HasForeignKey(e => e.UsuarioId)
           .OnDelete(DeleteBehavior.Restrict);
-});      
+});
 
         // Seed Data
         SeedData(modelBuilder);

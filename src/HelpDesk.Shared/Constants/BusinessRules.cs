@@ -25,7 +25,7 @@ public static class BusinessRules
         ".jpg",
         ".jpeg"
     };
-    
+
     public static readonly Dictionary<TicketPriority, int> SLAHours = new()
     {
         { TicketPriority.Critica, 4 },
@@ -33,7 +33,7 @@ public static class BusinessRules
         { TicketPriority.Media, 24 },
         { TicketPriority.Baja, 72 }
     };
-    
+
     public const int DefaultPageSize = 20;
     public const int MaxPageSize = 100;
 }
@@ -48,7 +48,7 @@ public static class ErrorMessages
     public const string CommentNotFound = "El comentario no fue encontrado";
     public const string TeamNotFound = "El equipo no fue encontrado";
     public const string SolutionNotFound = "La solución no fue encontrada";
-    
+
     public const string EmailAlreadyExists = "El email ya está registrado en el sistema";
     public const string CategoryHasTickets = "No se puede eliminar la categoría porque tiene tickets asociados";
     public const string UserHasOpenTickets = "No se puede desactivar el usuario porque tiene tickets abiertos asignados";

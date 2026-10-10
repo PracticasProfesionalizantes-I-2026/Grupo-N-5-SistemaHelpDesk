@@ -108,6 +108,7 @@ public interface ITeamRepository : IRepository<Team>
 {
     Task<Team?> GetByNameAsync(string nombre, bool asNoTracking = true);
     Task<IEnumerable<Team>> GetActiveAsync(bool asNoTracking = true);
+    Task<IEnumerable<Team>> GetByTecnicoIdAsync(Guid tecnicoId, bool asNoTracking = true);
     Task<IEnumerable<Team>> GetByCategoryAsync(Guid categoriaId, bool asNoTracking = true);
     Task<Team?> GetWithTecnicosAsync(Guid id, bool asNoTracking = true);
     Task AddTecnicoAsync(Guid teamId, Guid tecnicoId);

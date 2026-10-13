@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+262602f2525e70bd6527609c35063867c64b9ef6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3974dab7a148e8e39df597094dd4ae937843197")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelpDesk.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

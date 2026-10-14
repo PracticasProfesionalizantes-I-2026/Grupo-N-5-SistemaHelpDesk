@@ -1,10 +1,10 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
-using HelpDesk.Shared.DTOs;
-using HelpDesk.Shared.Exceptions;
-using HelpDesk.Shared.Enums;
 using HelpDesk.Shared.Constants;
+using HelpDesk.Shared.DTOs;
+using HelpDesk.Shared.Enums;
+using HelpDesk.Shared.Exceptions;
 
 namespace HelpDesk.BusinessLogic.Services;
 
@@ -50,7 +50,11 @@ public class UserService : BaseService, IUserService
 
         return MapToResponseDTO(created);
     }
+<<<<<<< HEAD
     public async Task<UserResponseDTO> RegisterAsync(RegisterDTO dto)
+=======
+    public async Task<UserResponseDTO> RegisterAsync(UserCreateDTO dto)
+>>>>>>> EnviarMensajes
     {
         if (string.IsNullOrWhiteSpace(dto.Email))
             throw new ValidationException("Email", "El email es obligatorio");

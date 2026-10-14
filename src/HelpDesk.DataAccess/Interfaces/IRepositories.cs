@@ -125,6 +125,7 @@ public interface ITeamRepository : IRepository<Team>
         Guid? categoriaId = null,
         bool? activo = null,
         string? search = null);
+<<<<<<< HEAD
     Task<IEnumerable<User>> GetTechniciansByCategoryAsync(Guid categoriaId);
 }
 
@@ -140,3 +141,11 @@ public interface ISolutionRepository : IRepository<Solution>
         bool asNoTracking = true);
     Task AddSolutionAsync(Solution solution);
 }
+=======
+}
+public interface IMessageRepository : IRepository<Message>
+{
+    Task AddAsync(Message message);
+    Task<IEnumerable<Message>> GetConversationAsync(Guid userId, Guid contactId);
+}
+>>>>>>> EnviarMensajes

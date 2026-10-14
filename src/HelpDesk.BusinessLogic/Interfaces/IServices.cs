@@ -38,7 +38,7 @@ public interface IUserService
     Task DeactivateAsync(Guid id);
     Task<UserResponseDTO?> GetByEmailAsync(string email);
     Task<LoginResponseDTO> LoginAsync(LoginDTO dto);
-    Task<UserResponseDTO> RegisterAsync(RegisterDTO dto);
+    Task<UserResponseDTO> RegisterAsync(UserCreateDTO dto);
 }
 
 public interface ICategoryService
@@ -84,6 +84,7 @@ public interface IReportService
     Task<IEnumerable<TicketsByTechnicianDTO>> GetTicketsByTechnicianAsync();
     Task<IEnumerable<SLAComplianceDTO>> GetSLAComplianceAsync();
     Task<IEnumerable<TechnicianWorkloadDTO>> GetTechnicianWorkloadAsync();
+<<<<<<< HEAD
     Task<TicketStatisticsDto> GetTicketStatisticsAsync(DateTime? startDate, DateTime? endDate, string? userRole);
 }
 public interface INotificationService
@@ -107,3 +108,11 @@ public interface ISolutionService
     Task<IEnumerable<SolutionResponseDTO>> GetSolutionsByTicketAsync(Guid ticketId);
     Task AttachSolutionAsync(Guid ticketId, Guid tecnicoId, string description, string? fileName, string? filePath, string? contentType, long? fileSize, byte[]? fileContent);
 }
+=======
+}
+public interface IMessageService
+{
+    Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text);
+    Task<IEnumerable<MessageDTO>> GetConversationAsync(Guid userId, Guid contactId);
+}
+>>>>>>> EnviarMensajes

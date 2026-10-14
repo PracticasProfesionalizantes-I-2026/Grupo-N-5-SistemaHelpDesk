@@ -50,11 +50,9 @@ public class UserService : BaseService, IUserService
 
         return MapToResponseDTO(created);
     }
-<<<<<<< HEAD
-    public async Task<UserResponseDTO> RegisterAsync(RegisterDTO dto)
-=======
+
     public async Task<UserResponseDTO> RegisterAsync(UserCreateDTO dto)
->>>>>>> EnviarMensajes
+
     {
         if (string.IsNullOrWhiteSpace(dto.Email))
             throw new ValidationException("Email", "El email es obligatorio");

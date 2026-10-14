@@ -17,7 +17,7 @@ public record SolutionResponseDTO(
     string? FilePath,
     string? ContentType,
     long? FileSize,
-    DateTime CreatedAt
+    DateTime FechaCreacion
 );
 
 public record SolutionFormDTO(

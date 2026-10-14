@@ -1,6 +1,5 @@
 {
   "version": 2,
-<<<<<<< HEAD
   "dgSpecHash": "Zx2X7LGpDns=",
   "success": true,
   "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
@@ -18,11 +17,4 @@
       "targetGraphs": []
     }
   ]
-=======
-  "dgSpecHash": "3/Houp4DNqQ=",
-  "success": true,
-  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
->>>>>>> EnviarMensajes
 }

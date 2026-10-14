@@ -40,6 +40,7 @@ public class HelpDeskDbContext : DbContext
     public DbSet<Rating> Ratings => Set<Rating>();
     public DbSet<Notification> Notificaciones => Set<Notification>();
     public DbSet<Solution> Soluciones => Set<Solution>();
+    public DbSet<Message> Messages => Set<Message>();
     /// <summary>Configura las entidades, relaciones y datos semilla del modelo.</summary>
     /// <param name="modelBuilder">Constructor del modelo.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -352,7 +353,7 @@ public class HelpDeskDbContext : DbContext
         modelBuilder.Entity<Category>().HasData(categorias);
 
         // Usuarios
-                // Usuarios (TPH: cada tipo derivado por separado)
+        // Usuarios (TPH: cada tipo derivado por separado)
         modelBuilder.Entity<Supervisor>().HasData(
             new Supervisor
             {

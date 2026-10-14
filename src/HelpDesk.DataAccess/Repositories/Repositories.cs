@@ -640,7 +640,6 @@ public class TeamRepository : Repository<Team>, ITeamRepository
 
         return await query.CountAsync();
     }
-<<<<<<< HEAD
     public async Task<IEnumerable<User>> GetTechniciansByCategoryAsync(Guid categoriaId)
     {
         return await _context.Usuarios
@@ -649,23 +648,17 @@ public class TeamRepository : Repository<Team>, ITeamRepository
             .ToListAsync();
     }
 }
-=======
-}
-public class MessageRepository : IMessageRepository
-{
-    private readonly HelpDeskDbContext _context;
 
-    public MessageRepository(HelpDeskDbContext context)
-    {
-        _context = context;
-    }
+public class MessageRepository : Repository<Message>, IMessageRepository
+{
+    public MessageRepository(HelpDeskDbContext context) : base(context) { }
 
     public async Task AddAsync(Message message)
     {
-        _context.Messages.Add(message);
+        message.Id = Guid.NewGuid();
+        await _dbSet.AddAsync(message);
         await _context.SaveChangesAsync();
     }
-
     public async Task<IEnumerable<Message>> GetConversationAsync(Guid userId, Guid contactId)
     {
         return await _context.Messages
@@ -677,4 +670,3 @@ public class MessageRepository : IMessageRepository
             .ToListAsync();
     }
 }
->>>>>>> EnviarMensajes

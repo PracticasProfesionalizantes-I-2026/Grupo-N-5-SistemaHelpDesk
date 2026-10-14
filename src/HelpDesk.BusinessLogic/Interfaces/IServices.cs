@@ -29,7 +29,7 @@ public interface IUserService
     Task DeactivateAsync(Guid id);
     Task<UserResponseDTO?> GetByEmailAsync(string email);
     Task<LoginResponseDTO> LoginAsync(LoginDTO dto);
-    Task<UserResponseDTO> RegisterAsync(RegisterDTO dto);
+    Task<UserResponseDTO> RegisterAsync(UserCreateDTO dto);
 }
 
 public interface ICategoryService
@@ -74,4 +74,9 @@ public interface IReportService
     Task<IEnumerable<TicketsByTechnicianDTO>> GetTicketsByTechnicianAsync();
     Task<IEnumerable<SLAComplianceDTO>> GetSLAComplianceAsync();
     Task<IEnumerable<TechnicianWorkloadDTO>> GetTechnicianWorkloadAsync();
+}
+public interface IMessageService
+{
+    Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text);
+    Task<IEnumerable<MessageDTO>> GetConversationAsync(Guid userId, Guid contactId);
 }

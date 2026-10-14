@@ -110,3 +110,8 @@ public interface ITeamRepository : IRepository<Team>
         bool? activo = null,
         string? search = null);
 }
+public interface IMessageRepository : IRepository<Message>
+{
+    Task AddAsync(Message message);
+    Task<IEnumerable<Message>> GetConversationAsync(Guid userId, Guid contactId);
+}

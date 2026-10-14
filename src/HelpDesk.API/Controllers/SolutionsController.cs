@@ -129,4 +129,35 @@ public class SolutionsController : ControllerBase
                     })
         };
     }
+    [HttpGet("ticket/{ticketId}")]
+    public async Task<ActionResult<IEnumerable<SolutionResponseDTO>>> GetByTicket(Guid ticketId)
+    {
+        var result = await _solutionService.GetSolutionsByTicketAsync(ticketId);
+        return Ok(result);
+    }
+
+    [HttpPost("attach")]
+    public async Task<IActionResult> Attach(Guid ticketId, Guid tecnicoId, string description, IFormFile? file)
+    {
+        byte[]? content = null;
+        long? size = null;
+        string? contentType = null;
+        string? fileName = null;
+        string? filePath = null;
+
+        if (file != null)
+        {
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            content = ms.ToArray();
+            size = file.Length;
+            contentType = file.ContentType;
+            fileName = file.FileName;
+            filePath = $"uploads/{file.FileName}";
+        }
+
+        await _solutionService.AttachSolutionAsync(ticketId, tecnicoId, description, fileName, filePath, contentType, size, content);
+
+        return Ok(new { message = "Solution attached successfully." });
+    }
 }

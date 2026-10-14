@@ -213,4 +213,39 @@ public class SolutionService : ISolutionService
             solution.TamanioArchivo,
             solution.FechaCreacion);
     }
+    public async Task<IEnumerable<SolutionResponseDTO>> GetSolutionsByTicketAsync(Guid ticketId)
+    {
+        var solutions = await _solutionRepository.GetByTicketIdAsync(ticketId);
+
+        return solutions.Select(s => new SolutionResponseDTO(
+            s.Id,
+            s.TicketId,
+            s.TecnicoId,
+            s.Descripcion,
+            s.NombreArchivo,
+            s.RutaArchivo,
+            s.TipoContenido,
+            s.TamanioArchivo,
+            s.FechaCreacion
+        ));
+    }
+
+    public async Task AttachSolutionAsync(Guid ticketId, Guid tecnicoId, string description, string? fileName, string? filePath, string? contentType, long? fileSize, byte[]? fileContent)
+    {
+        var solution = new Solution
+        {
+            Id = Guid.NewGuid(),
+            TicketId = ticketId,
+            TecnicoId = tecnicoId,
+            Descripcion = description,
+            NombreArchivo = fileName,
+            RutaArchivo = filePath,
+            TipoContenido = contentType,
+            TamanioArchivo = fileSize,
+            ContenidoArchivo = fileContent,
+            FechaCreacion = DateTime.UtcNow
+        };
+
+        await _solutionRepository.AddSolutionAsync(solution);
+    }
 }

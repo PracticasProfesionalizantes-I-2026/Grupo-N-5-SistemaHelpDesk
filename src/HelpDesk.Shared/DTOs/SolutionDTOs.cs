@@ -12,11 +12,12 @@ public record SolutionResponseDTO(
     Guid Id,
     Guid TicketId,
     Guid TecnicoId,
-    string Descripcion,
-    string? NombreArchivo,
-    string? TipoContenido,
-    long? TamanioArchivo,
-    DateTime FechaCreacion
+    string Description,
+    string? FileName,
+    string? FilePath,
+    string? ContentType,
+    long? FileSize,
+    DateTime CreatedAt
 );
 
 public record SolutionFormDTO(

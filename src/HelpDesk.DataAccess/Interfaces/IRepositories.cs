@@ -138,4 +138,5 @@ public interface ISolutionRepository : IRepository<Solution>
     Task<IEnumerable<Solution>> GetByTicketIdAsync(
         Guid ticketId,
         bool asNoTracking = true);
+    Task AddSolutionAsync(Solution solution);
 }

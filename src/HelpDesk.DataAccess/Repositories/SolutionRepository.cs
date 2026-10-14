@@ -27,4 +27,10 @@ public class SolutionRepository : Repository<Solution>, ISolutionRepository
             .OrderByDescending(s => s.FechaCreacion)
             .ToListAsync();
     }
+    public async Task AddSolutionAsync(Solution solution)
+    {
+        _dbSet.Add(solution);
+        await _context.SaveChangesAsync();
+    }
+
 }

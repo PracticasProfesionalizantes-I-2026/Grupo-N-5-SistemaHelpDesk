@@ -1,20 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Zx2X7LGpDns=",
+  "dgSpecHash": "0+QqCjsKHf8=",
   "success": true,
-  "projectFilePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
+  "projectFilePath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\GianLuca\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512"
+    "C:\\Users\\loren\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problem reading the cache file c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
-      "warningLevel": 1,
-      "filePath": "c:\\Users\\GianLuca\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

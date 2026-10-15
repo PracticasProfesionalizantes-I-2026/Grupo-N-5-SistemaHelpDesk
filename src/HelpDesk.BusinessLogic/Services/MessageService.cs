@@ -1,21 +1,32 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.DataAccess.Entities;
 using HelpDesk.DataAccess.Interfaces;
+using HelpDesk.Shared.Constants;
 using HelpDesk.Shared.DTOs;
+using HelpDesk.Shared.Exceptions;
+
+namespace HelpDesk.BusinessLogic.Services;
 
 public class MessageService : IMessageService
 {
     private readonly IMessageRepository _repository;
+    private readonly IUserRepository _userRepository;
 
-    public MessageService(IMessageRepository repository)
+    public MessageService(IMessageRepository repository, IUserRepository userRepository)
     {
         _repository = repository;
+        _userRepository = userRepository;
     }
 
     public async Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text)
     {
         if (string.IsNullOrWhiteSpace(text))
-            throw new ArgumentException("Message cannot be empty.");
+            throw new ValidationException("Text", "Message cannot be empty.");
+
+        var sender = await _userRepository.GetByIdAsync(senderId)
+            ?? throw new NotFoundException(ErrorMessages.UserNotFound);
+        var receiver = await _userRepository.GetByIdAsync(receiverId)
+            ?? throw new NotFoundException(ErrorMessages.UserNotFound);
 
         var message = new Message
         {
@@ -35,20 +46,20 @@ public class MessageService : IMessageService
             message.Text,
             message.SentAt,
             new UserResponseDTO(
-                message.Sender.Id,
-                message.Sender.NombreCompleto,
-                message.Sender.Email,
-                message.Sender.Rol.ToString(),
-                message.Sender.Activo,
-                message.Sender.FechaCreacion
+                sender.Id,
+                sender.Email,
+                sender.NombreCompleto,
+                sender.Rol.ToString(),
+                sender.Activo,
+                sender.FechaCreacion
             ),
             new UserResponseDTO(
-                message.Receiver.Id,
-                message.Receiver.NombreCompleto,
-                message.Receiver.Email,
-                message.Receiver.Rol.ToString(),
-                message.Receiver.Activo,
-                message.Receiver.FechaCreacion
+                receiver.Id,
+                receiver.Email,
+                receiver.NombreCompleto,
+                receiver.Rol.ToString(),
+                receiver.Activo,
+                receiver.FechaCreacion
             )
         );
     }

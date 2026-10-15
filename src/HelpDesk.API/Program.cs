@@ -72,6 +72,7 @@ builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<ISolutionRepository, SolutionRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -85,6 +86,7 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ISolutionService, SolutionService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 // Hosted Background Services
 builder.Services.AddHostedService<TicketEscalationService>();

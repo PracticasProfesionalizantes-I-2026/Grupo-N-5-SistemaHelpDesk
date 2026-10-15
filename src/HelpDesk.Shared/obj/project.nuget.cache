@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0+QqCjsKHf8=",
+  "dgSpecHash": "M0CFBrcDsvA=",
   "success": true,
-  "projectFilePath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
+  "projectFilePath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Shared\\HelpDesk.Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\loren\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512"
   ],

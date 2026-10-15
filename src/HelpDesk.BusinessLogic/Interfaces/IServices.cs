@@ -1,3 +1,4 @@
+using HelpDesk.DataAccess.Entities;
 using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Enums;
 
@@ -38,7 +39,7 @@ public interface IUserService
     Task DeactivateAsync(Guid id);
     Task<UserResponseDTO?> GetByEmailAsync(string email);
     Task<LoginResponseDTO> LoginAsync(LoginDTO dto);
-    Task<UserResponseDTO> RegisterAsync(UserCreateDTO dto);
+    Task<UserResponseDTO> RegisterAsync(RegisterDTO dto);
 }
 
 public interface ICategoryService
@@ -104,4 +105,27 @@ public interface ISolutionService
         SolutionCreateDTO dto,
         Guid tecnicoId,
         string usuarioRol);
+
+    Task<IEnumerable<SolutionResponseDTO>> GetSolutionsByTicketAsync(Guid ticketId);
+
+    Task AttachSolutionAsync(
+        Guid ticketId,
+        Guid tecnicoId,
+        string description,
+        string? fileName,
+        string? filePath,
+        string? contentType,
+        long? fileSize,
+        byte[]? fileContent);
 }
+
+public interface ITokenService
+{
+    string GenerateToken(User user);
+}
+
+public interface IMessageService
+{
+    Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text);
+    Task<IEnumerable<MessageDTO>> GetConversationAsync(Guid userId, Guid contactId);
+}

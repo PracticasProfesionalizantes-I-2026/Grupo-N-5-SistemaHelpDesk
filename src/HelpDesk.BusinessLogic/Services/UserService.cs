@@ -6,7 +6,6 @@ using HelpDesk.Shared.Security;
 using HelpDesk.Shared.Constants;
 using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Enums;
-using HelpDesk.Shared.Exceptions;
 
 namespace HelpDesk.BusinessLogic.Services;
 
@@ -58,7 +57,7 @@ public class UserService : BaseService, IUserService
         return MapToResponseDTO(created);
     }
 
-    public async Task<UserResponseDTO> RegisterAsync(UserCreateDTO dto)
+    public async Task<UserResponseDTO> RegisterAsync(RegisterDTO dto)
 
     {
         if (string.IsNullOrWhiteSpace(dto.Email))

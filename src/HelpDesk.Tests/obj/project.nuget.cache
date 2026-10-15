@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "suHDGk/WGQs=",
+  "dgSpecHash": "UgXnvdltsFk=",
   "success": true,
-  "projectFilePath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+  "projectFilePath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\loren\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\loren\\.nuget\\packages\\fluentassertions\\6.12.2\\fluentassertions.6.12.2.nupkg.sha512",
@@ -76,21 +76,12 @@
   ],
   "logs": [
     {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problema al leer el archivo de caché c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
-      "warningLevel": 1,
-      "filePath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
-      "targetGraphs": []
-    },
-    {
       "code": "NU1903",
       "level": "Warning",
       "message": "El paquete \"SQLitePCLRaw.lib.e_sqlite3\" 2.1.10 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
-      "projectPath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+      "projectPath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
       "warningLevel": 1,
-      "filePath": "c:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
+      "filePath": "C:\\Users\\loren\\OneDrive\\Documentos\\GitHub\\Grupo-N-5-SistemaHelpDesk\\src\\HelpDesk.Tests\\HelpDesk.Tests.csproj",
       "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
       "targetGraphs": [
         "net10.0"

@@ -209,6 +209,7 @@ public class SolutionService : ISolutionService
             solution.TecnicoId,
             solution.Descripcion,
             solution.NombreArchivo,
+            solution.RutaArchivo,
             solution.TipoContenido,
             solution.TamanioArchivo,
             solution.FechaCreacion);

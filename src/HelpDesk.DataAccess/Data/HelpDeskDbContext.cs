@@ -237,9 +237,9 @@ public class HelpDeskDbContext : DbContext
                 .HasMaxLength(100);
 
             entity.HasOne(s => s.Ticket)
-                .WithMany()
-                .HasForeignKey(s => s.TicketId)
-                .OnDelete(DeleteBehavior.Cascade);
+    .WithMany(t => t.Soluciones)
+    .HasForeignKey(s => s.TicketId)
+    .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(s => s.Tecnico)
                 .WithMany()

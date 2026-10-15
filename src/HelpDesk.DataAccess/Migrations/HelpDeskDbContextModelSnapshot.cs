@@ -123,6 +123,34 @@ namespace HelpDesk.DataAccess.Migrations
                     b.ToTable("Comentarios");
                 });
 
+            modelBuilder.Entity("HelpDesk.DataAccess.Entities.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("HelpDesk.DataAccess.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -732,6 +760,25 @@ namespace HelpDesk.DataAccess.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("HelpDesk.DataAccess.Entities.Message", b =>
+                {
+                    b.HasOne("HelpDesk.DataAccess.Entities.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HelpDesk.DataAccess.Entities.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("HelpDesk.DataAccess.Entities.Notification", b =>
                 {
                     b.HasOne("HelpDesk.DataAccess.Entities.Ticket", "Ticket")
@@ -790,7 +837,7 @@ namespace HelpDesk.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("HelpDesk.DataAccess.Entities.Ticket", "Ticket")
-                        .WithMany()
+                        .WithMany("Soluciones")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -942,6 +989,8 @@ namespace HelpDesk.DataAccess.Migrations
                     b.Navigation("Comentarios");
 
                     b.Navigation("HistorialEstados");
+
+                    b.Navigation("Soluciones");
                 });
 
             modelBuilder.Entity("HelpDesk.DataAccess.Entities.User", b =>

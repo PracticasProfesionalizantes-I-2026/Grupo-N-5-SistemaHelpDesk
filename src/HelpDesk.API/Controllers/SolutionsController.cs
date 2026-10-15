@@ -120,12 +120,12 @@ public class SolutionsController : BaseApiController
                     })
         };
     }
-    [HttpGet("ticket/{ticketId}")]
-    public async Task<ActionResult<IEnumerable<SolutionResponseDTO>>> GetByTicket(Guid ticketId)
-    {
-        var result = await _solutionService.GetSolutionsByTicketAsync(ticketId);
-        return Ok(result);
-    }
+    [HttpGet]
+public async Task<ActionResult<IEnumerable<SolutionResponseDTO>>> GetByTicket(Guid ticketId)
+{
+    var result = await _solutionService.GetSolutionsByTicketAsync(ticketId);
+    return Ok(result);
+}
 
     [HttpPost("attach")]
     public async Task<IActionResult> Attach(Guid ticketId, Guid tecnicoId, string description, IFormFile? file)

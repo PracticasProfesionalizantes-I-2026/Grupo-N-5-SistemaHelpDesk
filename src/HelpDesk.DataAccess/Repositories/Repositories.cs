@@ -109,7 +109,17 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
     }
 
 
+public override async Task<IEnumerable<Ticket>> GetAllAsync(bool asNoTracking = true)
+{
+    IQueryable<Ticket> query = _dbSet
+        .Include(t => t.Estado)
+        .Include(t => t.Prioridad);
 
+    if (asNoTracking)
+        query = query.AsNoTracking();
+
+    return await query.ToListAsync();
+}
 
     public async Task<IEnumerable<Ticket>> GetByEmpleadoIdAsync(Guid empleadoId, bool asNoTracking = true)
     {
@@ -321,7 +331,11 @@ public class TicketRepository : Repository<Ticket>, ITicketRepository
             throw new KeyNotFoundException("El ticket no existe.");
 
         ticket.TecnicoId = tecnicoId;
-        ticket.EstadoId = (await _context.Estados.FirstAsync(s => s.Nombre == "Asignado")).Id;
+        var estadoAsignado = await _context.Estados.FirstOrDefaultAsync(s => s.Nombre == "En Progreso" || s.Nombre == "Asignado");
+        if (estadoAsignado != null)
+        {
+            ticket.EstadoId = estadoAsignado.Id;
+        }
         ticket.FechaAsignacion = DateTime.UtcNow;
 
         _context.Tickets.Update(ticket);

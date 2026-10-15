@@ -3,11 +3,14 @@ using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HelpDesk.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class ReportsController : ControllerBase
+public class ReportsController : BaseApiController
 {
     private readonly IReportService _reportService;
 
@@ -21,8 +24,8 @@ public class ReportsController : ControllerBase
     {
         try
         {
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-            var result = await _reportService.GetTicketStatisticsAsync(startDate, endDate, userRole!);
+            var userRole = GetCurrentUserRole();
+            var result = await _reportService.GetTicketStatisticsAsync(startDate, endDate, userRole);
             return Ok(result);
         }
         catch (UnauthorizedAccessException ex)

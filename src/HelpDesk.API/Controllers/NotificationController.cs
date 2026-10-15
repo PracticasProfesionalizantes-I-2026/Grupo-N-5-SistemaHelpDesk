@@ -1,11 +1,15 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+namespace HelpDesk.API.Controllers;
+
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class NotificationsController : ControllerBase
+public class NotificationsController : BaseApiController
 {
     private readonly INotificationService _notificationService;
 
@@ -14,9 +18,25 @@ public class NotificationsController : ControllerBase
         _notificationService = notificationService;
     }
 
+    [HttpGet("mias")]
+    public async Task<ActionResult<IEnumerable<NotificationResponseDTO>>> GetMias()
+    {
+        var currentUserId = GetCurrentUserId();
+        var result = await _notificationService.GetMyNotificationsAsync(currentUserId);
+        return Ok(result);
+    }
+
     [HttpGet("usuario/{usuarioId}")]
     public async Task<ActionResult<IEnumerable<NotificationResponseDTO>>> GetByUsuario(Guid usuarioId)
     {
+        var currentUserId = GetCurrentUserId();
+        var currentRole = GetCurrentUserRole();
+
+        if (currentRole != "Supervisor" && currentUserId != usuarioId)
+        {
+            return Forbid();
+        }
+
         var result = await _notificationService.GetMyNotificationsAsync(usuarioId);
         return Ok(result);
     }

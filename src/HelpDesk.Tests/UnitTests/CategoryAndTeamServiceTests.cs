@@ -207,4 +207,39 @@ public class TeamServiceTests
         Assert.NotNull(result);
         _teamRepoMock.Verify(x => x.AddTecnicoAsync(teamId, tecnicoId), Times.Once);
     }
+
+    [Fact]
+    public async Task CreateAsync_ShouldThrow_WhenTechnicianNotFound()
+    {
+        // Arrange
+        var invalidTecnicoId = Guid.NewGuid();
+        var categoriaId = Guid.NewGuid();
+        var dto = new TeamCreateDTO("Team Invalido", "Desc", categoriaId, new[] { invalidTecnicoId });
+
+        _teamRepoMock.Setup(x => x.GetByNameAsync(dto.Nombre)).ReturnsAsync((Team?)null);
+        _categoryRepoMock.Setup(x => x.GetByIdAsync(categoriaId)).ReturnsAsync(new Category { Id = categoriaId, Activo = true });
+        _userRepoMock.Setup(x => x.GetByIdAsync(invalidTecnicoId)).ReturnsAsync((User?)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => _service.CreateAsync(dto));
+        _teamRepoMock.Verify(x => x.CreateAsync(It.IsAny<Team>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldThrow_WhenTechnicianIsNotActiveTecnico()
+    {
+        // Arrange
+        var empleadoId = Guid.NewGuid();
+        var categoriaId = Guid.NewGuid();
+        var dto = new TeamCreateDTO("Team con Empleado", "Desc", categoriaId, new[] { empleadoId });
+
+        _teamRepoMock.Setup(x => x.GetByNameAsync(dto.Nombre)).ReturnsAsync((Team?)null);
+        _categoryRepoMock.Setup(x => x.GetByIdAsync(categoriaId)).ReturnsAsync(new Category { Id = categoriaId, Activo = true });
+        // Usuario existe pero NO es Tecnico
+        _userRepoMock.Setup(x => x.GetByIdAsync(empleadoId)).ReturnsAsync(new Empleado { Id = empleadoId, Activo = true, Rol = UserRole.Empleado });
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BusinessRuleException>(() => _service.CreateAsync(dto));
+        _teamRepoMock.Verify(x => x.CreateAsync(It.IsAny<Team>()), Times.Never);
+    }
 }

@@ -104,12 +104,4 @@ public interface ISolutionService
         SolutionCreateDTO dto,
         Guid tecnicoId,
         string usuarioRol);
-    Task<IEnumerable<SolutionResponseDTO>> GetSolutionsByTicketAsync(Guid ticketId);
-    Task AttachSolutionAsync(Guid ticketId, Guid tecnicoId, string description, string? fileName, string? filePath, string? contentType, long? fileSize, byte[]? fileContent);
 }
-public interface IMessageService
-{
-    Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text);
-    Task<IEnumerable<MessageDTO>> GetConversationAsync(Guid userId, Guid contactId);
-}
-

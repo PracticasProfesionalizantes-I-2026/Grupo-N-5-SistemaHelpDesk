@@ -3,7 +3,8 @@
   "method": "PATCH",
   "url": "http://localhost:5000/api/tickets/{{ticketId}}/assign",
   "headers": {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Authorization": "Bearer {{token}}"
   },
   "body": {
     "tecnicoId": "cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa"

@@ -3,11 +3,14 @@ using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HelpDesk.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class TicketsController : ControllerBase
+public class TicketsController : BaseApiController
 {
     private readonly ITicketService _ticketService;
 
@@ -181,10 +184,10 @@ public class TicketsController : ControllerBase
     {
         try
         {
-            var userRole = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-            var usuarioId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value!);
+            var userRole = GetCurrentUserRole();
+            var usuarioId = GetCurrentUserId();
 
-            await _ticketService.ResolveAsync(id, userRole!, usuarioId, cerrar);
+            await _ticketService.ResolveAsync(id, userRole, usuarioId, cerrar);
             return NoContent(); // 204
         }
         catch (UnauthorizedAccessException ex)
@@ -273,18 +276,6 @@ public class TicketsController : ControllerBase
         }
     }
 
-    private Guid GetCurrentUserId()
-    {
-        // En producción, esto vendría del token JWT
-        // Para testing, usamos un ID fijo del seed data
-        return Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"); // Juan Pérez
-    }
-
-    private string GetCurrentUserRole()
-    {
-        // En producción, esto vendría del token JWT
-        return "Empleado";
-    }
 
     private ActionResult HandleException(Exception ex)
     {

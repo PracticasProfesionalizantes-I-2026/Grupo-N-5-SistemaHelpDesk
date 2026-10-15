@@ -40,6 +40,9 @@ public class Ticket
     /// <summary>Fecha y hora de la última actualización del ticket.</summary>
     public DateTime FechaActualizacion { get; set; }
 
+    /// <summary>Fecha y hora en que el ticket fue asignado a un técnico.</summary>
+public DateTime? FechaAsignacion { get; set; }
+
     /// <summary>Fecha y hora en que el ticket fue resuelto (puede ser nula).</summary>
     public DateTime? FechaResolucion { get; set; }
 
@@ -66,11 +69,12 @@ public class Ticket
 
     /// <summary>Equipo asignado al ticket.</summary>
     public virtual Team? Team { get; set; }
-    /// <summary> Fecha de asignacion del ticket </summary>
-    public DateTime? FechaAsignacion { get; set; }
+
     /// <summary>Comentarios asociados al ticket.</summary>
     public virtual ICollection<Comment> Comentarios { get; set; } = new List<Comment>();
-    // gian 
+
     /// <summary>Historial de cambios de estado del ticket.</summary>
     public virtual ICollection<StatusHistory> HistorialEstados { get; set; } = new List<StatusHistory>();
+    /// <summary>Soluciones técnicas asociadas al ticket.</summary>
+    public virtual ICollection<Solution> Soluciones { get; set; } = new List<Solution>();
 }

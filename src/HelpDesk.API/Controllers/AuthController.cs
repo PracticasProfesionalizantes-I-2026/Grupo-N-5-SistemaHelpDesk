@@ -28,7 +28,12 @@ public class AuthController : ControllerBase
         {
             return Unauthorized(new { error = ex.Message });
         }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
+
     [HttpPost("register")]
     public async Task<ActionResult<UserResponseDTO>> Register([FromBody] RegisterDTO dto)
     {
@@ -37,9 +42,13 @@ public class AuthController : ControllerBase
             var result = await _userService.RegisterAsync(dto);
             return StatusCode(StatusCodes.Status201Created, result);
         }
-        catch (UnauthorizedActionException ex)
+        catch (ValidationException ex)
         {
-            return Unauthorized(new { error = ex.Message });
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (DuplicateException ex)
+        {
+            return Conflict(new { error = ex.Message });
         }
     }
 }

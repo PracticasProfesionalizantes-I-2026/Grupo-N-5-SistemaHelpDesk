@@ -3,11 +3,14 @@ using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HelpDesk.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class TeamsController : ControllerBase
+public class TeamsController : BaseApiController
 {
     private readonly ITeamService _teamService;
 
@@ -149,18 +152,7 @@ public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetMisEquipos()
             ValidationException => BadRequest(new { error = ex.Message }),
             BusinessRuleException => Conflict(new { error = ex.Message }),
             DuplicateException => Conflict(new { error = ex.Message }),
-            DependencyException => Conflict(new { error = ex.Message }),
             _ => StatusCode(500, new { error = "Error interno del servidor" })
         };
     }
-    private Guid GetCurrentUserId()
-{
-    // Para pruebas: id de un técnico del seed (Carlos López)
-    return Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
-}
-
-private string GetCurrentUserRole()
-{
-    return "Tecnico";
-}
 }

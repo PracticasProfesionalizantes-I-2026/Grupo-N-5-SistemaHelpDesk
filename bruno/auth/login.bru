@@ -1,7 +1,7 @@
 {
   "name": "HelpDesk API",
   "version": "1.0.0",
-  "description": "Colección de requests para probar la API de HelpDesk",
+  "description": "Colección de requests para probar la API de HelpDesk - Autenticación JWT",
   "requests": [
     {
       "name": "Login Empleado",
@@ -11,7 +11,8 @@
         "Content-Type": "application/json"
       },
       "body": {
-        "email": "juan.perez@empresa.com"
+        "email": "juan.perez@empresa.com",
+        "password": "Password123!"
       }
     },
     {
@@ -22,7 +23,8 @@
         "Content-Type": "application/json"
       },
       "body": {
-        "email": "carlos.lopez@empresa.com"
+        "email": "carlos.lopez@empresa.com",
+        "password": "Password123!"
       }
     },
     {
@@ -33,7 +35,8 @@
         "Content-Type": "application/json"
       },
       "body": {
-        "email": "admin@helpdesk.com"
+        "email": "admin@helpdesk.com",
+        "password": "Password123!"
       }
     }
   ]

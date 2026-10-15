@@ -24,11 +24,17 @@ public static class DbInitializer
 
         try
         {
-            logger.LogInformation("Iniciando migración de base de datos...");
-            await context.Database.EnsureCreatedAsync();
-            logger.LogInformation("Migración completada.");
+            logger.LogInformation("Iniciando verificación/migración de base de datos...");
+            try
+            {
+                await context.Database.MigrateAsync();
+            }
+            catch (Microsoft.Data.Sqlite.SqliteException ex) when (ex.Message.Contains("already exists"))
+            {
+                logger.LogWarning("Las tablas ya existían previamente en SQLite. Continuando con la inicialización...");
+            }
 
-            logger.LogInformation("Verificando datos de prueba...");
+            logger.LogInformation("Verificando datos de prueba y credenciales...");
             await SeedDataAsync(context);
             logger.LogInformation("Datos de prueba verificados.");
         }
@@ -41,10 +47,21 @@ public static class DbInitializer
 
     private static async Task SeedDataAsync(HelpDeskDbContext context)
     {
-        // Verificar si ya hay datos
+        var defaultPasswordHash = HelpDesk.Shared.Security.PasswordHasher.HashPassword("Password123!");
+
+        // Si ya hay usuarios, verificar si tienen PasswordHash configurado
         if (await context.Usuarios.AnyAsync())
         {
-            return; // Ya hay datos, no hacer nada
+            var usersWithoutPassword = await context.Usuarios.Where(u => string.IsNullOrEmpty(u.PasswordHash)).ToListAsync();
+            if (usersWithoutPassword.Any())
+            {
+                foreach (var u in usersWithoutPassword)
+                {
+                    u.PasswordHash = defaultPasswordHash;
+                }
+                await context.SaveChangesAsync();
+            }
+            return;
         }
 
         // Prioridades
@@ -64,7 +81,8 @@ public static class DbInitializer
             new Status { Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), Nombre = "En Progreso", Descripcion = "Ticket siendo trabajado", EsFinal = false, Orden = 2 },
             new Status { Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"), Nombre = "Resuelto", Descripcion = "Ticket resuelto, pendiente de cierre", EsFinal = false, Orden = 3 },
             new Status { Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"), Nombre = "Cerrado", Descripcion = "Ticket cerrado definitivamente", EsFinal = true, Orden = 4 },
-            new Status { Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), Nombre = "Reabierto", Descripcion = "Ticket reabierto después de cerrado", EsFinal = false, Orden = 5 }
+            new Status { Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), Nombre = "Reabierto", Descripcion = "Ticket reabierto después de cerrado", EsFinal = false, Orden = 5 },
+            new Status { Id = Guid.Parse("ffffffff-aaaa-bbbb-cccc-dddddddddddd"), Nombre = "Escalado", Descripcion = "Ticket escalado por incumplimiento de SLA", EsFinal = false, Orden = 6 }
         };
         await context.Estados.AddRangeAsync(estados);
 
@@ -79,14 +97,14 @@ public static class DbInitializer
         };
         await context.Categorias.AddRangeAsync(categorias);
 
-        // Usuarios
+        // Usuarios con PasswordHash seguro ("Password123!")
         var usuarios = new List<User>
         {
-            new Supervisor { Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"), Email = "admin@helpdesk.com", NombreCompleto = "Admin Sistema", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Empleado { Id = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"), Email = "juan.perez@empresa.com", NombreCompleto = "Juan Pérez", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Empleado { Id = Guid.Parse("bbbbbbbb-cccc-dddd-eeee-ffffffffffff"), Email = "maria.garcia@empresa.com", NombreCompleto = "María García", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Tecnico { Id = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa"), Email = "carlos.lopez@empresa.com", NombreCompleto = "Carlos López", FechaCreacion = DateTime.UtcNow, Activo = true },
-            new Tecnico { Id = Guid.Parse("dddddddd-eeee-ffff-aaaa-bbbbbbbbbbbb"), Email = "ana.martinez@empresa.com", NombreCompleto = "Ana Martínez", FechaCreacion = DateTime.UtcNow, Activo = true }
+            new Supervisor { Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"), Email = "admin@helpdesk.com", NombreCompleto = "Admin Sistema", FechaCreacion = DateTime.UtcNow, Activo = true, PasswordHash = defaultPasswordHash },
+            new Empleado { Id = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"), Email = "juan.perez@empresa.com", NombreCompleto = "Juan Pérez", FechaCreacion = DateTime.UtcNow, Activo = true, PasswordHash = defaultPasswordHash },
+            new Empleado { Id = Guid.Parse("bbbbbbbb-cccc-dddd-eeee-ffffffffffff"), Email = "maria.garcia@empresa.com", NombreCompleto = "María García", FechaCreacion = DateTime.UtcNow, Activo = true, PasswordHash = defaultPasswordHash },
+            new Tecnico { Id = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa"), Email = "carlos.lopez@empresa.com", NombreCompleto = "Carlos López", FechaCreacion = DateTime.UtcNow, Activo = true, PasswordHash = defaultPasswordHash },
+            new Tecnico { Id = Guid.Parse("dddddddd-eeee-ffff-aaaa-bbbbbbbbbbbb"), Email = "ana.martinez@empresa.com", NombreCompleto = "Ana Martínez", FechaCreacion = DateTime.UtcNow, Activo = true, PasswordHash = defaultPasswordHash }
         };
         await context.Usuarios.AddRangeAsync(usuarios);
 

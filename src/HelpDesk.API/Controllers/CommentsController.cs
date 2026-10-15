@@ -3,11 +3,14 @@ using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HelpDesk.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/tickets/{ticketId}/[controller]")]
-public class CommentsController : ControllerBase
+public class CommentsController : BaseApiController
 {
     private readonly ICommentService _commentService;
 
@@ -48,8 +51,7 @@ public class CommentsController : ControllerBase
         }
     }
 
-    private Guid GetCurrentUserId() => Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-    private string GetCurrentUserRole() => "Empleado";
+
 
     private ActionResult HandleException(Exception ex)
     {

@@ -4,12 +4,15 @@ using HelpDesk.DataAccess.Interfaces;
 using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using HelpDesk.Shared.Enums;
+using HelpDesk.Shared.Security;
 using HelpDesk.Shared.Constants;
 
 namespace HelpDesk.BusinessLogic.Services;
 
 public class UserService : BaseService, IUserService
 {
+    private readonly ITokenService _tokenService;
+
     public UserService(
         ITicketRepository ticketRepository,
         IUserRepository userRepository,
@@ -19,9 +22,11 @@ public class UserService : BaseService, IUserService
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
         ITeamRepository teamRepository,
-        IRatingRepository ratingRepository)
+        IRatingRepository ratingRepository,
+        ITokenService tokenService)
         : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository, ratingRepository)
     {
+        _tokenService = tokenService;
     }
 
     public async Task<UserResponseDTO> CreateAsync(UserCreateDTO dto)
@@ -45,6 +50,7 @@ public class UserService : BaseService, IUserService
         user.NombreCompleto = dto.NombreCompleto;
         user.FechaCreacion = DateTime.UtcNow;
         user.Activo = true;
+        user.PasswordHash = PasswordHasher.HashPassword("Password123!");
 
         var created = await _userRepository.CreateAsync(user);
 
@@ -62,12 +68,15 @@ public class UserService : BaseService, IUserService
         if (existing != null)
             throw new DuplicateException(ErrorMessages.EmailAlreadyExists);
 
+        var passwordToHash = !string.IsNullOrWhiteSpace(dto.Password) ? dto.Password : "Password123!";
+
         var user = new Empleado
         {
             Email = dto.Email.Trim(),
             NombreCompleto = dto.NombreCompleto.Trim(),
             FechaCreacion = DateTime.UtcNow,
-            Activo = true
+            Activo = true,
+            PasswordHash = PasswordHasher.HashPassword(passwordToHash)
         };
         user.Rol = UserRole.Empleado;
 
@@ -187,14 +196,20 @@ public class UserService : BaseService, IUserService
 
     public async Task<LoginResponseDTO> LoginAsync(LoginDTO dto)
     {
-        var user = await _userRepository.GetByEmailAsync(dto.Email);
+        if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
+            throw new ValidationException("Credenciales", "El correo y la contraseña son obligatorios");
+
+        var user = await _userRepository.GetByEmailAsync(dto.Email.Trim());
         if (user == null)
             throw new UnauthorizedActionException(ErrorMessages.InvalidCredentials);
 
         if (!user.Activo)
-            throw new UnauthorizedActionException("Usuario inactivo");
+            throw new UnauthorizedActionException("Su cuenta se encuentra inactiva. Contacte al administrador.");
 
-        var token = $"mock-token-{user.Id}-{DateTime.UtcNow.Ticks}"; // Simulación simple
+        if (!PasswordHasher.VerifyPassword(dto.Password, user.PasswordHash))
+            throw new UnauthorizedActionException(ErrorMessages.InvalidCredentials);
+
+        var token = _tokenService.GenerateToken(user);
 
         return new LoginResponseDTO(MapToResponseDTO(user), token);
     }

@@ -10,6 +10,8 @@ namespace HelpDesk.BusinessLogic.Services;
 
 public class TicketService : BaseService, ITicketService
 {
+    private readonly INotificationService? _notificationService;
+
     public TicketService(
         ITicketRepository ticketRepository,
         IUserRepository userRepository,
@@ -19,7 +21,8 @@ public class TicketService : BaseService, ITicketService
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
         ITeamRepository teamRepository,
-        IRatingRepository ratingRepository
+        IRatingRepository ratingRepository,
+        INotificationService? notificationService = null
     ) : base(
         ticketRepository,
         userRepository,
@@ -32,6 +35,7 @@ public class TicketService : BaseService, ITicketService
         ratingRepository
     )
     {
+        _notificationService = notificationService;
     }
 
     public async Task<TicketResponseDTO> CreateAsync(TicketCreateDTO dto, Guid empleadoId)
@@ -193,6 +197,24 @@ public class TicketService : BaseService, ITicketService
             supervisorId,
             observacion);
 
+        if (_notificationService != null)
+        {
+            await _notificationService.EnviarNotificacionAsync(
+                ticket.Id,
+                dto.TecnicoId,
+                "Nuevo ticket asignado",
+                $"Se le ha asignado el ticket #{ticket.Id}: '{ticket.Titulo}'");
+
+            if (ticket.EmpleadoId != Guid.Empty)
+            {
+                await _notificationService.EnviarNotificacionAsync(
+                    ticket.Id,
+                    ticket.EmpleadoId,
+                    "Ticket asignado",
+                    $"Su ticket #{ticket.Id} ha sido asignado a un técnico de soporte.");
+            }
+        }
+
         return await MapToResponseDTO(ticket);
     }
 
@@ -231,6 +253,15 @@ public class TicketService : BaseService, ITicketService
 
         await _ticketRepository.UpdateAsync(ticket);
         await CreateStatusHistoryAsync(ticket.Id, oldStatusId, dto.EstadoId, usuarioId, dto.Observacion);
+
+        if (_notificationService != null && ticket.EmpleadoId != Guid.Empty)
+        {
+            await _notificationService.EnviarNotificacionAsync(
+                ticket.Id,
+                ticket.EmpleadoId,
+                $"Ticket {newStatus.Nombre}",
+                $"El estado de su ticket #{ticket.Id} ha cambiado a '{newStatus.Nombre}'.");
+        }
 
         return await MapToResponseDTO(ticket);
     }
@@ -290,6 +321,19 @@ public class TicketService : BaseService, ITicketService
                 escaladoStatus.Id,
                 sistemaId,
                 "Escalado automático por incumplimiento de SLA");
+
+            if (_notificationService != null)
+            {
+                var supervisors = await _userRepository.GetByRoleAsync("Supervisor");
+                foreach (var sup in supervisors.Where(s => s.Activo))
+                {
+                    await _notificationService.EnviarNotificacionAsync(
+                        ticketDb.Id,
+                        sup.Id,
+                        "Alerta SLA: Ticket Escalado",
+                        $"El ticket #{ticketDb.Id} '{ticketDb.Titulo}' ha superado el SLA y fue escalado.");
+                }
+            }
 
             escalados++;
         }
@@ -535,11 +579,103 @@ public class TicketService : BaseService, ITicketService
         if (ticket == null)
             return;
 
-        var activeTechnicians = await _userRepository.GetActiveTechniciansAsync();
-        var technician = activeTechnicians.FirstOrDefault();
-        if (technician == null)
-            throw new InvalidOperationException("No hay técnicos activos disponibles para asignación.");
+        // 1. Obtener equipos asociados a la categoría del ticket
+        var teams = await _teamRepository.GetByCategoryAsync(ticket.CategoriaId);
+        var activeTechnicianIds = new HashSet<Guid>();
 
-        await _ticketRepository.AssignTicketAsync(ticket.Id, technician.Id);
+        foreach (var team in teams)
+        {
+            var teamWithTechs = await _teamRepository.GetWithTecnicosAsync(team.Id);
+            if (teamWithTechs != null)
+            {
+                foreach (var tech in teamWithTechs.Tecnicos)
+                {
+                    if (tech.Activo)
+                    {
+                        activeTechnicianIds.Add(tech.Id);
+                    }
+                }
+            }
+        }
+
+        // Si no hay equipos específicos para la categoría, consultar los técnicos activos generales
+        if (!activeTechnicianIds.Any())
+        {
+            var generalTechs = await _userRepository.GetActiveTechniciansAsync();
+            foreach (var tech in generalTechs)
+            {
+                activeTechnicianIds.Add(tech.Id);
+            }
+        }
+
+        // 2a. Si no hay técnicos disponibles, el ticket permanece sin asignación
+        if (!activeTechnicianIds.Any())
+        {
+            return;
+        }
+
+        // 2. Analizar carga de trabajo de cada técnico (tickets asignados no finalizados)
+        Guid bestTechnicianId = Guid.Empty;
+        int minWorkload = int.MaxValue;
+
+        // Orden por ID para criterio determinista / round-robin en caso de empate
+        foreach (var techId in activeTechnicianIds.OrderBy(id => id))
+        {
+            var assignedTickets = await _ticketRepository.GetByTecnicoIdAsync(techId);
+            var workload = assignedTickets.Count(t => t.Estado == null || !t.Estado.EsFinal);
+
+            if (workload < minWorkload)
+            {
+                minWorkload = workload;
+                bestTechnicianId = techId;
+            }
+        }
+
+        if (bestTechnicianId == Guid.Empty)
+            return;
+
+        // 3. Asignar ticket al técnico seleccionado y actualizar estado a 'En Progreso'
+        var inProgressStatus = await _statusRepository.GetByNameAsync("En Progreso");
+        var oldStatusId = ticket.EstadoId;
+
+        ticket.TecnicoId = bestTechnicianId;
+        ticket.FechaAsignacion = DateTime.UtcNow;
+        ticket.FechaActualizacion = DateTime.UtcNow;
+
+        if (inProgressStatus != null)
+        {
+            ticket.EstadoId = inProgressStatus.Id;
+            ticket.Estado = inProgressStatus;
+        }
+
+        await _ticketRepository.UpdateAsync(ticket);
+
+        // 4. Registrar en historial
+        var sistemaId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+        await CreateStatusHistoryAsync(
+            ticket.Id,
+            oldStatusId,
+            ticket.EstadoId,
+            sistemaId,
+            "Asignación automática por carga de trabajo y categoría");
+
+        // 5. Notificar al técnico y al usuario creador (RF-10)
+        if (_notificationService != null)
+        {
+            await _notificationService.EnviarNotificacionAsync(
+                ticket.Id,
+                bestTechnicianId,
+                "Ticket asignado automáticamente",
+                $"Se le ha asignado automáticamente el ticket #{ticket.Id}: '{ticket.Titulo}'");
+
+            if (ticket.EmpleadoId != Guid.Empty)
+            {
+                await _notificationService.EnviarNotificacionAsync(
+                    ticket.Id,
+                    ticket.EmpleadoId,
+                    "Ticket en progreso",
+                    $"Su ticket #{ticket.Id} ha sido asignado y se encuentra en progreso.");
+            }
+        }
     }
 }

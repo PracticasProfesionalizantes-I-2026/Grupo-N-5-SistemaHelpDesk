@@ -3,8 +3,11 @@ using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HelpDesk.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase

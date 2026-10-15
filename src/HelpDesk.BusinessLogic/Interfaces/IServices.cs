@@ -105,3 +105,8 @@ public interface ISolutionService
         Guid tecnicoId,
         string usuarioRol);
 }
+
+public interface ITokenService
+{
+    string GenerateToken(HelpDesk.DataAccess.Entities.User user);
+}

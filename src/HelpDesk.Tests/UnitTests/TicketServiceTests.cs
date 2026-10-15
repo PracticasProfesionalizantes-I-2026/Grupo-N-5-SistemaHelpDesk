@@ -21,6 +21,7 @@ public class TicketServiceTests
     private readonly Mock<IStatusHistoryRepository> _statusHistoryRepoMock;
     private readonly Mock<ITeamRepository> _teamRepoMock;
     private readonly Mock<IRatingRepository> _ratingRepoMock;
+    private readonly Mock<INotificationService> _notificationServiceMock;
     private readonly TicketService _service;
 
     public TicketServiceTests()
@@ -34,6 +35,7 @@ public class TicketServiceTests
         _statusHistoryRepoMock = new Mock<IStatusHistoryRepository>();
         _teamRepoMock = new Mock<ITeamRepository>();
         _ratingRepoMock = new Mock<IRatingRepository>();
+        _notificationServiceMock = new Mock<INotificationService>();
 
         _service = new TicketService(
             _ticketRepoMock.Object,
@@ -44,7 +46,8 @@ public class TicketServiceTests
             _commentRepoMock.Object,
             _statusHistoryRepoMock.Object,
             _teamRepoMock.Object,
-            _ratingRepoMock.Object);
+            _ratingRepoMock.Object,
+            _notificationServiceMock.Object);
     }
 
     [Fact]
@@ -240,5 +243,218 @@ public class TicketServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedActionException>(() => _service.ReopenAsync(ticketId, tecnicoId));
+    }
+
+    [Fact]
+    public async Task AutoAssignTicketAsync_ShouldAssignTechnicianWithLowestWorkload()
+    {
+        // Arrange
+        var categoriaId = Guid.NewGuid();
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            Titulo = "Ticket sin asignar",
+            CategoriaId = categoriaId,
+            EmpleadoId = Guid.NewGuid(),
+            TecnicoId = null,
+            EstadoId = Guid.NewGuid()
+        };
+
+        var tech1 = new Tecnico { Id = Guid.NewGuid(), Activo = true };
+        var tech2 = new Tecnico { Id = Guid.NewGuid(), Activo = true };
+
+        _ticketRepoMock.Setup(x => x.GetUnassignedTicketAsync()).ReturnsAsync(ticket);
+        _teamRepoMock.Setup(x => x.GetByCategoryAsync(categoriaId, true)).ReturnsAsync(new List<Team>());
+        _userRepoMock.Setup(x => x.GetActiveTechniciansAsync(true)).ReturnsAsync(new List<User> { tech1, tech2 });
+
+        // tech1 has 3 open tickets, tech2 has 1 open ticket
+        _ticketRepoMock.Setup(x => x.GetByTecnicoIdAsync(tech1.Id, true))
+            .ReturnsAsync(new List<Ticket>
+            {
+                new Ticket { Estado = new Status { EsFinal = false } },
+                new Ticket { Estado = new Status { EsFinal = false } },
+                new Ticket { Estado = new Status { EsFinal = false } }
+            });
+
+        _ticketRepoMock.Setup(x => x.GetByTecnicoIdAsync(tech2.Id, true))
+            .ReturnsAsync(new List<Ticket>
+            {
+                new Ticket { Estado = new Status { EsFinal = false } }
+            });
+
+        _statusRepoMock.Setup(x => x.GetByNameAsync("En Progreso", true))
+            .ReturnsAsync(new Status { Id = Guid.NewGuid(), Nombre = "En Progreso", EsFinal = false });
+
+        _statusHistoryRepoMock.Setup(x => x.CreateAsync(It.IsAny<StatusHistory>()))
+            .ReturnsAsync((StatusHistory h) => h);
+
+        // Act
+        await _service.AutoAssignTicketAsync();
+
+        // Assert
+        Assert.Equal(tech2.Id, ticket.TecnicoId);
+        _ticketRepoMock.Verify(x => x.UpdateAsync(ticket), Times.Once);
+        _notificationServiceMock.Verify(x => x.EnviarNotificacionAsync(
+            ticket.Id,
+            tech2.Id,
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AutoAssignTicketAsync_ShouldDoNothing_WhenNoTechniciansAvailable()
+    {
+        // Arrange
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            CategoriaId = Guid.NewGuid(),
+            TecnicoId = null
+        };
+
+        _ticketRepoMock.Setup(x => x.GetUnassignedTicketAsync()).ReturnsAsync(ticket);
+        _teamRepoMock.Setup(x => x.GetByCategoryAsync(ticket.CategoriaId, true)).ReturnsAsync(new List<Team>());
+        _userRepoMock.Setup(x => x.GetActiveTechniciansAsync(true)).ReturnsAsync(new List<User>());
+
+        // Act
+        await _service.AutoAssignTicketAsync();
+
+        // Assert
+        Assert.Null(ticket.TecnicoId);
+        _ticketRepoMock.Verify(x => x.UpdateAsync(It.IsAny<Ticket>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task EscalateOverdueTicketsAsync_ShouldEscalateAndNotifySupervisors_WhenTicketExceedsSla()
+    {
+        // Arrange
+        var escaladoStatus = new Status { Id = Guid.NewGuid(), Nombre = "Escalado", EsFinal = false };
+        _statusRepoMock.Setup(x => x.GetByNameAsync("Escalado", true)).ReturnsAsync(escaladoStatus);
+
+        var supervisor = new Supervisor { Id = Guid.NewGuid(), Activo = true };
+        _userRepoMock.Setup(x => x.GetByRoleAsync("Supervisor", true)).ReturnsAsync(new List<User> { supervisor });
+
+        var prioridad = new Priority { Id = Guid.NewGuid(), SLAHoras = 4 };
+        var ticketOverdue = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            Titulo = "Ticket Crítico Demorado",
+            PrioridadId = prioridad.Id,
+            Prioridad = prioridad,
+            FechaCreacion = DateTime.UtcNow.AddHours(-10), // Venció hace 6 horas
+            EstadoId = Guid.NewGuid(),
+            Estado = new Status { EsFinal = false }
+        };
+
+        _ticketRepoMock.Setup(x => x.GetOverdueAsync(true)).ReturnsAsync(new List<Ticket> { ticketOverdue });
+        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketOverdue.Id, false)).ReturnsAsync(ticketOverdue);
+        _statusHistoryRepoMock.Setup(x => x.CreateAsync(It.IsAny<StatusHistory>())).ReturnsAsync((StatusHistory h) => h);
+
+        // Act
+        var count = await _service.EscalateOverdueTicketsAsync();
+
+        // Assert
+        Assert.Equal(1, count);
+        Assert.Equal(escaladoStatus.Id, ticketOverdue.EstadoId);
+        _ticketRepoMock.Verify(x => x.UpdateAsync(ticketOverdue), Times.Once);
+        _notificationServiceMock.Verify(x => x.EnviarNotificacionAsync(
+            ticketOverdue.Id,
+            supervisor.Id,
+            It.Is<string>(s => s.Contains("SLA")),
+            It.IsAny<string>(),
+            It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task EscalateOverdueTicketsAsync_ShouldNotEscalate_WhenWithinSla()
+    {
+        // Arrange
+        var escaladoStatus = new Status { Id = Guid.NewGuid(), Nombre = "Escalado", EsFinal = false };
+        _statusRepoMock.Setup(x => x.GetByNameAsync("Escalado", true)).ReturnsAsync(escaladoStatus);
+
+        var prioridad = new Priority { Id = Guid.NewGuid(), SLAHoras = 24 };
+        var ticketWithinSla = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            PrioridadId = prioridad.Id,
+            Prioridad = prioridad,
+            FechaCreacion = DateTime.UtcNow.AddHours(-2), // Creado hace 2 horas, dentro de las 24h
+            EstadoId = Guid.NewGuid(),
+            Estado = new Status { EsFinal = false }
+        };
+
+        _ticketRepoMock.Setup(x => x.GetOverdueAsync(true)).ReturnsAsync(new List<Ticket> { ticketWithinSla });
+
+        // Act
+        var count = await _service.EscalateOverdueTicketsAsync();
+
+        // Assert
+        Assert.Equal(0, count);
+        _ticketRepoMock.Verify(x => x.UpdateAsync(It.IsAny<Ticket>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldDelete_WhenSupervisorAndOpenTicket()
+    {
+        // Arrange
+        var ticketId = Guid.NewGuid();
+        var supervisorId = Guid.NewGuid();
+
+        _userRepoMock.Setup(x => x.GetByIdAsync(supervisorId)).ReturnsAsync(new Supervisor { Id = supervisorId, Rol = UserRole.Supervisor });
+
+        var abierto = new Status { Id = Guid.NewGuid(), Nombre = "Abierto", EsFinal = false };
+        var ticket = new Ticket { Id = ticketId, EstadoId = abierto.Id };
+
+        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketId, false)).ReturnsAsync(ticket);
+        _statusRepoMock.Setup(x => x.GetInitialStatusAsync(true)).ReturnsAsync(abierto);
+
+        // Act
+        await _service.DeleteAsync(ticketId, supervisorId);
+
+        // Assert
+        _ticketRepoMock.Verify(x => x.DeleteAsync(ticketId), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldThrow_WhenNotSupervisor()
+    {
+        // Arrange
+        var ticketId = Guid.NewGuid();
+        var tecnicoId = Guid.NewGuid();
+
+        _userRepoMock.Setup(x => x.GetByIdAsync(tecnicoId)).ReturnsAsync(new Tecnico { Id = tecnicoId, Rol = UserRole.Tecnico });
+
+        var ticket = new Ticket { Id = ticketId, EstadoId = Guid.NewGuid() };
+        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketId, false)).ReturnsAsync(ticket);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<UnauthorizedActionException>(
+            () => _service.DeleteAsync(ticketId, tecnicoId));
+
+        _ticketRepoMock.Verify(x => x.DeleteAsync(It.IsAny<Guid>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldThrow_WhenTicketNotOpen()
+    {
+        // Arrange
+        var ticketId = Guid.NewGuid();
+        var supervisorId = Guid.NewGuid();
+
+        _userRepoMock.Setup(x => x.GetByIdAsync(supervisorId)).ReturnsAsync(new Supervisor { Id = supervisorId, Rol = UserRole.Supervisor });
+
+        var estadoAbierto = new Status { Id = Guid.NewGuid(), Nombre = "Abierto" };
+        // Ticket tiene un EstadoId DIFERENTE al inicial (ej: "En Progreso")
+        var ticket = new Ticket { Id = ticketId, EstadoId = Guid.NewGuid() };
+
+        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketId, false)).ReturnsAsync(ticket);
+        _statusRepoMock.Setup(x => x.GetInitialStatusAsync(true)).ReturnsAsync(estadoAbierto); // EstadoId != abierto.Id
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BusinessRuleException>(
+            () => _service.DeleteAsync(ticketId, supervisorId));
+
+        _ticketRepoMock.Verify(x => x.DeleteAsync(It.IsAny<Guid>()), Times.Never);
     }
 }

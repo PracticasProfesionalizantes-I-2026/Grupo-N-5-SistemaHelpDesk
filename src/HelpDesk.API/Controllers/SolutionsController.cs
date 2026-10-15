@@ -3,11 +3,14 @@ using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace HelpDesk.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/tickets/{ticketId}/solutions")]
-public class SolutionsController : ControllerBase
+public class SolutionsController : BaseApiController
 {
     private readonly ISolutionService _solutionService;
 
@@ -88,19 +91,7 @@ public class SolutionsController : ControllerBase
         }
     }
 
-    private Guid GetCurrentUserId()
-    {
-        // Temporal para las pruebas del proyecto.
-        // Carlos López es el técnico del seed.
-        // En producción debería salir del JWT.
-        return Guid.Parse(
-            "cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
-    }
 
-    private string GetCurrentUserRole()
-    {
-        return "Tecnico";
-    }
 
     private ActionResult HandleException(
         Exception ex)

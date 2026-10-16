@@ -94,7 +94,7 @@ public interface INotificationService
     Task MarcarComoLeidaAsync(Guid notificationId);
     Task ActualizarEstadoAsync(Guid notificationId, bool entregada);
 }
-
+   
 
 public interface ISolutionService
 {
@@ -119,13 +119,14 @@ public interface ISolutionService
         byte[]? fileContent);
 }
 
-public interface ITokenService
+public interface IPasswordRecoveryService
 {
-    string GenerateToken(User user);
+    Task<PasswordResetResponseDTO> ForgotPasswordAsync(ForgotPasswordDTO dto);
+    Task<PasswordResetResponseDTO> ResetPasswordAsync(ResetPasswordDTO dto);
 }
 
 public interface IMessageService
 {
     Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text);
     Task<IEnumerable<MessageDTO>> GetConversationAsync(Guid userId, Guid contactId);
-}
+}

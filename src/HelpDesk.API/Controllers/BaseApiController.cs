@@ -10,37 +10,19 @@ namespace HelpDesk.API.Controllers;
 [ApiController]
 public abstract class BaseApiController : ControllerBase
 {
-    /// <summary>
-    /// Obtiene el identificador único (Guid) del usuario autenticado a partir de los claims del token.
-    /// </summary>
-    /// <exception cref="UnauthorizedActionException">Si el usuario no está autenticado o el claim 'sub'/'nameidentifier' es inválido.</exception>
-    protected Guid GetCurrentUserId()
-    {
-        var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                      ?? User.FindFirst("sub")?.Value;
+    // =========================================================================
+    // ROLES PARA PROBAR EN BRUNO (DESCOMENTAR EL QUE QUIERAS PROBAR)
+    // =========================================================================
 
-        if (string.IsNullOrEmpty(idClaim) || !Guid.TryParse(idClaim, out var userId))
-        {
-            throw new UnauthorizedActionException("Usuario no autenticado o sesión inválida.");
-        }
+    // 1. SUPERVISOR (Admin Sistema)
+    protected Guid GetCurrentUserId() => Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+    protected string GetCurrentUserRole() => "Supervisor";
 
-        return userId;
-    }
+    // 2. TÉCNICO (Carlos López)
+    // protected Guid GetCurrentUserId() => Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
+    // protected string GetCurrentUserRole() => "Tecnico";
 
-    /// <summary>
-    /// Obtiene el rol del usuario autenticado a partir de los claims del token.
-    /// </summary>
-    /// <exception cref="UnauthorizedActionException">Si el claim de rol no está presente en el token.</exception>
-    protected string GetCurrentUserRole()
-    {
-        var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value
-                        ?? User.FindFirst("role")?.Value;
-
-        if (string.IsNullOrEmpty(roleClaim))
-        {
-            throw new UnauthorizedActionException("Rol de usuario no identificado.");
-        }
-
-        return roleClaim;
-    }
+    // 3. EMPLEADO (Juan Pérez)
+    // protected Guid GetCurrentUserId() => Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+    // protected string GetCurrentUserRole() => "Empleado";
 }

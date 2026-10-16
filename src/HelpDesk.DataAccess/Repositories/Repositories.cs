@@ -684,3 +684,34 @@ public class MessageRepository : Repository<Message>, IMessageRepository
             .ToListAsync();
     }
 }
+
+public class PasswordResetTokenRepository : Repository<PasswordResetToken>, IPasswordResetTokenRepository
+{
+    public PasswordResetTokenRepository(HelpDeskDbContext context) : base(context) { }
+
+    public async Task<PasswordResetToken?> GetValidTokenAsync(Guid userId, string codigo)
+    {
+        var now = DateTime.UtcNow;
+        return await _dbSet
+            .Where(t => t.UserId == userId && t.Codigo == codigo && !t.Usado && t.ExpiraEn > now)
+            .OrderByDescending(t => t.FechaCreacion)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task InvalidateUserTokensAsync(Guid userId)
+    {
+        var tokens = await _dbSet
+            .Where(t => t.UserId == userId && !t.Usado)
+            .ToListAsync();
+
+        foreach (var t in tokens)
+        {
+            t.Usado = true;
+        }
+
+        if (tokens.Any())
+        {
+            await _context.SaveChangesAsync();
+        }
+    }
+}

@@ -10,10 +10,14 @@ namespace HelpDesk.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IPasswordRecoveryService _passwordRecoveryService;
 
-    public AuthController(IUserService userService)
+    public AuthController(
+        IUserService userService,
+        IPasswordRecoveryService passwordRecoveryService)
     {
         _userService = userService;
+        _passwordRecoveryService = passwordRecoveryService;
     }
 
     [HttpPost("login")]
@@ -51,4 +55,40 @@ public class AuthController : ControllerBase
             return Conflict(new { error = ex.Message });
         }
     }
-}
+
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult<PasswordResetResponseDTO>> ForgotPassword([FromBody] ForgotPasswordDTO dto)
+    {
+        try
+        {
+            var result = await _passwordRecoveryService.ForgotPasswordAsync(dto);
+            return Ok(result);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<ActionResult<PasswordResetResponseDTO>> ResetPassword([FromBody] ResetPasswordDTO dto)
+    {
+        try
+        {
+            var result = await _passwordRecoveryService.ResetPasswordAsync(dto);
+            return Ok(result);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (BusinessRuleException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
+    }
+}

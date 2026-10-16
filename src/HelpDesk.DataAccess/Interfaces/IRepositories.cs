@@ -146,3 +146,9 @@ public interface IMessageRepository : IRepository<Message>
     Task AddAsync(Message message);
     Task<IEnumerable<Message>> GetConversationAsync(Guid userId, Guid contactId);
 }
+
+public interface IPasswordResetTokenRepository : IRepository<PasswordResetToken>
+{
+    Task<PasswordResetToken?> GetValidTokenAsync(Guid userId, string codigo);
+    Task InvalidateUserTokensAsync(Guid userId);
+}

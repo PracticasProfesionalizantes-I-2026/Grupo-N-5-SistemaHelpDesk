@@ -22,7 +22,6 @@ public class UserServiceTests
     private readonly Mock<IStatusHistoryRepository> _statusHistoryRepoMock;
     private readonly Mock<ITeamRepository> _teamRepoMock;
     private readonly Mock<IRatingRepository> _ratingRepoMock;
-    private readonly Mock<ITokenService> _tokenServiceMock;
     private readonly UserService _service;
 
     public UserServiceTests()
@@ -36,7 +35,6 @@ public class UserServiceTests
         _statusHistoryRepoMock = new Mock<IStatusHistoryRepository>();
         _teamRepoMock = new Mock<ITeamRepository>();
         _ratingRepoMock = new Mock<IRatingRepository>();
-        _tokenServiceMock = new Mock<ITokenService>();
 
         _service = new UserService(
             _ticketRepoMock.Object,
@@ -47,8 +45,7 @@ public class UserServiceTests
             _commentRepoMock.Object,
             _statusHistoryRepoMock.Object,
             _teamRepoMock.Object,
-            _ratingRepoMock.Object,
-            _tokenServiceMock.Object);
+            _ratingRepoMock.Object);
     }
 
     [Fact]
@@ -179,15 +176,14 @@ public class UserServiceTests
         };
 
         _userRepoMock.Setup(x => x.GetByEmailAsync(email, true)).ReturnsAsync(user);
-        _tokenServiceMock.Setup(x => x.GenerateToken(user)).Returns("valid.jwt.token");
 
         // Act
         var result = await _service.LoginAsync(new LoginDTO(email, password));
 
         // Assert
-        Assert.NotNull(result.Token);
-        Assert.Equal("valid.jwt.token", result.Token);
+        Assert.NotNull(result);
         Assert.Equal(email, result.Usuario.Email);
+
     }
 
     [Fact]

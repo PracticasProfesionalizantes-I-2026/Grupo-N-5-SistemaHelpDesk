@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HelpDesk.API.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("api/tickets/{ticketId}/[controller]")]
 public class CommentsController : BaseApiController

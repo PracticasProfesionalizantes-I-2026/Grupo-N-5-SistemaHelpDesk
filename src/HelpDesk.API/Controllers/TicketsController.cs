@@ -1,13 +1,12 @@
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.Shared.DTOs;
 using HelpDesk.Shared.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDesk.API.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class TicketsController : BaseApiController

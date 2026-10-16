@@ -11,18 +11,61 @@ namespace HelpDesk.API.Controllers;
 public abstract class BaseApiController : ControllerBase
 {
     // =========================================================================
-    // ROLES PARA PROBAR EN BRUNO (DESCOMENTAR EL QUE QUIERAS PROBAR)
+    // ROLES PARA PROBAR EN BRUNO (DESCOMENTAR EL QUE QUIERAS PROBAR POR DEFECTO)
+    // O enviar headers opcionales en Bruno:
+    // X-User-Role: Supervisor | Tecnico | Empleado
+    // X-User-Id: <guid>
     // =========================================================================
 
     // 1. SUPERVISOR (Admin Sistema)
-    protected Guid GetCurrentUserId() => Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
-    protected string GetCurrentUserRole() => "Supervisor";
+    //private static readonly Guid DefaultUserId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+    //private static readonly string DefaultUserRole = "Supervisor";
 
     // 2. TÉCNICO (Carlos López)
-    // protected Guid GetCurrentUserId() => Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
-    // protected string GetCurrentUserRole() => "Tecnico";
+    private static readonly Guid DefaultUserId = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
+    private static readonly string DefaultUserRole = "Tecnico";
 
     // 3. EMPLEADO (Juan Pérez)
-    // protected Guid GetCurrentUserId() => Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-    // protected string GetCurrentUserRole() => "Empleado";
+    // private static readonly Guid DefaultUserId = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+    // private static readonly string DefaultUserRole = "Empleado";
+
+    protected Guid GetCurrentUserId()
+    {
+        // 1. Si viene por header opcional en Bruno / Postman
+        if (Request?.Headers.TryGetValue("X-User-Id", out var headerId) == true &&
+            Guid.TryParse(headerId, out var parsedHeaderId))
+        {
+            return parsedHeaderId;
+        }
+
+        // 2. Si viene por Claims JWT
+        var claim = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!string.IsNullOrEmpty(claim) && Guid.TryParse(claim, out var parsedClaimId))
+        {
+            return parsedClaimId;
+        }
+
+        // 3. Fallback hardcodeado
+        return DefaultUserId;
+    }
+
+    protected string GetCurrentUserRole()
+    {
+        // 1. Si viene por header opcional en Bruno / Postman
+        if (Request?.Headers.TryGetValue("X-User-Role", out var headerRole) == true &&
+            !string.IsNullOrWhiteSpace(headerRole))
+        {
+            return headerRole.ToString();
+        }
+
+        // 2. Si viene por Claims JWT
+        var claim = User?.FindFirst(ClaimTypes.Role)?.Value;
+        if (!string.IsNullOrEmpty(claim))
+        {
+            return claim;
+        }
+
+        // 3. Fallback hardcodeado
+        return DefaultUserRole;
+    }
 }

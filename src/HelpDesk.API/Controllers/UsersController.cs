@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HelpDesk.API.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase

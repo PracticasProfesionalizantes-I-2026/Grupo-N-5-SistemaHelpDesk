@@ -12,6 +12,7 @@
     <ProjectReference Include="..\HelpDesk.Shared\HelpDesk.Shared.csproj" />
     <ProjectReference Include="..\HelpDesk.DataAccess\HelpDesk.DataAccess.csproj" />
     <ProjectReference Include="..\HelpDesk.BusinessLogic\HelpDesk.BusinessLogic.csproj" />
+    <ProjectReference Include="..\HelpDesk.API\HelpDesk.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>

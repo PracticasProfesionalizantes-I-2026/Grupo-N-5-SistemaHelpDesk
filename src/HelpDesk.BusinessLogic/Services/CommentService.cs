@@ -26,6 +26,21 @@ public class CommentService : BaseService, ICommentService
 
     public async Task<CommentResponseDTO> CreateAsync(Guid ticketId, CommentCreateDTO dto, Guid usuarioId, string usuarioRol)
     {
+        if (ticketId == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
+        if (usuarioId == Guid.Empty)
+            throw new ValidationException("El identificador del usuario no es válido");
+
+        if (dto == null)
+            throw new ValidationException("Los datos del comentario son obligatorios");
+
+        if (string.IsNullOrWhiteSpace(dto.Contenido))
+            throw new ValidationException("El contenido del comentario es obligatorio");
+
+        if (dto.Contenido.Length > 2000)
+            throw new ValidationException("El comentario no puede superar los 2000 caracteres");
+
         await ValidateUserExistsAsync(usuarioId);
 
         var ticket = await _ticketRepository.GetByIdAsync(ticketId, asNoTracking: false);

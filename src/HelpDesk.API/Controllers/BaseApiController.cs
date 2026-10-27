@@ -18,16 +18,16 @@ public abstract class BaseApiController : ControllerBase
     // =========================================================================
 
     // 1. SUPERVISOR (Admin Sistema)
-    //private static readonly Guid DefaultUserId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
-    //private static readonly string DefaultUserRole = "Supervisor";
+    private static readonly Guid DefaultUserId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+    private static readonly string DefaultUserRole = "Supervisor";
 
     // 2. TÉCNICO (Carlos López)
-    private static readonly Guid DefaultUserId = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
-    private static readonly string DefaultUserRole = "Tecnico";
+    //private static readonly Guid DefaultUserId = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
+    //private static readonly string DefaultUserRole = "Tecnico";
 
     // 3. EMPLEADO (Juan Pérez)
-    // private static readonly Guid DefaultUserId = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-    // private static readonly string DefaultUserRole = "Empleado";
+    //private static readonly Guid DefaultUserId = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+    //private static readonly string DefaultUserRole = "Empleado";
 
     protected Guid GetCurrentUserId()
     {

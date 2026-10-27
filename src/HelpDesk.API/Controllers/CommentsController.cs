@@ -24,6 +24,9 @@ public class CommentsController : BaseApiController
     {
         try
         {
+            if (ticketId == Guid.Empty)
+                return BadRequest(new { error = "El identificador del ticket no es válido", message = "El identificador del ticket no es válido" });
+
             var userId = GetCurrentUserId();
             var userRol = GetCurrentUserRole();
             var result = await _commentService.CreateAsync(ticketId, dto, userId, userRol);
@@ -40,6 +43,9 @@ public class CommentsController : BaseApiController
     {
         try
         {
+            if (ticketId == Guid.Empty)
+                return BadRequest(new { error = "El identificador del ticket no es válido", message = "El identificador del ticket no es válido" });
+
             var userId = GetCurrentUserId();
             var userRol = GetCurrentUserRole();
             var result = await _commentService.GetByTicketIdAsync(ticketId, userId, userRol, soloPublicos);
@@ -57,11 +63,12 @@ public class CommentsController : BaseApiController
     {
         return ex switch
         {
-            NotFoundException => NotFound(new { error = ex.Message }),
-            ValidationException => BadRequest(new { error = ex.Message }),
-            BusinessRuleException => Conflict(new { error = ex.Message }),
-            UnauthorizedActionException => Forbid(),
-            _ => StatusCode(500, new { error = "Error interno del servidor" })
+            NotFoundException => NotFound(new { error = ex.Message, message = ex.Message }),
+            ValidationException => BadRequest(new { error = ex.Message, message = ex.Message }),
+            BusinessRuleException => Conflict(new { error = ex.Message, message = ex.Message }),
+            UnauthorizedActionException => StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message, message = ex.Message }),
+            UnauthorizedAccessException => StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message, message = ex.Message }),
+            _ => StatusCode(500, new { error = "Error interno del servidor", message = "Error interno del servidor" })
         };
     }
 }

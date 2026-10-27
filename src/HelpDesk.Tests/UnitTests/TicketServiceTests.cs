@@ -1,3 +1,4 @@
+
 using HelpDesk.BusinessLogic.Interfaces;
 using HelpDesk.BusinessLogic.Services;
 using HelpDesk.DataAccess.Entities;
@@ -92,6 +93,34 @@ public class TicketServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => _service.CreateAsync(dto, Guid.NewGuid()));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData(null)]
+    public async Task CreateAsync_ShouldThrowValidationException_WhenTituloIsEmpty(string? invalidTitle)
+    {
+        // Arrange
+        var dto = new TicketCreateDTO(invalidTitle!, "Valid description", Guid.NewGuid(), Guid.NewGuid());
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<ValidationException>(() => _service.CreateAsync(dto, Guid.NewGuid()));
+        Assert.Equal("Debe ingresar un título", ex.Message);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData(null)]
+    public async Task CreateAsync_ShouldThrowValidationException_WhenDescripcionIsEmpty(string? invalidDesc)
+    {
+        // Arrange
+        var dto = new TicketCreateDTO("Valid title", invalidDesc!, Guid.NewGuid(), Guid.NewGuid());
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<ValidationException>(() => _service.CreateAsync(dto, Guid.NewGuid()));
+        Assert.Equal("Debe ingresar una descripción", ex.Message);
     }
 
     [Fact]
@@ -395,66 +424,40 @@ public class TicketServiceTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldDelete_WhenSupervisorAndOpenTicket()
+    public async Task GetFilteredAsync_ShouldIncludeDescripcionInResult()
     {
         // Arrange
-        var ticketId = Guid.NewGuid();
-        var supervisorId = Guid.NewGuid();
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            Titulo = "Ticket Title",
+            Descripcion = "Ticket Detailed Description",
+            FechaCreacion = DateTime.UtcNow,
+            FechaActualizacion = DateTime.UtcNow
+        };
 
-        _userRepoMock.Setup(x => x.GetByIdAsync(supervisorId)).ReturnsAsync(new Supervisor { Id = supervisorId, Rol = UserRole.Supervisor });
+        _ticketRepoMock.Setup(x => x.GetFilteredAsync(
+            It.IsAny<Guid?>(), It.IsAny<Guid?>(), It.IsAny<Guid?>(),
+            It.IsAny<Guid?>(), It.IsAny<Guid?>(), It.IsAny<DateTime?>(),
+            It.IsAny<DateTime?>(), It.IsAny<int>(), It.IsAny<int>(), true))
+            .ReturnsAsync(new List<Ticket> { ticket });
 
-        var abierto = new Status { Id = Guid.NewGuid(), Nombre = "Abierto", EsFinal = false };
-        var ticket = new Ticket { Id = ticketId, EstadoId = abierto.Id };
+        _ticketRepoMock.Setup(x => x.GetFilteredCountAsync(
+            It.IsAny<Guid?>(), It.IsAny<Guid?>(), It.IsAny<Guid?>(),
+            It.IsAny<Guid?>(), It.IsAny<Guid?>(), It.IsAny<DateTime?>(),
+            It.IsAny<DateTime?>()))
+            .ReturnsAsync(1);
 
-        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketId, false)).ReturnsAsync(ticket);
-        _statusRepoMock.Setup(x => x.GetInitialStatusAsync(true)).ReturnsAsync(abierto);
+        var filter = new TicketFilterDTO();
 
         // Act
-        await _service.DeleteAsync(ticketId, supervisorId);
+        var result = await _service.GetFilteredAsync(filter, Guid.NewGuid(), "Supervisor");
 
         // Assert
-        _ticketRepoMock.Verify(x => x.DeleteAsync(ticketId), Times.Once);
-    }
-
-    [Fact]
-    public async Task DeleteAsync_ShouldThrow_WhenNotSupervisor()
-    {
-        // Arrange
-        var ticketId = Guid.NewGuid();
-        var tecnicoId = Guid.NewGuid();
-
-        _userRepoMock.Setup(x => x.GetByIdAsync(tecnicoId)).ReturnsAsync(new Tecnico { Id = tecnicoId, Rol = UserRole.Tecnico });
-
-        var ticket = new Ticket { Id = ticketId, EstadoId = Guid.NewGuid() };
-        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketId, false)).ReturnsAsync(ticket);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<UnauthorizedActionException>(
-            () => _service.DeleteAsync(ticketId, tecnicoId));
-
-        _ticketRepoMock.Verify(x => x.DeleteAsync(It.IsAny<Guid>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task DeleteAsync_ShouldThrow_WhenTicketNotOpen()
-    {
-        // Arrange
-        var ticketId = Guid.NewGuid();
-        var supervisorId = Guid.NewGuid();
-
-        _userRepoMock.Setup(x => x.GetByIdAsync(supervisorId)).ReturnsAsync(new Supervisor { Id = supervisorId, Rol = UserRole.Supervisor });
-
-        var estadoAbierto = new Status { Id = Guid.NewGuid(), Nombre = "Abierto" };
-        // Ticket tiene un EstadoId DIFERENTE al inicial (ej: "En Progreso")
-        var ticket = new Ticket { Id = ticketId, EstadoId = Guid.NewGuid() };
-
-        _ticketRepoMock.Setup(x => x.GetByIdAsync(ticketId, false)).ReturnsAsync(ticket);
-        _statusRepoMock.Setup(x => x.GetInitialStatusAsync(true)).ReturnsAsync(estadoAbierto); // EstadoId != abierto.Id
-
-        // Act & Assert
-        await Assert.ThrowsAsync<BusinessRuleException>(
-            () => _service.DeleteAsync(ticketId, supervisorId));
-
-        _ticketRepoMock.Verify(x => x.DeleteAsync(It.IsAny<Guid>()), Times.Never);
+        Assert.NotNull(result);
+        Assert.Single(result.Items);
+        var item = result.Items.First();
+        Assert.Equal("Ticket Title", item.Titulo);
+        Assert.Equal("Ticket Detailed Description", item.Descripcion);
     }
 }

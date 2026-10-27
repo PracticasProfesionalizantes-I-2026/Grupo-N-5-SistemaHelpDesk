@@ -15,7 +15,104 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value!.Errors.Select(e =>
+                    {
+                        var msg = e.ErrorMessage;
+                        var exMsg = e.Exception?.Message ?? string.Empty;
+
+                        if (string.IsNullOrWhiteSpace(msg) && e.Exception != null)
+                        {
+                            msg = exMsg;
+                        }
+
+                        // Número o tipo incorrecto donde se espera String
+                        if (msg.Contains("could not be converted to System.String", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("could not be converted to System.String", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El valor del campo debe ser una cadena de texto (string), no un número ni un objeto.";
+                        }
+
+                        // GUID inválido
+                        if (msg.Contains("could not be converted to System.Guid", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("could not be converted to System.Guid", StringComparison.OrdinalIgnoreCase) ||
+                            e.Exception is FormatException ||
+                            exMsg.Contains("Guid", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El formato del identificador no es válido. Debe ser un GUID válido (ej: 00000000-0000-0000-0000-000000000000).";
+                        }
+
+                        // Número entero
+                        if (msg.Contains("could not be converted to System.Int", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("could not be converted to System.Int", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El valor del campo debe ser un número entero válido.";
+                        }
+
+                        // Booleano
+                        if (msg.Contains("could not be converted to System.Boolean", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("could not be converted to System.Boolean", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El valor del campo debe ser un booleano (true o false).";
+                        }
+
+                        // DateTime
+                        if (msg.Contains("could not be converted to System.DateTime", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("could not be converted to System.DateTime", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El formato de la fecha no es válido.";
+                        }
+
+                        // Body vacío
+                        if (msg.Contains("non-empty request body", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("non-empty request body", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El cuerpo de la solicitud no puede estar vacío. Debe enviar un JSON con los datos requeridos.";
+                        }
+
+                        // JSON malformado
+                        if (msg.Contains("JSON", StringComparison.OrdinalIgnoreCase) && 
+                            (msg.Contains("syntax", StringComparison.OrdinalIgnoreCase) || msg.Contains("invalid", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            return "El cuerpo de la solicitud contiene formato JSON inválido o mal estructurado.";
+                        }
+
+                        // Conversión genérica de tipo
+                        if (msg.Contains("could not be converted", StringComparison.OrdinalIgnoreCase) ||
+                            exMsg.Contains("could not be converted", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return "El tipo de dato proporcionado no es compatible con el campo esperado.";
+                        }
+
+                        return msg;
+                    }).ToArray()
+                );
+
+            var firstError = errors.Values.SelectMany(v => v).FirstOrDefault()
+                ?? "La solicitud contiene errores de formato o validación.";
+
+            var responseObj = new
+            {
+                error = new
+                {
+                    code = "BadRequest",
+                    message = firstError,
+                    details = errors
+                },
+                message = firstError
+            };
+
+            return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(responseObj);
+        };
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 

@@ -161,21 +161,16 @@ public class TicketsController : BaseApiController
     {
         try
         {
+            if (id == Guid.Empty)
+                return BadRequest(new { error = "El identificador del ticket no es válido", message = "El identificador del ticket no es válido" });
+
             string userRole = GetCurrentUserRole();
             await _ticketService.DeleteTicketAsync(id, userRole);
             return NoContent(); // 204: Eliminado correctamente
         }
-        catch (UnauthorizedAccessException ex)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new { message = ex.Message }); // 409: Estado inválido
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message }); // 404: No existe
+            return HandleException(ex);
         }
     }
     [HttpPut("{id}/resolve")]
@@ -189,21 +184,9 @@ public class TicketsController : BaseApiController
             await _ticketService.ResolveAsync(id, userRole, usuarioId, cerrar);
             return NoContent(); // 204
         }
-        catch (UnauthorizedAccessException ex)
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error interno al resolver el ticket", detail = ex.Message });
+            return HandleException(ex);
         }
     }
     [HttpPost("auto-assign")]
@@ -280,13 +263,16 @@ public class TicketsController : BaseApiController
     {
         return ex switch
         {
-            NotFoundException => NotFound(new { error = ex.Message }),
-            ValidationException => BadRequest(new { error = ex.Message }),
-            BusinessRuleException => Conflict(new { error = ex.Message }),
-            DuplicateException => Conflict(new { error = ex.Message }),
-            DependencyException => Conflict(new { error = ex.Message }),
-            UnauthorizedActionException => Forbid(),
-            _ => StatusCode(500, new { error = "Error interno del servidor" })
+            NotFoundException => NotFound(new { error = ex.Message, message = ex.Message }),
+            KeyNotFoundException => NotFound(new { error = ex.Message, message = ex.Message }),
+            ValidationException => BadRequest(new { error = ex.Message, message = ex.Message }),
+            ArgumentException => BadRequest(new { error = ex.Message, message = ex.Message }),
+            BusinessRuleException => Conflict(new { error = ex.Message, message = ex.Message }),
+            DuplicateException => Conflict(new { error = ex.Message, message = ex.Message }),
+            DependencyException => Conflict(new { error = ex.Message, message = ex.Message }),
+            UnauthorizedActionException => StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message, message = ex.Message }),
+            UnauthorizedAccessException => StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message, message = ex.Message }),
+            _ => StatusCode(500, new { error = "Error interno del servidor", message = "Error interno del servidor" })
         };
     }
 }

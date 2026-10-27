@@ -40,9 +40,33 @@ public class TicketService : BaseService, ITicketService
 
     public async Task<TicketResponseDTO> CreateAsync(TicketCreateDTO dto, Guid empleadoId)
     {
+        if (dto == null)
+            throw new ValidationException("Los datos para la creación del ticket son obligatorios");
+
+        if (empleadoId == Guid.Empty)
+            throw new ValidationException("El identificador del empleado no es válido");
+
+        if (string.IsNullOrWhiteSpace(dto.Titulo))
+            throw new ValidationException(ErrorMessages.TicketTitleRequired);
+
+        if (dto.Titulo.Length > 200)
+            throw new ValidationException("El título no puede superar los 200 caracteres");
+
+        if (string.IsNullOrWhiteSpace(dto.Descripcion))
+            throw new ValidationException(ErrorMessages.TicketDescriptionRequired);
+
+        if (dto.Descripcion.Length > 5000)
+            throw new ValidationException("La descripción no puede superar los 5000 caracteres");
+
+        if (dto.PrioridadId == null || dto.PrioridadId == Guid.Empty)
+            throw new ValidationException("Debe seleccionar una prioridad válida");
+
+        if (dto.CategoriaId == null || dto.CategoriaId == Guid.Empty)
+            throw new ValidationException("Debe seleccionar una categoría válida");
+
         await ValidateUserExistsAsync(empleadoId);
-        await ValidateCategoryExistsAsync(dto.CategoriaId);
-        await ValidatePriorityExistsAsync(dto.PrioridadId);
+        await ValidateCategoryExistsAsync(dto.CategoriaId.Value);
+        await ValidatePriorityExistsAsync(dto.PrioridadId.Value);
 
         var initialStatus = await _statusRepository.GetInitialStatusAsync();
         if (initialStatus == null)
@@ -52,10 +76,10 @@ public class TicketService : BaseService, ITicketService
         {
             Titulo = dto.Titulo,
             Descripcion = dto.Descripcion,
-            PrioridadId = dto.PrioridadId,
+            PrioridadId = dto.PrioridadId!.Value,
             EstadoId = initialStatus.Id,
             
-            CategoriaId = dto.CategoriaId,
+            CategoriaId = dto.CategoriaId!.Value,
             EmpleadoId = empleadoId,
             FechaCreacion = DateTime.UtcNow,
             FechaActualizacion = DateTime.UtcNow
@@ -133,8 +157,19 @@ public class TicketService : BaseService, ITicketService
         ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
         ValidateTicketNotClosed(ticket);
 
-        if (dto.Titulo != null) ticket.Titulo = dto.Titulo;
-        if (dto.Descripcion != null) ticket.Descripcion = dto.Descripcion;
+        if (dto.Titulo != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Titulo))
+                throw new ValidationException(ErrorMessages.TicketTitleRequired);
+            ticket.Titulo = dto.Titulo;
+        }
+
+        if (dto.Descripcion != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Descripcion))
+                throw new ValidationException(ErrorMessages.TicketDescriptionRequired);
+            ticket.Descripcion = dto.Descripcion;
+        }
         if (dto.CategoriaId.HasValue)
         {
             await ValidateCategoryExistsAsync(dto.CategoriaId.Value);
@@ -155,6 +190,15 @@ public class TicketService : BaseService, ITicketService
 
     public async Task<TicketResponseDTO> AssignTechnicianAsync(Guid id, TicketAssignDTO dto, Guid supervisorId)
     {
+        if (id == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
+        if (dto == null)
+            throw new ValidationException("Los datos de asignación son obligatorios");
+
+        if (dto.TecnicoId == Guid.Empty)
+            throw new ValidationException("El identificador del técnico no es válido");
+
         var supervisor = await _userRepository.GetByIdAsync(supervisorId);
         if (supervisor == null || supervisor.Rol != UserRole.Supervisor)
             throw new UnauthorizedActionException(ErrorMessages.OnlySupervisorCanAssign);
@@ -220,6 +264,18 @@ public class TicketService : BaseService, ITicketService
 
     public async Task<TicketResponseDTO> ChangeStatusAsync(Guid id, TicketStatusDTO dto, Guid usuarioId, string usuarioRol)
     {
+        if (id == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
+        if (dto == null)
+            throw new ValidationException("Los datos para cambio de estado son obligatorios");
+
+        if (dto.EstadoId == Guid.Empty)
+            throw new ValidationException("El identificador del estado no es válido");
+
+        if (dto.Observacion != null && dto.Observacion.Length > 1000)
+            throw new ValidationException("La observación no puede superar los 1000 caracteres");
+
         var ticket = await _ticketRepository.GetByIdAsync(id, asNoTracking: false);
         if (ticket == null)
             throw new NotFoundException(ErrorMessages.TicketNotFound);
@@ -373,8 +429,21 @@ public class TicketService : BaseService, ITicketService
     }
     public async Task DeleteTicketAsync(Guid id, string userRole)
     {
-        if (userRole != "Supervisor")
-            throw new UnauthorizedAccessException("Solo un Supervisor puede eliminar tickets.");
+        if (id == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
+        if (userRole != UserRole.Supervisor.ToString())
+            throw new UnauthorizedActionException("Solo un Supervisor puede eliminar tickets.");
+
+        var ticket = await _ticketRepository.GetByIdAsync(id, asNoTracking: false);
+        if (ticket == null)
+            throw new NotFoundException(ErrorMessages.TicketNotFound);
+
+        var initialStatus = await _statusRepository.GetInitialStatusAsync();
+        if (initialStatus != null && ticket.EstadoId != initialStatus.Id)
+            throw new BusinessRuleException("Solo se pueden eliminar tickets en estado 'Abierto'");
+        else if (ticket.Estado != null && !ticket.Estado.Nombre.Equals("Abierto", StringComparison.OrdinalIgnoreCase))
+            throw new BusinessRuleException("Solo se pueden eliminar tickets en estado 'Abierto'");
 
         await _ticketRepository.DeleteAsync(id);
     }
@@ -382,6 +451,9 @@ public class TicketService : BaseService, ITicketService
 
     public async Task DeleteAsync(Guid id, Guid supervisorId)
     {
+        if (id == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
         var supervisor = await _userRepository.GetByIdAsync(supervisorId);
         if (supervisor == null || supervisor.Rol != UserRole.Supervisor)
             throw new UnauthorizedActionException(ErrorMessages.OnlySupervisorCanAssign);
@@ -390,7 +462,10 @@ public class TicketService : BaseService, ITicketService
         if (ticket == null)
             throw new NotFoundException(ErrorMessages.TicketNotFound);
 
-        if (ticket.EstadoId != (await _statusRepository.GetInitialStatusAsync())?.Id)
+        var initialStatus = await _statusRepository.GetInitialStatusAsync();
+        if (initialStatus != null && ticket.EstadoId != initialStatus.Id)
+            throw new BusinessRuleException("Solo se pueden eliminar tickets en estado 'Abierto'");
+        else if (ticket.Estado != null && !ticket.Estado.Nombre.Equals("Abierto", StringComparison.OrdinalIgnoreCase))
             throw new BusinessRuleException("Solo se pueden eliminar tickets en estado 'Abierto'");
 
         await _ticketRepository.DeleteAsync(id);
@@ -426,8 +501,20 @@ public class TicketService : BaseService, ITicketService
         Guid usuarioId,
         string usuarioRol)
     {
+        if (ticketId == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
+        if (usuarioId == Guid.Empty)
+            throw new ValidationException("El identificador del usuario no es válido");
+
+        if (dto == null)
+            throw new ValidationException("Los datos de la calificación son obligatorios");
+
         if (dto.Puntuacion < 1 || dto.Puntuacion > 5)
             throw new ValidationException("Puntuacion", "La calificación debe ser entre 1 y 5");
+
+        if (dto.Comentario != null && dto.Comentario.Length > 1000)
+            throw new ValidationException("El comentario no puede superar los 1000 caracteres");
 
         var ticket = await _ticketRepository.GetByIdAsync(ticketId);
         if (ticket == null)
@@ -538,6 +625,7 @@ public class TicketService : BaseService, ITicketService
         return new TicketListDTO(
             ticket.Id,
             ticket.Titulo,
+            ticket.Descripcion,
             ticket.Prioridad != null ? new PriorityResponseDTO(ticket.Prioridad.Id, ticket.Prioridad.Nombre, ticket.Prioridad.Nivel, ticket.Prioridad.Color, ticket.Prioridad.SLAHoras) : null!,
             ticket.Estado != null ? new StatusResponseDTO(ticket.Estado.Id, ticket.Estado.Nombre, ticket.Estado.Descripcion, ticket.Estado.EsFinal, ticket.Estado.Orden) : null!,
             ticket.Categoria != null ? new CategoryResponseDTO(ticket.Categoria.Id, ticket.Categoria.Nombre, ticket.Categoria.Descripcion, ticket.Categoria.Activo, 0) : null!,

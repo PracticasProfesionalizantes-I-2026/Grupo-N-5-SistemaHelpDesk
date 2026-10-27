@@ -41,6 +41,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             {
                 options.UseSqlite(_connection);
             });
+
+            var sp = services.BuildServiceProvider();
+            using var scope = sp.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<HelpDeskDbContext>();
+            db.Database.EnsureCreated();
         });
 
         builder.UseEnvironment("Development");

@@ -1,27 +1,51 @@
 namespace HelpDesk.Shared.DTOs;
 
+using System.ComponentModel.DataAnnotations;
+
 public record TicketCreateDTO(
-    string Titulo,
-    string Descripcion,
-    Guid PrioridadId,
-    Guid CategoriaId
+    [Required(ErrorMessage = "El título es obligatorio")]
+    [MinLength(3, ErrorMessage = "El título debe tener al menos 3 caracteres")]
+    [MaxLength(200, ErrorMessage = "El título no puede superar los 200 caracteres")]
+    string? Titulo,
+
+    [Required(ErrorMessage = "La descripción es obligatoria")]
+    [MinLength(10, ErrorMessage = "La descripción debe tener al menos 10 caracteres")]
+    [MaxLength(5000, ErrorMessage = "La descripción no puede superar los 5000 caracteres")]
+    string? Descripcion,
+
+    [Required(ErrorMessage = "Debe seleccionar una prioridad (PrioridadId: GUID)")]
+    Guid? PrioridadId,
+
+    [Required(ErrorMessage = "Debe seleccionar una categoría (CategoriaId: GUID)")]
+    Guid? CategoriaId
 );
 
 public record TicketUpdateDTO(
+    [MinLength(3, ErrorMessage = "El título debe tener al menos 3 caracteres")]
+    [MaxLength(200, ErrorMessage = "El título no puede superar los 200 caracteres")]
     string? Titulo = null,
+
+    [MinLength(10, ErrorMessage = "La descripción debe tener al menos 10 caracteres")]
+    [MaxLength(5000, ErrorMessage = "La descripción no puede superar los 5000 caracteres")]
     string? Descripcion = null,
+
     Guid? PrioridadId = null,
     Guid? CategoriaId = null
 );
 
 public record TicketAssignDTO(
+    [Required(ErrorMessage = "El campo TecnicoId es obligatorio y debe ser un GUID válido")]
     Guid TecnicoId
 );
 
 public record TicketStatusDTO(
+    [Required(ErrorMessage = "El campo EstadoId es obligatorio y debe ser un GUID válido")]
     Guid EstadoId,
+
+    [MaxLength(1000, ErrorMessage = "La observación no puede superar los 1000 caracteres")]
     string? Observacion = null
 );
+
 public record TicketUpdateStatusDto
 {
     public Guid TicketId { get; set; }
@@ -50,6 +74,7 @@ public record TicketResponseDTO(
 public record TicketListDTO(
     Guid Id,
     string Titulo,
+    string Descripcion,
     PriorityResponseDTO Prioridad,
     StatusResponseDTO Estado,
     CategoryResponseDTO Categoria,
@@ -82,6 +107,7 @@ public record UserSummaryDTO(
     string Email,
     string Rol
 );
+
 public record TicketSolutionDTO(
     Guid Id,
     Guid TicketId,

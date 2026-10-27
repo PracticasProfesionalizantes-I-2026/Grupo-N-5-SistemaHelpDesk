@@ -27,10 +27,28 @@ public class UserService : BaseService, IUserService
 
     public async Task<UserResponseDTO> CreateAsync(UserCreateDTO dto)
     {
-        if (!Enum.TryParse<UserRole>(dto.Rol, out var rol))
+        if (dto == null)
+            throw new ValidationException("Los datos del usuario son obligatorios");
+
+        if (string.IsNullOrWhiteSpace(dto.Email))
+            throw new ValidationException("Email", "El email es obligatorio");
+
+        if (dto.Email.Length > 254)
+            throw new ValidationException("Email", "El email no puede superar los 254 caracteres");
+
+        if (string.IsNullOrWhiteSpace(dto.NombreCompleto))
+            throw new ValidationException("NombreCompleto", "El nombre completo es obligatorio");
+
+        if (dto.NombreCompleto.Trim().Length < 3)
+            throw new ValidationException("NombreCompleto", "El nombre completo debe tener al menos 3 caracteres");
+
+        if (dto.NombreCompleto.Length > 150)
+            throw new ValidationException("NombreCompleto", "El nombre completo no puede superar los 150 caracteres");
+
+        if (string.IsNullOrWhiteSpace(dto.Rol) || !Enum.TryParse<UserRole>(dto.Rol, out var rol))
             throw new ValidationException("Rol", "Rol inválido. Valores permitidos: Empleado, Tecnico, Supervisor");
 
-        var existing = await _userRepository.GetByEmailAsync(dto.Email);
+        var existing = await _userRepository.GetByEmailAsync(dto.Email.Trim().ToLowerInvariant());
         if (existing != null)
             throw new DuplicateException(ErrorMessages.EmailAlreadyExists);
 

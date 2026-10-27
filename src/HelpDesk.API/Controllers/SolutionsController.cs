@@ -66,6 +66,12 @@ public class SolutionsController : BaseApiController
                     memoryStream.ToArray();
             }
 
+            if (ticketId == Guid.Empty)
+                return BadRequest(new { error = "El identificador del ticket no es válido", message = "El identificador del ticket no es válido" });
+
+            if (string.IsNullOrWhiteSpace(descripcion))
+                return BadRequest(new { error = "La descripción de la solución es obligatoria", message = "La descripción de la solución es obligatoria" });
+
             var dto = new SolutionCreateDTO(
                 descripcion,
                 archivo?.FileName,
@@ -99,24 +105,27 @@ public class SolutionsController : BaseApiController
         return ex switch
         {
             NotFoundException =>
-                NotFound(new { error = ex.Message }),
+                NotFound(new { error = ex.Message, message = ex.Message }),
 
             ValidationException =>
-                BadRequest(new { error = ex.Message }),
+                BadRequest(new { error = ex.Message, message = ex.Message }),
 
             BusinessRuleException =>
-                Conflict(new { error = ex.Message }),
+                Conflict(new { error = ex.Message, message = ex.Message }),
 
             UnauthorizedActionException =>
-                Forbid(),
+                StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message, message = ex.Message }),
+
+            UnauthorizedAccessException =>
+                StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message, message = ex.Message }),
 
             _ =>
                 StatusCode(
                     500,
                     new
                     {
-                        error =
-                            "Error interno del servidor"
+                        error = "Error interno del servidor",
+                        message = "Error interno del servidor"
                     })
         };
     }

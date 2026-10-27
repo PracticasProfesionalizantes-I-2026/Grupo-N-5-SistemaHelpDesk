@@ -25,13 +25,28 @@ public class CategoryService : BaseService, ICategoryService
 
     public async Task<CategoryResponseDTO> CreateAsync(CategoryCreateDTO dto)
     {
-        var existing = await _categoryRepository.GetByNameAsync(dto.Nombre);
+        if (dto == null)
+            throw new ValidationException("Los datos de la categoría son obligatorios");
+
+        if (string.IsNullOrWhiteSpace(dto.Nombre))
+            throw new ValidationException("El nombre de la categoría es obligatorio");
+
+        if (dto.Nombre.Trim().Length < 2)
+            throw new ValidationException("El nombre debe tener al menos 2 caracteres");
+
+        if (dto.Nombre.Length > 100)
+            throw new ValidationException("El nombre no puede superar los 100 caracteres");
+
+        if (!string.IsNullOrWhiteSpace(dto.Descripcion) && dto.Descripcion.Length > 500)
+            throw new ValidationException("La descripción no puede superar los 500 caracteres");
+
+        var existing = await _categoryRepository.GetByNameAsync(dto.Nombre.Trim());
         if (existing != null)
-            throw new DuplicateException(ErrorMessages.TeamNameAlreadyExists);
+            throw new DuplicateException("Ya existe una categoría con ese nombre");
 
         var category = new Category
         {
-            Nombre = dto.Nombre,
+            Nombre = dto.Nombre.Trim(),
             Descripcion = dto.Descripcion,
             Activo = true
         };

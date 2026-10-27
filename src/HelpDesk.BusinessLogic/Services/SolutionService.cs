@@ -54,6 +54,21 @@ public class SolutionService : ISolutionService
         Guid tecnicoId,
         string usuarioRol)
     {
+        if (ticketId == Guid.Empty)
+            throw new ValidationException("El identificador del ticket no es válido");
+
+        if (tecnicoId == Guid.Empty)
+            throw new ValidationException("El identificador del técnico no es válido");
+
+        if (dto == null)
+            throw new ValidationException("Los datos de la solución son obligatorios");
+
+        if (string.IsNullOrWhiteSpace(dto.Descripcion))
+            throw new ValidationException(ErrorMessages.SolutionDescriptionRequired);
+
+        if (dto.Descripcion.Length > BusinessRules.MaxSolutionDescriptionLength)
+            throw new ValidationException("La descripción de la solución no puede superar los 5000 caracteres");
+
         if (usuarioRol != UserRole.Tecnico.ToString())
             throw new UnauthorizedActionException(
                 ErrorMessages.OnlyTechnicianCanAttachSolution);
@@ -82,17 +97,6 @@ public class SolutionService : ISolutionService
         if (currentStatus?.EsFinal == true)
             throw new BusinessRuleException(
                 ErrorMessages.CannotModifyClosedTicket);
-
-        if (string.IsNullOrWhiteSpace(dto.Descripcion))
-            throw new ValidationException(
-                ErrorMessages.SolutionDescriptionRequired);
-
-        if (dto.Descripcion.Length >
-            BusinessRules.MaxSolutionDescriptionLength)
-        {
-            throw new ValidationException(
-                "La descripción de la solución no puede superar los 5000 caracteres");
-        }
 
         ValidateFile(dto);
 

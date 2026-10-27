@@ -26,12 +26,27 @@ public class TeamService : BaseService, ITeamService
 
     public async Task<TeamResponseDTO> CreateAsync(TeamCreateDTO dto)
     {
-        var existing = await _teamRepository.GetByNameAsync(dto.Nombre);
+        if (dto == null)
+            throw new ValidationException("Los datos del equipo son obligatorios");
+
+        if (string.IsNullOrWhiteSpace(dto.Nombre))
+            throw new ValidationException("El nombre del equipo es obligatorio");
+
+        if (dto.Nombre.Trim().Length < 2)
+            throw new ValidationException("El nombre debe tener al menos 2 caracteres");
+
+        if (dto.Nombre.Length > 100)
+            throw new ValidationException("El nombre no puede superar los 100 caracteres");
+
+        if (dto.CategoriaId == Guid.Empty)
+            throw new ValidationException("Debe seleccionar una categoría válida");
+
+        if (dto.TecnicoIds == null || !dto.TecnicoIds.Any() || dto.TecnicoIds.All(id => id == Guid.Empty))
+            throw new ValidationException("TecnicoIds", ErrorMessages.TeamMustHaveAtLeastOneTechnician);
+
+        var existing = await _teamRepository.GetByNameAsync(dto.Nombre.Trim());
         if (existing != null)
             throw new DuplicateException(ErrorMessages.TeamNameAlreadyExists);
-
-        if (dto.TecnicoIds == null || !dto.TecnicoIds.Any())
-            throw new ValidationException("TecnicoIds", ErrorMessages.TeamMustHaveAtLeastOneTechnician);
 
         await ValidateCategoryExistsAsync(dto.CategoriaId);
 

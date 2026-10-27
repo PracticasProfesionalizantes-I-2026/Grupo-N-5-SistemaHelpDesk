@@ -18,12 +18,15 @@ public class MessagesController : ControllerBase
         _service = service;
     }
 
+    /// <summary>
+    /// Envía un mensaje entre dos usuarios.
+    /// </summary>
     [HttpPost("send")]
-    public async Task<IActionResult> Send(Guid senderId, Guid receiverId, string text)
+    public async Task<IActionResult> Send([FromBody] SendMessageDTO dto)
     {
         try
         {
-            var result = await _service.SendMessageAsync(senderId, receiverId, text);
+            var result = await _service.SendMessageAsync(dto.SenderId, dto.ReceiverId, dto.Text!);
             return CreatedAtAction(nameof(GetConversation), new { userId = result.SenderId, contactId = result.ReceiverId }, result);
         }
         catch (NotFoundException ex)
@@ -36,6 +39,9 @@ public class MessagesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Obtiene la conversación entre dos usuarios.
+    /// </summary>
     [HttpGet("conversation/{userId}/{contactId}")]
     public async Task<IActionResult> GetConversation(Guid userId, Guid contactId)
     {

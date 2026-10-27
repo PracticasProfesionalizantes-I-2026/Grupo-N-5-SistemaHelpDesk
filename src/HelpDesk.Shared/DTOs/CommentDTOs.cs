@@ -1,7 +1,12 @@
 namespace HelpDesk.Shared.DTOs;
 
+using System.ComponentModel.DataAnnotations;
+
 public record CommentCreateDTO(
-    string Contenido,
+    [Required(ErrorMessage = "El contenido del comentario es obligatorio")]
+    [MinLength(1, ErrorMessage = "El comentario no puede estar vacío")]
+    [MaxLength(3000, ErrorMessage = "El comentario no puede superar los 3000 caracteres")]
+    string? Contenido,
     bool EsInterno = false
 );
 

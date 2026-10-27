@@ -71,4 +71,8 @@ public static class ErrorMessages
     public const string SolutionDescriptionRequired = "La descripción de la solución es obligatoria";
     public const string SolutionFileTooLarge = "El archivo adjunto supera el límite permitido de 10 MB";
     public const string SolutionFileTypeNotAllowed = "El formato del archivo adjunto no está permitido";
+    public const string TicketTitleRequired = "Debe ingresar un título";
+    public const string TicketDescriptionRequired = "Debe ingresar una descripción";
+    public const string TicketPriorityRequired = "Debe seleccionar una prioridad";
+    public const string TicketCategoryRequired = "Debe seleccionar una categoría";
 }

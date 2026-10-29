@@ -196,14 +196,16 @@ public class TicketService : BaseService, ITicketService
         if (dto == null)
             throw new ValidationException("Los datos de asignación son obligatorios");
 
-        if (dto.TecnicoId == Guid.Empty)
+        if (!dto.TecnicoId.HasValue || dto.TecnicoId.Value == Guid.Empty)
             throw new ValidationException("El identificador del técnico no es válido");
+
+        var tecnicoId = dto.TecnicoId.Value;
 
         var supervisor = await _userRepository.GetByIdAsync(supervisorId);
         if (supervisor == null || supervisor.Rol != UserRole.Supervisor)
             throw new UnauthorizedActionException(ErrorMessages.OnlySupervisorCanAssign);
 
-        await ValidateTechnicianAsync(dto.TecnicoId);
+        await ValidateTechnicianAsync(tecnicoId);
 
         var ticket = await _ticketRepository.GetByIdAsync(id, asNoTracking: false);
         if (ticket == null)
@@ -211,7 +213,7 @@ public class TicketService : BaseService, ITicketService
 
         ValidateTicketNotClosed(ticket);
 
-        if (ticket.TecnicoId == dto.TecnicoId)
+        if (ticket.TecnicoId == tecnicoId)
             throw new BusinessRuleException("El ticket ya está asignado a ese técnico");
 
         var tecnicoAnteriorId = ticket.TecnicoId;
@@ -221,7 +223,7 @@ public class TicketService : BaseService, ITicketService
         if (inProgressStatus == null)
             throw new BusinessRuleException("Estado 'En Progreso' no configurado");
 
-        ticket.TecnicoId = dto.TecnicoId;
+        ticket.TecnicoId = tecnicoId;
         ticket.EstadoId = inProgressStatus.Id;
         ticket.Estado = inProgressStatus;
         ticket.FechaActualizacion = DateTime.UtcNow;
@@ -230,7 +232,7 @@ public class TicketService : BaseService, ITicketService
 
         string observacion;
         if (tecnicoAnteriorId.HasValue)
-            observacion = $"Reasignado de técnico {tecnicoAnteriorId} a {dto.TecnicoId}";
+            observacion = $"Reasignado de técnico {tecnicoAnteriorId} a {tecnicoId}";
         else
             observacion = "Asignado a técnico";
 
@@ -245,7 +247,7 @@ public class TicketService : BaseService, ITicketService
         {
             await _notificationService.EnviarNotificacionAsync(
                 ticket.Id,
-                dto.TecnicoId,
+                tecnicoId,
                 "Nuevo ticket asignado",
                 $"Se le ha asignado el ticket #{ticket.Id}: '{ticket.Titulo}'");
 
@@ -270,8 +272,10 @@ public class TicketService : BaseService, ITicketService
         if (dto == null)
             throw new ValidationException("Los datos para cambio de estado son obligatorios");
 
-        if (dto.EstadoId == Guid.Empty)
+        if (!dto.EstadoId.HasValue || dto.EstadoId.Value == Guid.Empty)
             throw new ValidationException("El identificador del estado no es válido");
+
+        var estadoId = dto.EstadoId.Value;
 
         if (dto.Observacion != null && dto.Observacion.Length > 1000)
             throw new ValidationException("La observación no puede superar los 1000 caracteres");
@@ -283,14 +287,14 @@ public class TicketService : BaseService, ITicketService
         ValidateCanAccessTicket(ticket, usuarioId, usuarioRol);
         ValidateTicketNotClosed(ticket);
 
-        await ValidateStatusExistsAsync(dto.EstadoId);
+        await ValidateStatusExistsAsync(estadoId);
 
-        var newStatus = await _statusRepository.GetByIdAsync(dto.EstadoId);
+        var newStatus = await _statusRepository.GetByIdAsync(estadoId);
         if (newStatus == null)
             throw new NotFoundException(ErrorMessages.StatusNotFound);
 
         var oldStatusId = ticket.EstadoId;
-        ticket.EstadoId = dto.EstadoId;
+        ticket.EstadoId = estadoId;
         ticket.Estado = newStatus;
         ticket.FechaActualizacion = DateTime.UtcNow;
 
@@ -308,7 +312,7 @@ public class TicketService : BaseService, ITicketService
         }
 
         await _ticketRepository.UpdateAsync(ticket);
-        await CreateStatusHistoryAsync(ticket.Id, oldStatusId, dto.EstadoId, usuarioId, dto.Observacion);
+        await CreateStatusHistoryAsync(ticket.Id, oldStatusId, estadoId, usuarioId, dto.Observacion);
 
         if (_notificationService != null && ticket.EmpleadoId != Guid.Empty)
         {

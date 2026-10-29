@@ -35,12 +35,12 @@ public record TicketUpdateDTO(
 
 public record TicketAssignDTO(
     [Required(ErrorMessage = "El campo TecnicoId es obligatorio y debe ser un GUID válido")]
-    Guid TecnicoId
+    Guid? TecnicoId
 );
 
 public record TicketStatusDTO(
     [Required(ErrorMessage = "El campo EstadoId es obligatorio y debe ser un GUID válido")]
-    Guid EstadoId,
+    Guid? EstadoId,
 
     [MaxLength(1000, ErrorMessage = "La observación no puede superar los 1000 caracteres")]
     string? Observacion = null

@@ -20,83 +20,160 @@ builder.Services.AddControllers()
     {
         options.InvalidModelStateResponseFactory = context =>
         {
-            var errors = context.ModelState
+            var rawEntries = context.ModelState
                 .Where(e => e.Value?.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value!.Errors.Select(e =>
+                .ToList();
+
+            // Detectar si hay errores específicos de propiedades más allá del error cascada del DTO
+            var hasSpecificPropertyErrors = rawEntries.Any(e =>
+                e.Key != "dto" && e.Key != "body" && e.Key != "$" && !string.IsNullOrWhiteSpace(e.Key));
+
+            Type? ResolveTargetType(string propertyName)
+            {
+                var clean = propertyName.TrimStart('$', '.');
+                if (string.IsNullOrWhiteSpace(clean)) return null;
+
+                foreach (var param in context.ActionDescriptor.Parameters)
+                {
+                    var paramType = param.ParameterType;
+
+                    var prop = paramType.GetProperty(clean, System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    if (prop != null) return prop.PropertyType;
+
+                    foreach (var ctor in paramType.GetConstructors())
                     {
-                        var msg = e.ErrorMessage;
-                        var exMsg = e.Exception?.Message ?? string.Empty;
+                        var cp = ctor.GetParameters().FirstOrDefault(p => string.Equals(p.Name, clean, StringComparison.OrdinalIgnoreCase));
+                        if (cp != null) return cp.ParameterType;
+                    }
+                }
+                return null;
+            }
 
-                        if (string.IsNullOrWhiteSpace(msg) && e.Exception != null)
-                        {
-                            msg = exMsg;
-                        }
+            var details = new Dictionary<string, string[]>();
+            var allTranslated = new List<string>();
 
-                        // Número o tipo incorrecto donde se espera String
-                        if (msg.Contains("could not be converted to System.String", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("could not be converted to System.String", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El valor del campo debe ser una cadena de texto (string), no un número ni un objeto.";
-                        }
+            foreach (var (key, entry) in rawEntries)
+            {
+                if (entry?.Errors == null) continue;
 
-                        // GUID inválido
-                        if (msg.Contains("could not be converted to System.Guid", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("could not be converted to System.Guid", StringComparison.OrdinalIgnoreCase) ||
-                            e.Exception is FormatException ||
-                            exMsg.Contains("Guid", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El formato del identificador no es válido. Debe ser un GUID válido (ej: 00000000-0000-0000-0000-000000000000).";
-                        }
+                // Si hay errores específicos en campos internos, omitir el error genérico 'The dto field is required'
+                var isDtoRootKey = key == "dto" || key == "body" || key == "$" || string.IsNullOrWhiteSpace(key);
+                if (isDtoRootKey && hasSpecificPropertyErrors)
+                {
+                    continue;
+                }
 
-                        // Número entero
-                        if (msg.Contains("could not be converted to System.Int", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("could not be converted to System.Int", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El valor del campo debe ser un número entero válido.";
-                        }
+                var cleanKey = key.TrimStart('$', '.');
+                var displayKey = string.IsNullOrWhiteSpace(cleanKey) ? "cuerpo" : cleanKey;
+                var targetType = ResolveTargetType(cleanKey);
+                var underlying = targetType != null ? (Nullable.GetUnderlyingType(targetType) ?? targetType) : null;
 
-                        // Booleano
-                        if (msg.Contains("could not be converted to System.Boolean", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("could not be converted to System.Boolean", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El valor del campo debe ser un booleano (true o false).";
-                        }
+                var keyList = new List<string>();
 
-                        // DateTime
-                        if (msg.Contains("could not be converted to System.DateTime", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("could not be converted to System.DateTime", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El formato de la fecha no es válido.";
-                        }
+                foreach (var err in entry.Errors)
+                {
+                    var msg = err.ErrorMessage ?? string.Empty;
+                    var exMsg = err.Exception?.Message ?? string.Empty;
+                    var innerExMsg = err.Exception?.InnerException?.Message ?? string.Empty;
+                    var fullContext = $"{msg} {exMsg} {innerExMsg}".Trim();
 
-                        // Body vacío
-                        if (msg.Contains("non-empty request body", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("non-empty request body", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El cuerpo de la solicitud no puede estar vacío. Debe enviar un JSON con los datos requeridos.";
-                        }
+                    var isConversionError = fullContext.Contains("could not be converted", StringComparison.OrdinalIgnoreCase) ||
+                                           fullContext.Contains("JSON value", StringComparison.OrdinalIgnoreCase) ||
+                                           err.Exception is FormatException;
 
-                        // JSON malformado
-                        if (msg.Contains("JSON", StringComparison.OrdinalIgnoreCase) && 
-                            (msg.Contains("syntax", StringComparison.OrdinalIgnoreCase) || msg.Contains("invalid", StringComparison.OrdinalIgnoreCase)))
-                        {
-                            return "El cuerpo de la solicitud contiene formato JSON inválido o mal estructurado.";
-                        }
+                    string translated;
 
-                        // Conversión genérica de tipo
-                        if (msg.Contains("could not be converted", StringComparison.OrdinalIgnoreCase) ||
-                            exMsg.Contains("could not be converted", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return "El tipo de dato proporcionado no es compatible con el campo esperado.";
-                        }
+                    // 1. GUID inválido (por tipo subyacente, convención Id o mención de Guid en contexto)
+                    if ((underlying == typeof(Guid) && isConversionError) ||
+                        (cleanKey.EndsWith("Id", StringComparison.OrdinalIgnoreCase) && isConversionError) ||
+                        cleanKey.Equals("id", StringComparison.OrdinalIgnoreCase) && isConversionError ||
+                        fullContext.Contains("System.Guid", StringComparison.OrdinalIgnoreCase) ||
+                        fullContext.Contains("Guid should contain", StringComparison.OrdinalIgnoreCase) ||
+                        (fullContext.Contains("Guid", StringComparison.OrdinalIgnoreCase) &&
+                         (fullContext.Contains("format", StringComparison.OrdinalIgnoreCase) || fullContext.Contains("convert", StringComparison.OrdinalIgnoreCase))))
+                    {
+                        translated = "El formato del identificador no es válido. Debe ser un GUID válido (ej: 00000000-0000-0000-0000-000000000000).";
+                    }
+                    // 2. String esperado (ej: número u objeto enviado en un campo string)
+                    else if ((underlying == typeof(string) && isConversionError) ||
+                             fullContext.Contains("could not be converted to System.String", StringComparison.OrdinalIgnoreCase))
+                    {
+                        translated = "El valor del campo debe ser una cadena de texto (string), no un número ni un objeto.";
+                    }
+                    // 3. Entero esperado
+                    else if (((underlying == typeof(int) || underlying == typeof(long) || underlying == typeof(short)) && isConversionError) ||
+                             fullContext.Contains("could not be converted to System.Int", StringComparison.OrdinalIgnoreCase) ||
+                             fullContext.Contains("System.Int32", StringComparison.OrdinalIgnoreCase) ||
+                             fullContext.Contains("System.Int64", StringComparison.OrdinalIgnoreCase))
+                    {
+                        translated = "El valor del campo debe ser un número entero válido.";
+                    }
+                    // 4. Booleano esperado
+                    else if ((underlying == typeof(bool) && isConversionError) ||
+                             fullContext.Contains("could not be converted to System.Boolean", StringComparison.OrdinalIgnoreCase))
+                    {
+                        translated = "El valor del campo debe ser un booleano (true o false).";
+                    }
+                    // 5. Fecha esperada
+                    else if (((underlying == typeof(DateTime) || underlying == typeof(DateTimeOffset)) && isConversionError) ||
+                             fullContext.Contains("could not be converted to System.DateTime", StringComparison.OrdinalIgnoreCase))
+                    {
+                        translated = "El formato de la fecha no es válido.";
+                    }
+                    // 6. JSON malformado / error de sintaxis JSON
+                    else if (fullContext.Contains("JSON", StringComparison.OrdinalIgnoreCase) &&
+                             (fullContext.Contains("syntax", StringComparison.OrdinalIgnoreCase) ||
+                              fullContext.Contains("invalid", StringComparison.OrdinalIgnoreCase) ||
+                              fullContext.Contains("expected", StringComparison.OrdinalIgnoreCase) ||
+                              fullContext.Contains("end of data", StringComparison.OrdinalIgnoreCase) ||
+                              (err.Exception is System.Text.Json.JsonException && fullContext.Contains("Path:"))))
+                    {
+                        translated = "El cuerpo de la solicitud contiene formato JSON inválido o mal estructurado.";
+                    }
+                    // 7. Request body vacío o 'The dto field is required'
+                    else if (fullContext.Contains("non-empty request body", StringComparison.OrdinalIgnoreCase) ||
+                             fullContext.Contains("The dto field is required", StringComparison.OrdinalIgnoreCase) ||
+                             fullContext.Contains("The body field is required", StringComparison.OrdinalIgnoreCase) ||
+                             (fullContext.Contains("field is required", StringComparison.OrdinalIgnoreCase) && isDtoRootKey))
+                    {
+                        translated = "El cuerpo de la solicitud no puede estar vacío. Debe enviar un JSON con los datos requeridos.";
+                    }
+                    // 8. Mensajes estándar de 'The {0} field is required' en inglés
+                    else if (System.Text.RegularExpressions.Regex.IsMatch(msg, @"^The .+ field is required\.?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                    {
+                        translated = $"El campo '{displayKey}' es obligatorio y no puede ser nulo o vacío.";
+                    }
+                    // 9. Conversión genérica fallida
+                    else if (fullContext.Contains("could not be converted", StringComparison.OrdinalIgnoreCase))
+                    {
+                        translated = "El tipo de dato proporcionado no es compatible con el campo esperado.";
+                    }
+                    // 10. Si ya es un mensaje en español de DataAnnotation o personalizado
+                    else if (!string.IsNullOrWhiteSpace(msg))
+                    {
+                        translated = msg;
+                    }
+                    else
+                    {
+                        translated = "La solicitud contiene errores de formato o validación en los datos enviados.";
+                    }
 
-                        return msg;
-                    }).ToArray()
-                );
+                    keyList.Add(translated);
+                    allTranslated.Add(translated);
+                }
 
-            var firstError = errors.Values.SelectMany(v => v).FirstOrDefault()
+                if (keyList.Count > 0)
+                {
+                    details[displayKey] = keyList.ToArray();
+                }
+            }
+
+            // Priorizar un mensaje específico (ej: GUID inválido o tipo) sobre el mensaje genérico de DTO vacío
+            var specificError = allTranslated.FirstOrDefault(e =>
+                !e.Contains("cuerpo de la solicitud no puede estar vacío", StringComparison.OrdinalIgnoreCase) &&
+                !e.Contains("The dto field is required", StringComparison.OrdinalIgnoreCase));
+
+            var primaryMessage = specificError ?? allTranslated.FirstOrDefault()
                 ?? "La solicitud contiene errores de formato o validación.";
 
             var responseObj = new
@@ -104,10 +181,10 @@ builder.Services.AddControllers()
                 error = new
                 {
                     code = "BadRequest",
-                    message = firstError,
-                    details = errors
+                    message = primaryMessage,
+                    details = details
                 },
-                message = firstError
+                message = primaryMessage
             };
 
             return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(responseObj);
@@ -185,6 +262,7 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ISolutionService, SolutionService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordRecoveryService, PasswordRecoveryService>();
 
 // Hosted Background Services

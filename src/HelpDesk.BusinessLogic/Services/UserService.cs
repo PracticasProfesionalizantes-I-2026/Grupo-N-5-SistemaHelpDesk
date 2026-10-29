@@ -11,6 +11,8 @@ namespace HelpDesk.BusinessLogic.Services;
 
 public class UserService : BaseService, IUserService
 {
+    private readonly ITokenService _tokenService;
+
     public UserService(
         ITicketRepository ticketRepository,
         IUserRepository userRepository,
@@ -20,9 +22,11 @@ public class UserService : BaseService, IUserService
         ICommentRepository commentRepository,
         IStatusHistoryRepository statusHistoryRepository,
         ITeamRepository teamRepository,
-        IRatingRepository ratingRepository)
+        IRatingRepository ratingRepository,
+        ITokenService tokenService)
         : base(ticketRepository, userRepository, categoryRepository, priorityRepository, statusRepository, commentRepository, statusHistoryRepository, teamRepository, ratingRepository)
     {
+        _tokenService = tokenService;
     }
 
     public async Task<UserResponseDTO> CreateAsync(UserCreateDTO dto)
@@ -225,8 +229,7 @@ public class UserService : BaseService, IUserService
         if (!PasswordHasher.VerifyPassword(dto.Password, user.PasswordHash))
             throw new UnauthorizedActionException(ErrorMessages.InvalidCredentials);
 
-        // Token generation removed as per project requirements
-        var token = string.Empty;
+        var token = _tokenService.GenerateToken(user);
 
         return new LoginResponseDTO(MapToResponseDTO(user), token);
     }

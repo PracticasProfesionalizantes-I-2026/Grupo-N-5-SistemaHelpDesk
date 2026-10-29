@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using HelpDesk.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,12 @@ public abstract class BaseApiController : ControllerBase
     // =========================================================================
 
     // 1. SUPERVISOR (Admin Sistema)
-    private static readonly Guid DefaultUserId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
-    private static readonly string DefaultUserRole = "Supervisor";
+    //private static readonly Guid DefaultUserId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+    //private static readonly string DefaultUserRole = "Supervisor";
 
     // 2. TÉCNICO (Carlos López)
-    //private static readonly Guid DefaultUserId = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
-    //private static readonly string DefaultUserRole = "Tecnico";
+    private static readonly Guid DefaultUserId = Guid.Parse("cccccccc-dddd-eeee-ffff-aaaaaaaaaaaa");
+    private static readonly string DefaultUserRole = "Tecnico";
 
     // 3. EMPLEADO (Juan Pérez)
     //private static readonly Guid DefaultUserId = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
@@ -31,18 +32,22 @@ public abstract class BaseApiController : ControllerBase
 
     protected Guid GetCurrentUserId()
     {
-        // 1. Si viene por header opcional en Bruno / Postman
+        // 1. Si viene por Claims JWT (Bearer Token)
+        var claim = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+            ?? User?.FindFirst("sub")?.Value
+            ?? User?.FindFirst("id")?.Value;
+
+        if (!string.IsNullOrEmpty(claim) && Guid.TryParse(claim, out var parsedClaimId))
+        {
+            return parsedClaimId;
+        }
+
+        // 2. Si viene por header opcional en Bruno / Postman / Tests (X-User-Id)
         if (Request?.Headers.TryGetValue("X-User-Id", out var headerId) == true &&
             Guid.TryParse(headerId, out var parsedHeaderId))
         {
             return parsedHeaderId;
-        }
-
-        // 2. Si viene por Claims JWT
-        var claim = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (!string.IsNullOrEmpty(claim) && Guid.TryParse(claim, out var parsedClaimId))
-        {
-            return parsedClaimId;
         }
 
         // 3. Fallback hardcodeado
@@ -51,18 +56,20 @@ public abstract class BaseApiController : ControllerBase
 
     protected string GetCurrentUserRole()
     {
-        // 1. Si viene por header opcional en Bruno / Postman
+        // 1. Si viene por Claims JWT (Bearer Token)
+        var claim = User?.FindFirst(ClaimTypes.Role)?.Value
+            ?? User?.FindFirst("role")?.Value;
+
+        if (!string.IsNullOrEmpty(claim))
+        {
+            return claim;
+        }
+
+        // 2. Si viene por header opcional en Bruno / Postman / Tests (X-User-Role)
         if (Request?.Headers.TryGetValue("X-User-Role", out var headerRole) == true &&
             !string.IsNullOrWhiteSpace(headerRole))
         {
             return headerRole.ToString();
-        }
-
-        // 2. Si viene por Claims JWT
-        var claim = User?.FindFirst(ClaimTypes.Role)?.Value;
-        if (!string.IsNullOrEmpty(claim))
-        {
-            return claim;
         }
 
         // 3. Fallback hardcodeado

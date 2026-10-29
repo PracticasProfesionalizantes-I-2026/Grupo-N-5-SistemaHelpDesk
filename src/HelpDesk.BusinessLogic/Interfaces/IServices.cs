@@ -130,3 +130,9 @@ public interface IMessageService
     Task<MessageDTO> SendMessageAsync(Guid senderId, Guid receiverId, string text);
     Task<IEnumerable<MessageDTO>> GetConversationAsync(Guid userId, Guid contactId);
 }
+
+public interface ITokenService
+{
+    string GenerateToken(User user);
+}
+
